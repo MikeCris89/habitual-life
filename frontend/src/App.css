@@ -1,0 +1,56 @@
+html,
+body,
+#root {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
+.flex {
+	display: flex;
+	align-items: center;
+}
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.flex-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.flex-around {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.col {
+	flex-direction: column;
+}
+
+/* .col > * {
+	width: 100%;
+} */
+
+.col-rev {
+	flex-direction: column-reverse;
+}
+
+.gap1 {
+	gap: 3px;
+}
+
+.gap2 {
+	gap: 6px;
+}
+
+.gap3 {
+	gap: 10px;
+}
+
+.gap4 {
+	gap: 13px;
+}
