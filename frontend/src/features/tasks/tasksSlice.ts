@@ -1,11 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-	BadTask,
-	CounterTask,
 	DayKeys,
-	GoodTask,
 	Habit,
-	HabitType,
+	isCounterHabit,
 	isCounterTask,
 	isGoodHabit,
 	Task,
@@ -15,6 +12,15 @@ import { endOfWeek, startOfDay, startOfWeek } from "../../utils/timeUtils";
 import { getTasks } from "../../utils/storageHandler";
 import { nanoid } from "nanoid";
 
+const initTask: Task = {
+	title: "",
+	habitId: "",
+	type: "good",
+	dateTime: "",
+	id: "",
+	complete: false,
+};
+
 const initialState: WeeklyTasks = getTasks() ?? {
 	weekStart: startOfWeek(),
 	weekEnd: endOfWeek(),
@@ -23,53 +29,35 @@ const initialState: WeeklyTasks = getTasks() ?? {
 	id: nanoid(),
 };
 
-const initTask: Task = {
-	title: "",
-	habitId: "",
-	type: "good",
-	dateTime: "",
-	id: "",
-};
-
-const initTypes: Record<HabitType, GoodTask | BadTask | CounterTask> = {
-	good: {
-		complete: false,
-	},
-	bad: {
-		complete: false,
-	},
-	counter: {
-		minMax: false,
-		total: 0,
-		count: 0,
-		complete: false,
-	},
-};
-
-type CheckType = {
-	id: string;
-	value?: number;
-};
-
-const createTask = (habit: Habit, date?: string): Task => {
+const createTask = (habit: Habit, date: string): Task => {
 	const task: Task = {
 		...initTask,
-		...initTypes[habit.type],
 		title: habit.title,
 		habitId: habit.id,
 		type: habit.type,
-		dateTime: date ?? "",
+		dateTime: date,
 		id: nanoid(),
 	};
 
-	// if (isGoodHabit(habit) && isGoodTask(task) && habit.timeOfDay.length > 0) {
-	// 	task.timeOfDay = habit.timeOfDay[0];
-	// }
+	if (isCounterHabit(habit)) {
+		task.total = habit.total;
+		task.minMax = habit.minMax;
+		task.count = 0;
+	}
 	return task;
 };
 
+const modifyTasks = (
+	dailyTasks: Record<string, Task[]>,
+	f: (task: Task[]) => Task[]
+) => {
+	return Object.fromEntries(
+		Object.entries(dailyTasks).map(([day, tasks]) => [day, f(tasks)])
+	);
+};
+
 const tasksSlice = createSlice({
-	name: "tasks",
+	name: "weeklyTasks",
 	initialState,
 	reducers: {
 		addDailyTasks: (
@@ -80,22 +68,28 @@ const tasksSlice = createSlice({
 			const today = new Date(startOfDay());
 			const { habits, date } = action.payload;
 
+			// loop through each day of week
 			DayKeys.forEach((day, i) => {
 				const thisDay = new Date(
 					today.setDate(weekStart.getDate() + i)
 				).toISOString();
 
+				// if date object is passed
 				if (date && new Date(today) > new Date(date)) return;
 
+				// habits that have tasks for today
 				const filteredHabits = habits.filter(
 					(habit) => habit.daysOfWeek[day].isTrue
 				);
+
+				// create tasks for each habit for this day, store in weeklyTasks.tasks
 				const tasksThisDay: Task[] = filteredHabits.flatMap((habit) => {
 					if (habit && isGoodHabit(habit)) {
 						if (habit.timeOfDay.length > 0) {
 							return habit.timeOfDay.map((obj) => {
 								const thisDate = new Date(thisDay);
-								const objDate = new Date(obj.time);
+								const objDate = new Date(obj.time || startOfDay());
+
 								thisDate.setHours(
 									objDate.getHours(),
 									objDate.getMinutes(),
@@ -104,7 +98,7 @@ const tasksSlice = createSlice({
 								);
 								return createTask(habit, thisDate.toISOString());
 							});
-						} else if (!habit.timeOfDay || habit.timeOfDay.length === 0) {
+						} else if (!habit.timeOfDay || !habit.timeOfDay.length) {
 							return createTask(habit, thisDay);
 						}
 					}
@@ -120,57 +114,66 @@ const tasksSlice = createSlice({
 			const thisTask = action.payload;
 			if (
 				thisTask.dateTime >= state.weekStart &&
-				thisTask.dateTime <= state.weekEnd
+				thisTask.dateTime < state.weekEnd
 			) {
-				const tasksToday = state.tasks[startOfDay()];
-
-				if (tasksToday) {
-					const task = tasksToday.find((task) => task.id === action.payload.id);
-					if (task) Object.assign(task, thisTask);
-				}
+				state.tasks = modifyTasks(state.tasks, (tasks) =>
+					tasks.map((task) => (task.id === action.payload.id ? thisTask : task))
+				);
 			}
 		},
 		editDailyTasks: (state, action: PayloadAction<Habit>) => {
 			const habit = action.payload;
-			Object.keys(state.tasks).forEach((date) => {
-				const today = new Date(startOfDay());
-				if (today > new Date(date)) return;
-				state.tasks[date] = state.tasks[date].filter(
-					(task) => !task.complete && task.habitId !== habit.id
-				);
-			});
+			state.tasks = modifyTasks(state.tasks, (tasks) =>
+				tasks.filter(
+					(task) =>
+						task.habitId !== habit.id &&
+						!task.complete &&
+						task.dateTime > new Date().toISOString()
+				)
+			);
 			tasksSlice.caseReducers.addDailyTasks(state, {
 				payload: { habits: [habit], date: startOfDay() },
 				type: "tasks/addDailyTasks",
 			});
 		},
-		checkOff: (state, action: PayloadAction<CheckType>) => {
-			const { id, value } = action.payload;
-			const task = state.tasks[startOfDay()].find((task) => task.id === id);
-
-			if (task) {
-				if (isCounterTask(task) && value) {
-					task.count += value;
-				} else {
-					task.complete = !task.complete;
-				}
+		checkOff: (state, action: PayloadAction<Task>) => {
+			state.tasks = modifyTasks(state.tasks, (tasks) =>
+				tasks.map((task) =>
+					task.id === action.payload.id
+						? { ...task, complete: !task.complete }
+						: task
+				)
+			);
+		},
+		increment: (
+			state,
+			action: PayloadAction<{ thisTask: Task; value?: number }>
+		) => {
+			const { thisTask, value } = action.payload;
+			if (isCounterTask(thisTask)) {
+				state.tasks = modifyTasks(state.tasks, (tasks) =>
+					tasks.map((task) =>
+						task.id === thisTask.id
+							? {
+									...task,
+									count: value ? thisTask.count + value : thisTask.count + 1,
+							  }
+							: task
+					)
+				);
 			}
 		},
-		// removes all tasks for a single habit
+		// removes all tasks for a single habit, this week only
 		deleteTasks: (state, action: PayloadAction<Habit>) => {
 			const habit = action.payload;
-			const newTasks = Object.fromEntries(
-				Object.entries(state.tasks).map(([day, tasks]) => [
-					day,
-					tasks.filter((task) => task.habitId !== habit.id),
-				])
+			state.tasks = modifyTasks(state.tasks, (tasks) =>
+				tasks.filter((task) => task.habitId !== habit.id)
 			);
-			state.tasks = newTasks;
 		},
 	},
 });
 
-export const { addDailyTasks, editTask, checkOff, deleteTasks } =
+export const { addDailyTasks, editTask, checkOff, deleteTasks, increment } =
 	tasksSlice.actions;
 
 export default tasksSlice.reducer;

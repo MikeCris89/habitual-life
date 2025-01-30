@@ -3,10 +3,7 @@ import { RootState } from "../app/store";
 import { DayKeys, HabitTypes, Task } from "./types";
 import { startOfDay } from "./timeUtils";
 
-export const selectHabits = createSelector(
-	[(state: RootState) => state.habits],
-	(habits) => habits
-);
+export const selectHabits = (state: RootState) => state.habits.habits;
 
 export const selectHabitsToday = createSelector([selectHabits], (habits) =>
 	habits.filter(
@@ -15,10 +12,7 @@ export const selectHabitsToday = createSelector([selectHabits], (habits) =>
 );
 
 // TASKS
-export const selectTasks = createSelector(
-	[(state: RootState) => state.tasks],
-	(tasks) => tasks
-);
+export const selectTasks = (state: RootState) => state.weeklyTasks;
 
 export const selectTasksToday = createSelector(
 	[selectTasks],

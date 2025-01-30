@@ -38,17 +38,18 @@ import { addHabit, editHabit } from "./habitsSlice";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { selectHabits } from "../../utils/selectors";
 import { addDailyTasks } from "../tasks/tasksSlice";
+import { AppDispatch } from "../../app/store";
 
 const initHabit: Habit = {
 	title: "",
 	daysOfWeek: {
-		Sunday: { isTrue: false, label: "S" },
-		Monday: { isTrue: false, label: "M" },
-		Tuesday: { isTrue: false, label: "T" },
-		Wednesday: { isTrue: false, label: "W" },
-		Thursday: { isTrue: false, label: "T" },
-		Friday: { isTrue: false, label: "F" },
-		Saturday: { isTrue: false, label: "S" },
+		Sunday: { isTrue: true, label: "S" },
+		Monday: { isTrue: true, label: "M" },
+		Tuesday: { isTrue: true, label: "T" },
+		Wednesday: { isTrue: true, label: "W" },
+		Thursday: { isTrue: true, label: "T" },
+		Friday: { isTrue: true, label: "F" },
+		Saturday: { isTrue: true, label: "S" },
 	},
 	type: HabitTypes.GOOD,
 	createdAt: new Date().toISOString(),
@@ -67,12 +68,13 @@ const initTypes: Record<HabitType, GoodType | BadType | CounterType> = {
 	bad: {},
 	counter: {
 		minMax: false,
+		total: 0,
 	},
 };
 
 const HabitForm: React.FC = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const { id, type } = useParams();
 	const habits = useSelector(selectHabits);
@@ -213,7 +215,7 @@ const HabitForm: React.FC = () => {
 	};
 
 	return (
-		<Paper sx={{ p: 1 }}>
+		<Paper sx={{ p: 1, width: "600px" }}>
 			<PageNav back={true} title={id ? "Edit Habit" : "Add Habit"} />
 
 			<Box
@@ -234,6 +236,7 @@ const HabitForm: React.FC = () => {
 					onChange={handleChange}
 					fullWidth
 					slotProps={{ input: { inputProps: { maxLength: 50 } } }}
+					required
 				/>
 
 				<FormGroup
@@ -369,6 +372,7 @@ const HabitForm: React.FC = () => {
 							{/* <Typography variant="body2">/day</Typography> */}
 							<TextField
 								type="number"
+								name="total"
 								value={habit.total}
 								label={"Total"}
 								slotProps={{
@@ -381,6 +385,7 @@ const HabitForm: React.FC = () => {
 										},
 									},
 								}}
+								onChange={handleChange}
 							/>
 						</Box>
 					</Box>

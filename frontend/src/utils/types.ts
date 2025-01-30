@@ -12,7 +12,9 @@ export interface TimeOfDay {
 export interface GoodType {
 	timeOfDay: TimeOfDay[];
 }
+
 export interface BadType {}
+
 export interface CounterType {
 	minMax: boolean;
 	total: number;
@@ -57,6 +59,7 @@ export interface GoodTask {
 export interface BadTask {
 	complete: boolean;
 }
+
 export interface CounterTask {
 	minMax: boolean;
 	total: number;
@@ -74,6 +77,7 @@ export interface Task {
 	minMax?: boolean;
 	count?: number;
 	complete?: boolean;
+	total?: number;
 }
 
 export type Stats = Record<HabitType, HabitStats[]>;

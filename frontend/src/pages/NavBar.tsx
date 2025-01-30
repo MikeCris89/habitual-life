@@ -32,6 +32,7 @@ const Nav = {
 	habits: "/habits",
 	add: "/add",
 	account: "/account",
+	calendar: "/calendar",
 } as const;
 
 type NavType = (typeof Nav)[keyof typeof Nav];
@@ -54,18 +55,22 @@ const NavBar: React.FC<Props> = ({ isMobile = true }) => {
 		setValue(newValue);
 		navigate(newValue);
 	};
+
 	return (
 		<Box sx={{ width: "100%" }}>
 			{!isMobile && (
 				<Toolbar sx={topNav}>
 					<Typography variant="h6">Better Habits</Typography>
 					<Toolbar sx={{ justifyContent: "space-around" }}>
-						<NavLink to={"/"}>Home</NavLink>
-						<NavLink to={"/habits"}>Habits</NavLink>
-						<NavLink to={"/add"}>Calendar</NavLink>
+						<NavLink to={Nav.home}>Home</NavLink>
+						<NavLink to={Nav.habits}>Habits</NavLink>
+						<NavLink to={Nav.calendar}>Calendar</NavLink>
 					</Toolbar>
 					<Box sx={{ justifySelf: "end" }}>
-						<ManageAccounts />
+						<ManageAccounts
+							onClick={(e) => handleChange(e, Nav.account)}
+							sx={{ cursor: "pointer" }}
+						/>
 					</Box>
 				</Toolbar>
 			)}
@@ -83,7 +88,7 @@ const NavBar: React.FC<Props> = ({ isMobile = true }) => {
 					/>
 					<BottomNavigationAction
 						label="Calendar"
-						value={Nav.add}
+						value={Nav.calendar}
 						icon={<CalendarIcon />}
 					/>
 					<BottomNavigationAction

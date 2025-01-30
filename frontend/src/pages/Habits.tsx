@@ -1,4 +1,11 @@
-import { Box, Button, Modal, Paper, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Modal,
+	Paper,
+	TextField,
+	Typography,
+} from "@mui/material";
 import HabitCard from "../components/HabitCard";
 import { Habit, HabitType } from "../utils/types";
 import PageNav from "../components/PageNav";
@@ -6,15 +13,22 @@ import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import useDisplay from "../hooks/useDisplay";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { Search } from "@mui/icons-material";
+import { Close, Search } from "@mui/icons-material";
 import AddMenu from "../components/AddMenu";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 type ListProps = {
-	habits: Habit[];
+	habits?: Habit[];
+	search?: string;
 };
 
-const HabitsList: React.FC<ListProps> = ({ habits }) => {
+const HabitsList: React.FC<ListProps> = memo(({ search }) => {
+	let habits = useSelector((state: RootState) => state.habits);
+	if (search)
+		habits = habits.filter((habit) =>
+			habit.title.toLowerCase().includes(search.toLowerCase())
+		);
+
 	return (
 		<Box
 			className="flex-center col gap2"
@@ -22,23 +36,79 @@ const HabitsList: React.FC<ListProps> = ({ habits }) => {
 				width: "100%",
 			}}
 		>
-			{habits.map((habit: Habit, i: number) => (
-				<Box key={habit.title + i} sx={{ width: "100%" }}>
+			{habits.map((habit: Habit) => (
+				<Box key={habit.id} sx={{ width: "100%" }}>
 					<HabitCard habit={habit} />
 				</Box>
 			))}
 		</Box>
 	);
-};
+});
+
+const HabitBar: React.FC<{
+	search: string;
+	setSearch: React.Dispatch<React.SetStateAction<string>>;
+	setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}> = memo(({ search, setSearch, setOpenModal }) => (
+	<Paper
+		className="flex-between"
+		sx={{
+			width: "100%",
+			position: "sticky",
+			top: 0,
+			zIndex: 1,
+			p: 1,
+			backgroundColor: "#e7e7e7",
+			m: 1,
+		}}
+	>
+		<Box className="flex-center gap2">
+			<Search />
+			<TextField
+				type="text"
+				size="small"
+				label="search..."
+				onChange={(e) => setSearch(e.target.value)}
+				value={search}
+				sx={{
+					p: 0,
+					m: 0,
+					fontSize: "12px",
+					"& .MuiOutlinedInput-root": {
+						padding: 0,
+					},
+					"& .MuiInputBase-input": { fontSize: "12px", p: 1 },
+					"& label": { fontSize: "12px" },
+					//color: "primary.contrastText",
+					//"& > *": { backgroundColor: "primary.contrastText" },
+					// "& label[data-shrink='true']": {
+					// 	border: "1px solid black",
+					// 	borderRadius: "4px",
+					// },
+				}}
+			/>
+			{search && <Close fontSize="small" onClick={() => setSearch("")} />}
+		</Box>
+		<Button
+			variant="contained"
+			// sx={{
+			// 	color: "primary.contrastText",
+			// 	borderColor: "primary.contrastText",
+			// }}
+			onClick={() => setOpenModal(true)}
+		>
+			add
+		</Button>
+	</Paper>
+));
 
 const Habits: React.FC = () => {
 	const [openModal, setOpenModal] = useState<boolean>(false);
+	const [search, setSearch] = useState<string>("");
 	const { id, type } = useParams();
 	const location = useLocation();
 	const { isMobile } = useDisplay();
 	const navigate = useNavigate();
-
-	const habits = useSelector((state: RootState) => state.habits);
 
 	const handleMenuNav = (type: HabitType) => {
 		navigate(`add/${type}`);
@@ -50,24 +120,6 @@ const Habits: React.FC = () => {
 	const isView = !isEdit && id;
 
 	const isOutlet = isAdd || isEdit || isView;
-
-	const HabitBar = () => (
-		<Paper
-			className="flex-between"
-			sx={{
-				width: "100%",
-				position: "sticky",
-				top: 0,
-				zIndex: 1,
-				p: 1,
-			}}
-		>
-			<Search />
-			<Button variant="outlined" onClick={() => setOpenModal(true)}>
-				add
-			</Button>
-		</Paper>
-	);
 
 	return (
 		<Box
@@ -89,6 +141,7 @@ const Habits: React.FC = () => {
 			</Modal>
 
 			<Box sx={{ height: "100%", width: "100%", overflow: "hidden" }}>
+				{/* Mobile - full page  */}
 				{isMobile && (
 					<Box
 						sx={{
@@ -99,24 +152,26 @@ const Habits: React.FC = () => {
 					>
 						{!isOutlet && (
 							<Box
-								className="flex-center col"
-								sx={{ minHeight: "100%", position: "relative" }}
+								className="flex col"
+								sx={{
+									minHeight: "100%",
+									position: "relative",
+									justifyContent: "start",
+								}}
 							>
-								{/* <Box
-									className="flex-between"
-									sx={{ width: "100%", position: "sticky" }}
-								>
-									<Search />
-									<Button variant="outlined">add</Button>
-								</Box> */}
-								<HabitBar />
-								<HabitsList habits={habits} />
+								<HabitBar
+									search={search}
+									setSearch={setSearch}
+									setOpenModal={setOpenModal}
+								/>
+								<HabitsList search={search} />
 							</Box>
 						)}
 
 						{isOutlet && <Outlet />}
 					</Box>
 				)}
+				{/*  Desktop - side by side */}
 				{!isMobile && (
 					<Box
 						className="flex-center col"
@@ -141,24 +196,18 @@ const Habits: React.FC = () => {
 									position: "relative",
 								}}
 							>
-								{/* <Paper
-									className="flex-between"
-									sx={{
-										width: "100%",
-										position: "sticky",
-										top: 0,
-										zIndex: 1,
-										p: 1,
-									}}
-								>
-									<Search />
-									<Button variant="outlined">add</Button>
-								</Paper> */}
-								<HabitBar />
-								<HabitsList habits={habits} />
+								<HabitBar
+									search={search}
+									setSearch={setSearch}
+									setOpenModal={setOpenModal}
+								/>
+								<HabitsList search={search} />
 							</Box>
 
-							<Paper sx={{ flex: 1, height: "100%" }}>
+							<Box
+								className="flex-center"
+								sx={{ flex: 1, height: "100%", alignItems: "start" }}
+							>
 								{!isOutlet ? (
 									<Box sx={{ textAlign: "center", color: "gray" }}>
 										<Typography variant="h6">
@@ -168,7 +217,7 @@ const Habits: React.FC = () => {
 								) : (
 									<Outlet />
 								)}
-							</Paper>
+							</Box>
 						</Box>
 					</Box>
 				)}

@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCounterTasksToday } from "../utils/selectors";
-import { checkOff } from "../features/tasks/tasksSlice";
+import { selectCounterTasksToday } from "../../utils/selectors";
+import { increment } from "./tasksSlice";
 
 const CounterTasksToday = () => {
 	const tasksToday = useSelector(selectCounterTasksToday);
@@ -14,7 +14,7 @@ const CounterTasksToday = () => {
 						<Box
 							className="flex-center col"
 							key={task.id}
-							onClick={() => dispatch(checkOff({ id: task.id, value: 1 }))}
+							onClick={() => dispatch(increment({ thisTask: task }))}
 							sx={{ minWidth: 0 }}
 						>
 							<Box>

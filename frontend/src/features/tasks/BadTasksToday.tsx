@@ -1,9 +1,9 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectGoodTasksToday } from "../utils/selectors";
-import { Task } from "../utils/types";
-import { CheckCircleTwoTone } from "@mui/icons-material";
-import { checkOff } from "../features/tasks/tasksSlice";
+import { selectBadTasksToday } from "../../utils/selectors";
+import { Task } from "../../utils/types";
+import { Check } from "@mui/icons-material";
+import { checkOff } from "./tasksSlice";
 
 type TaskProps = {
 	task: Task;
@@ -12,7 +12,7 @@ type TaskProps = {
 const TasksToday: React.FC<TaskProps> = ({ task }) => {
 	const dispatch = useDispatch();
 	return (
-		<Box sx={{ width: "100%" }}>
+		<Box>
 			<Paper className="flex-between" sx={{ p: 1 }}>
 				<Box
 					sx={{
@@ -24,27 +24,30 @@ const TasksToday: React.FC<TaskProps> = ({ task }) => {
 					}}
 				>
 					<Typography variant="body1">{task.title}</Typography>
-					<Typography variant="body2">
-						{new Date(task.dateTime).toLocaleString()}
-					</Typography>
 				</Box>
 				<Button
+					size="small"
 					variant={task.complete ? "contained" : "outlined"}
-					color="success"
 					onClick={() => {
 						console.log("onClick Task: ", task);
 						dispatch(checkOff(task));
 					}}
+					sx={{
+						borderRadius: "50%",
+						padding: 0,
+						minHeight: 40,
+						minWidth: 40,
+					}}
 				>
-					<CheckCircleTwoTone />
+					<Check />
 				</Button>
 			</Paper>
 		</Box>
 	);
 };
 
-const GoodTasksToday: React.FC = () => {
-	const tasksToday = useSelector(selectGoodTasksToday);
+const BadTasksToday: React.FC = () => {
+	const tasksToday = useSelector(selectBadTasksToday);
 
 	return (
 		<div>
@@ -63,4 +66,4 @@ const GoodTasksToday: React.FC = () => {
 	);
 };
 
-export default GoodTasksToday;
+export default BadTasksToday;

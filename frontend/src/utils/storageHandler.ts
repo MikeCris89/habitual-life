@@ -1,17 +1,17 @@
+import { dbActions } from "./indexedDb";
 import { startOfWeek } from "./timeUtils";
 import { Habit, WeeklyTasks } from "./types";
 
-export const getHabits = (): Habit[] => {
-	const data = localStorage.getItem("habits");
-	return data ? JSON.parse(data) : [];
+export const getHabits = async (): Promise<Habit[]> => {
+	const data = await dbActions.getAll("habits");
+	return data || [];
 };
 
-export const getTasks = (): WeeklyTasks | null => {
-	const data = localStorage.getItem("tasks");
-	if (!data) return null;
-	const parsed = JSON.parse(data);
+export const getTasks = async (): Promise<WeeklyTasks | null> => {
+	const data = await dbActions.getAll("tasks");
+	if (!data.length) return null;
 	const weekStart = startOfWeek();
-	const newData = parsed.find(
+	const newData = data.find(
 		(week: WeeklyTasks) =>
 			weekStart >= week.weekStart && weekStart < week.weekEnd
 	);
@@ -34,7 +34,9 @@ export const setTasks = (weeklyTasks: WeeklyTasks) => {
 	localStorage.setItem("tasks", JSON.stringify(allTasks));
 };
 
-export const setData = (key: string, data: unknown): void => {
-	if (data !== undefined && data !== null)
-		localStorage.setItem(key, JSON.stringify(data));
+export const setData = async (key: string, data: unknown): Promise<void> => {
+	if (data !== undefined && data !== null) {
+		const resp = await dbActions.add(key, data);
+		return resp;
+	}
 };

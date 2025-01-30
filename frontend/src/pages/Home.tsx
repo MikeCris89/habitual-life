@@ -1,11 +1,11 @@
 import { Box, Button } from "@mui/material";
 import PageNav from "../components/PageNav";
-import GoodTasksToday from "../components/GoodTasksToday";
-import CounterTasksToday from "../components/CounterTasksToday";
+import GoodTasksToday from "../features/tasks/GoodTasksToday";
+import CounterTasksToday from "../features/tasks/CounterTasksToday";
 import { useDispatch, useSelector } from "react-redux";
 import { selectHabits, selectTasksToday } from "../utils/selectors";
 import { addDailyTasks } from "../features/tasks/tasksSlice";
-import BadTasksToday from "../components/BadTasksToday";
+import BadTasksToday from "../features/tasks/BadTasksToday";
 import { useState } from "react";
 
 const Home = () => {
