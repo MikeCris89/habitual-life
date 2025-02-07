@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
-import { RootState } from "../app/store";
-import { DayKeys, HabitTypes, Task } from "./types";
-import { startOfDay } from "./timeUtils";
+import { RootState } from "./thunksStore";
+import { DayKeys, HabitTypes, Task } from "../../utils/types";
+import { startOfDay } from "../../utils/timeUtils";
 
 export const selectHabits = (state: RootState) => state.habits.habits;
 

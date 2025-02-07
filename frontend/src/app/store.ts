@@ -1,16 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import habitsReducer from "../features/habits/habitsSlice";
-import tasksReducer from "../features/tasks/tasksSlice";
+import { habitsApi } from "../features/habits/habitsApi";
+import { setupListeners } from "@reduxjs/toolkit/query";
 
-const store = configureStore({
+export const store = configureStore({
 	reducer: {
-		habits: habitsReducer,
-		weeklyTasks: tasksReducer,
+		[habitsApi.reducerPath]: habitsApi.reducer,
 	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(habitsApi.middleware),
 });
 
-export default store;
+setupListeners(store.dispatch);
 
-// Export RootState and AppDispatch types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

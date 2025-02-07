@@ -9,7 +9,6 @@ import {
 	WeeklyTasks,
 } from "../../utils/types";
 import { endOfWeek, startOfDay, startOfWeek } from "../../utils/timeUtils";
-import { getTasks } from "../../utils/storageHandler";
 import { nanoid } from "nanoid";
 
 const initTask: Task = {
@@ -21,7 +20,7 @@ const initTask: Task = {
 	complete: false,
 };
 
-const initialState: WeeklyTasks = getTasks() ?? {
+const initialState: WeeklyTasks = {
 	weekStart: startOfWeek(),
 	weekEnd: endOfWeek(),
 	tasks: {},
@@ -60,7 +59,7 @@ const tasksSlice = createSlice({
 	name: "weeklyTasks",
 	initialState,
 	reducers: {
-		addDailyTasks: (
+		addDailyTasksOld: (
 			state,
 			action: PayloadAction<{ habits: Habit[]; date?: string }>
 		) => {
@@ -110,7 +109,7 @@ const tasksSlice = createSlice({
 				];
 			});
 		},
-		editTask: (state, action: PayloadAction<Task>) => {
+		editTaskOld: (state, action: PayloadAction<Task>) => {
 			const thisTask = action.payload;
 			if (
 				thisTask.dateTime >= state.weekStart &&
@@ -121,7 +120,7 @@ const tasksSlice = createSlice({
 				);
 			}
 		},
-		editDailyTasks: (state, action: PayloadAction<Habit>) => {
+		editDailyTasksOld: (state, action: PayloadAction<Habit>) => {
 			const habit = action.payload;
 			state.tasks = modifyTasks(state.tasks, (tasks) =>
 				tasks.filter(
@@ -131,12 +130,12 @@ const tasksSlice = createSlice({
 						task.dateTime > new Date().toISOString()
 				)
 			);
-			tasksSlice.caseReducers.addDailyTasks(state, {
+			tasksSlice.caseReducers.addDailyTasksOld(state, {
 				payload: { habits: [habit], date: startOfDay() },
 				type: "tasks/addDailyTasks",
 			});
 		},
-		checkOff: (state, action: PayloadAction<Task>) => {
+		checkOffOld: (state, action: PayloadAction<Task>) => {
 			state.tasks = modifyTasks(state.tasks, (tasks) =>
 				tasks.map((task) =>
 					task.id === action.payload.id
@@ -145,7 +144,7 @@ const tasksSlice = createSlice({
 				)
 			);
 		},
-		increment: (
+		incrementOld: (
 			state,
 			action: PayloadAction<{ thisTask: Task; value?: number }>
 		) => {
@@ -164,7 +163,7 @@ const tasksSlice = createSlice({
 			}
 		},
 		// removes all tasks for a single habit, this week only
-		deleteTasks: (state, action: PayloadAction<Habit>) => {
+		deleteTasksOld: (state, action: PayloadAction<Habit>) => {
 			const habit = action.payload;
 			state.tasks = modifyTasks(state.tasks, (tasks) =>
 				tasks.filter((task) => task.habitId !== habit.id)
@@ -173,7 +172,12 @@ const tasksSlice = createSlice({
 	},
 });
 
-export const { addDailyTasks, editTask, checkOff, deleteTasks, increment } =
-	tasksSlice.actions;
+export const {
+	addDailyTasksOld,
+	editTaskOld,
+	checkOffOld,
+	deleteTasksOld,
+	incrementOld,
+} = tasksSlice.actions;
 
 export default tasksSlice.reducer;

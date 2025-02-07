@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCounterTasksToday } from "../../utils/selectors";
-import { increment } from "./tasksSlice";
+import { selectCounterTasksToday } from "../legacy/oldSelectors";
+import { increment } from "../legacy/tasksSlice";
 
 const CounterTasksToday = () => {
 	const tasksToday = useSelector(selectCounterTasksToday);

@@ -9,7 +9,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
 	BadType,
 	CounterType,
@@ -34,13 +34,16 @@ import dayjs, { Dayjs } from "dayjs";
 import PageNav from "../../components/PageNav";
 import { Add, RemoveCircleOutline } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { addHabit, editHabit } from "./habitsSlice";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { selectHabits } from "../../utils/selectors";
-import { addDailyTasks } from "../tasks/tasksSlice";
-import { AppDispatch } from "../../app/store";
+import { startOfDay } from "../../utils/timeUtils";
+import { useGetHabitsQuery } from "./habitsApi";
 
-const initHabit: Habit = {
+const initTimeOfDay = {
+	id: 0,
+	time: startOfDay(),
+};
+
+const initHabit: HabitBase = {
 	title: "",
 	daysOfWeek: {
 		Sunday: { isTrue: true, label: "S" },
@@ -51,68 +54,87 @@ const initHabit: Habit = {
 		Friday: { isTrue: true, label: "F" },
 		Saturday: { isTrue: true, label: "S" },
 	},
-	type: HabitTypes.GOOD,
 	createdAt: new Date().toISOString(),
+	timeOfDay: [{ ...initTimeOfDay }],
 	id: "",
 };
 
-const initTimeOfDay = {
-	id: 0,
-	time: "",
-};
-
-const initTypes: Record<HabitType, GoodType | BadType | CounterType> = {
+const initTypes: Record<HabitType, Habit> = {
 	good: {
-		timeOfDay: [{ ...initTimeOfDay }],
+		...initHabit,
+		type: HabitTypes.GOOD,
 	},
-	bad: {},
+	bad: {
+		...initHabit,
+		title: "No - ",
+		type: HabitTypes.BAD,
+	},
 	counter: {
-		minMax: false,
+		...initHabit,
+		type: HabitTypes.COUNTER,
+		max: false,
 		total: 0,
 	},
 };
 
 const HabitForm: React.FC = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch<AppDispatch>();
+	//const dispatch = useDispatch<AppDispatch>();
 
 	const { id, type } = useParams();
-	const habits = useSelector(selectHabits);
+	const {
+		data: habits,
+		isLoading,
+		error,
+		isFetching,
+		refetch,
+	} = useGetHabitsQuery();
 	const [searchParams] = useSearchParams();
 
+	const habitToEdit = useMemo(() => {
+		if (id) return habits?.find((habit) => habit.id === id);
+		return undefined;
+	}, [id, habits]);
+
+	const habitType = useMemo(() => {
+		if (habitToEdit) return habitToEdit.type;
+		if (type && isValidType(type)) return type;
+		navigate(-1);
+		throw new Error("Habit Type not found.");
+	}, [type, habitToEdit, navigate]);
+
 	const [habit, setHabit] = useState<Habit>({
-		...initHabit,
-		...initTypes[initHabit.type],
+		...(habitToEdit ?? initTypes[habitType]),
 	});
 
-	useEffect(() => {
-		let habitToEdit;
-		let addType;
-		if (id) {
-			habitToEdit = habits.find((habit) => habit.id === id);
-			if (!habitToEdit) throw new Error(`Habit Not Found. ID: ${id}`);
-			addType = habitToEdit.type;
-		} else if (type) {
-			addType = type;
-		}
+	// useEffect(() => {
+	// 	let habitToEdit;
+	// 	let addType;
+	// 	if (id) {
+	// 		habitToEdit = habits.find((habit) => habit.id === id);
+	// 		if (!habitToEdit) throw new Error(`Habit Not Found. ID: ${id}`);
+	// 		addType = habitToEdit.type;
+	// 	} else if (type) {
+	// 		addType = type;
+	// 	}
 
-		if (!habitToEdit && (!addType || !isValidType(addType))) {
-			navigate(-1);
-			return;
-		}
-		if (!addType || !isValidType(addType)) {
-			navigate(-1);
-			return;
-		}
+	// 	if (!habitToEdit && (!addType || !isValidType(addType))) {
+	// 		navigate(-1);
+	// 		return;
+	// 	}
+	// 	if (!addType || !isValidType(addType)) {
+	// 		navigate(-1);
+	// 		return;
+	// 	}
 
-		setHabit(
-			habitToEdit
-				? { ...habitToEdit, daysOfWeek: { ...habitToEdit.daysOfWeek } }
-				: addType === HabitTypes.BAD
-				? { ...initHabit, type: addType, ...initTypes[addType], title: "No - " }
-				: { ...initHabit, type: addType, ...initTypes[addType] }
-		);
-	}, [id, searchParams, habits, navigate, type]);
+	// 	setHabit(
+	// 		habitToEdit
+	// 			? { ...habitToEdit, daysOfWeek: { ...habitToEdit.daysOfWeek } }
+	// 			: addType === HabitTypes.BAD
+	// 			? { ...initHabit, type: addType, ...initTypes[addType], title: "No - " }
+	// 			: { ...initHabit, type: addType, ...initTypes[addType] }
+	// 	);
+	// }, [id, searchParams, habits, navigate, type]);
 
 	// GoodHabit time of day
 	const getTimeId = (habit: HabitBase & GoodType) => {

@@ -3,7 +3,7 @@ import NavBar from "./NavBar";
 import { Box } from "@mui/material";
 import useDisplay from "../hooks/useDisplay";
 import { useSelector } from "react-redux";
-import { RootState } from "../app/store";
+import { RootState } from "../features/legacy/thunksStore";
 
 const Root = () => {
 	const { isMobile } = useDisplay();

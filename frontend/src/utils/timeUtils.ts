@@ -9,20 +9,19 @@ export const formatTime = (
 	return today.toISOString();
 };
 
-export const startOfDay = (): string =>
-	new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
+export const startOfDay = (date: Date = new Date()): string =>
+	new Date(date.setHours(0, 0, 0, 0)).toISOString();
 
-export const startOfWeek = (): string => {
-	const date = new Date(startOfDay());
+export const startOfWeek = (date: Date = new Date()): string => {
 	const dayOfWeek = date.getDay();
 
 	date.setDate(date.getDate() - dayOfWeek);
-	return date.toISOString();
+	return new Date(date.setHours(0, 0, 0, 0)).toISOString();
 };
 
-export const endOfWeek = (): string => {
-	const date = new Date(startOfWeek());
-	date.setDate(date.getDate() + 7);
+export const endOfWeek = (date: Date = new Date()): string => {
+	const end = new Date(startOfWeek(date));
+	end.setDate(date.getDate() + 7);
 
-	return date.toISOString();
+	return end.toISOString();
 };

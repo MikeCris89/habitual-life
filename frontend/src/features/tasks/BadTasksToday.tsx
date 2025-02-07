@@ -1,9 +1,9 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectBadTasksToday } from "../../utils/selectors";
+import { selectBadTasksToday } from "../legacy/oldSelectors";
 import { Task } from "../../utils/types";
 import { Check } from "@mui/icons-material";
-import { checkOff } from "./tasksSlice";
+import { checkOff } from "../legacy/tasksSlice";
 
 type TaskProps = {
 	task: Task;

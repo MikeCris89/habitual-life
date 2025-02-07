@@ -1,13 +1,13 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { Days } from "../../components/HabitCard";
+import { Days } from "./HabitCard";
 import PageNav from "../../components/PageNav";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState } from "../legacy/thunksStore";
 import { formatTime } from "../../utils/timeUtils";
-import { deleteHabit } from "./habitsSlice";
+import { deleteHabit } from "../legacy/habitsSlice";
 import { isGoodHabit } from "../../utils/types";
-import { deleteTasks } from "../tasks/tasksSlice";
+import { deleteTasks } from "../legacy/tasksSlice";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();

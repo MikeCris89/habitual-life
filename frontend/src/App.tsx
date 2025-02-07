@@ -5,7 +5,7 @@ import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setData, setTasks } from "./utils/storageHandler";
-import { selectHabits, selectTasks } from "./utils/selectors";
+import { selectHabits, selectTasks } from "./features/legacy/oldSelectors";
 
 function App() {
 	const theme = createTheme({

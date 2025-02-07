@@ -9,14 +9,18 @@ export interface TimeOfDay {
 	time: string;
 }
 
-export interface GoodType {
+export interface GoodType extends HabitBase {
+	type: "good";
 	timeOfDay: TimeOfDay[];
 }
 
-export interface BadType {}
+export interface BadType extends HabitBase {
+	type: "bad";
+}
 
-export interface CounterType {
-	minMax: boolean;
+export interface CounterType extends HabitBase {
+	type: "counter";
+	max: boolean;
 	total: number;
 }
 
@@ -28,56 +32,63 @@ export const HabitTypes = {
 
 export type HabitType = (typeof HabitTypes)[keyof typeof HabitTypes];
 
-export type Habit =
-	| (HabitBase & GoodType)
-	| (HabitBase & BadType)
-	| (HabitBase & CounterType);
+// export type Habit =
+// 	| (HabitBase & GoodType)
+// 	| (HabitBase & BadType)
+// 	| (HabitBase & CounterType);
+
+export type Habit = GoodType | BadType | CounterType;
 
 export interface HabitBase {
 	title: string;
 	daysOfWeek: DaysOfWeek;
-	type: HabitType;
-	timeOfDay?: TimeOfDay[];
-	minMax?: boolean;
+	// type: HabitType;
+	timeOfDay: TimeOfDay[];
+	// minMax?: boolean;
 	id: string;
 	createdAt: string;
 }
 
 export interface HabitStats {
 	title: string; // to have quick access to title of habit
-	id: string; // habit id
+	id: string;
 	totalTasks: number;
 	completeTasks: number;
 	totalCount?: number; // total count for counter types
 	completeCount?: number; //counter for counter types
 }
 
-export interface GoodTask {
-	timeOfDay: TimeOfDay;
-	complete: boolean;
+export interface GoodTask extends TaskBase {
+	type: "good";
+	//timeOfDay: TimeOfDay;
+	//complete: boolean;
 }
-export interface BadTask {
-	complete: boolean;
+export interface BadTask extends TaskBase {
+	type: "bad";
+	//complete: boolean;
 }
 
-export interface CounterTask {
-	minMax: boolean;
+export interface CounterTask extends TaskBase {
+	type: "counter";
+	max: boolean;
 	total: number;
 	count: number;
-	complete: boolean;
+	//complete: boolean;
 }
 
-export interface Task {
+export type Task = GoodTask | BadTask | CounterTask;
+
+export interface TaskBase {
 	title: string;
 	id: string;
-	type: HabitType;
+	//type: HabitType;
 	habitId: string;
 	dateTime: string;
-	timeOfDay?: TimeOfDay;
-	minMax?: boolean;
-	count?: number;
-	complete?: boolean;
-	total?: number;
+	// timeOfDay?: TimeOfDay;
+	// minMax?: boolean;
+	// count?: number;
+	complete: boolean;
+	// total?: number;
 }
 
 export type Stats = Record<HabitType, HabitStats[]>;
@@ -127,14 +138,12 @@ export const isValidType = (type: string): type is HabitType => {
 	return Object.values(HabitTypes).some((entry) => entry === type);
 };
 
-export const isGoodHabit = (habit: Habit): habit is HabitBase & GoodType => {
+export const isGoodHabit = (habit: Habit): habit is GoodType => {
 	return habit.type === HabitTypes.GOOD && "timeOfDay" in habit;
 };
 
-export const isCounterHabit = (
-	habit: Habit
-): habit is HabitBase & CounterType => {
-	return habit.type === HabitTypes.COUNTER && "minMax" in habit;
+export const isCounterHabit = (habit: Habit): habit is CounterType => {
+	return habit.type === HabitTypes.COUNTER && "max" in habit;
 };
 
 // TASKS

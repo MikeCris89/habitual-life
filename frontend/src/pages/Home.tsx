@@ -3,8 +3,11 @@ import PageNav from "../components/PageNav";
 import GoodTasksToday from "../features/tasks/GoodTasksToday";
 import CounterTasksToday from "../features/tasks/CounterTasksToday";
 import { useDispatch, useSelector } from "react-redux";
-import { selectHabits, selectTasksToday } from "../utils/selectors";
-import { addDailyTasks } from "../features/tasks/tasksSlice";
+import {
+	selectHabits,
+	selectTasksToday,
+} from "../features/legacy/oldSelectors";
+import { addDailyTasks } from "../features/legacy/tasksSlice";
 import BadTasksToday from "../features/tasks/BadTasksToday";
 import { useState } from "react";
 

@@ -1,7 +1,7 @@
 import { Box, Card, Typography } from "@mui/material";
-import { DaysOfWeek, Habit } from "../utils/types";
+import { DaysOfWeek, Habit } from "../../utils/types";
 import { useNavigate } from "react-router-dom";
-import { dayStyle, dayActive } from "../utils/styles";
+import { dayStyle, dayActive } from "../../utils/styles";
 
 type CardProps = {
 	habit: Habit;

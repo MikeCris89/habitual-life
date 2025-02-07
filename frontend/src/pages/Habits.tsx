@@ -6,11 +6,11 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import HabitCard from "../components/HabitCard";
+import HabitCard from "../features/habits/HabitCard";
 import { Habit, HabitType } from "../utils/types";
 import PageNav from "../components/PageNav";
 import { useSelector } from "react-redux";
-import { RootState } from "../app/store";
+import { RootState } from "../features/legacy/thunksStore";
 import useDisplay from "../hooks/useDisplay";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Close, Search } from "@mui/icons-material";
