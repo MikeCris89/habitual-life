@@ -1,20 +1,20 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCounterTasksToday } from "../legacy/oldSelectors";
-import { increment } from "../legacy/tasksSlice";
-
-const CounterTasksToday = () => {
-	const tasksToday = useSelector(selectCounterTasksToday);
-	const dispatch = useDispatch();
+import { CounterTask } from "../../utils/types";
+import { useIncrementCounterMutation } from "./tasksApi";
+type Props = {
+	tasks: CounterTask[];
+};
+const CounterTasksToday: React.FC<Props> = ({ tasks }) => {
+	const [incrementTask, { isLoading, error }] = useIncrementCounterMutation();
 	return (
 		<Box sx={{ p: 2, width: "100%" }}>
-			{tasksToday && (
+			{tasks && (
 				<Box className="flex-center gap4" sx={{ overflow: "auto" }}>
-					{tasksToday.map((task) => (
+					{tasks.map((task) => (
 						<Box
 							className="flex-center col"
 							key={task.id}
-							onClick={() => dispatch(increment({ thisTask: task }))}
+							onClick={() => incrementTask({ task })}
 							sx={{ minWidth: 0 }}
 						>
 							<Box>

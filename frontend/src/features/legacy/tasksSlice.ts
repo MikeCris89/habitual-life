@@ -6,6 +6,7 @@ import {
 	isCounterTask,
 	isGoodHabit,
 	Task,
+	TaskBase,
 	WeeklyTasks,
 } from "../../utils/types";
 import { endOfWeek, startOfDay, startOfWeek } from "../../utils/timeUtils";
@@ -29,21 +30,24 @@ const initialState: WeeklyTasks = {
 };
 
 const createTask = (habit: Habit, date: string): Task => {
-	const task: Task = {
+	const task: TaskBase = {
 		...initTask,
 		title: habit.title,
 		habitId: habit.id,
-		type: habit.type,
 		dateTime: date,
 		id: nanoid(),
 	};
 
 	if (isCounterHabit(habit)) {
-		task.total = habit.total;
-		task.minMax = habit.minMax;
-		task.count = 0;
+		return {
+			...task,
+			type: habit.type,
+			max: habit.max,
+			total: habit.total,
+			count: 0,
+		};
 	}
-	return task;
+	return { ...task, type: habit.type };
 };
 
 const modifyTasks = (

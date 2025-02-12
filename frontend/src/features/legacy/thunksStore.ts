@@ -12,5 +12,5 @@ const thunksStore = configureStore({
 export default thunksStore;
 
 // Export RootState and AppDispatch types
-//export type RootState = ReturnType<typeof thunksStore.getState>;
-//export type AppDispatch = typeof thunksStore.dispatch;
+export type RootStateOld = ReturnType<typeof thunksStore.getState>;
+export type AppDispatchOld = typeof thunksStore.dispatch;

@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 import { endOfWeek, startOfDay, startOfWeek } from "./timeUtils";
-import { Task } from "./types";
+import { Habit, Task } from "./types";
 
 const dbPromise = openDB("habitsDB", 1, {
 	upgrade(db) {
@@ -9,12 +9,30 @@ const dbPromise = openDB("habitsDB", 1, {
 		}
 
 		if (!db.objectStoreNames.contains("tasks")) {
-			db.createObjectStore("tasks", { keyPath: "id" });
+			const store = db.createObjectStore("tasks", {
+				keyPath: "id",
+			});
+			store.createIndex("habitId", "habitId", { unique: false });
+			store.createIndex("dateTime", "dateTime", { unique: false });
+		}
+		if (!db.objectStoreNames.contains("meta")) {
+			db.createObjectStore("meta", { keyPath: "key" });
+		}
+		if (!db.objectStoreNames.contains("errorLogs")) {
+			db.createObjectStore("errorLogs", { keyPath: "id", autoIncrement: true });
 		}
 	},
 });
 
 export const dbActions = {
+	async getLastCreatedDate(): Promise<string | null> {
+		const db = await dbPromise;
+		return await db.get("meta", "lastCreatedDate");
+	},
+	async setLastCreateDate(date: string) {
+		const db = await dbPromise;
+		await db.put("meta", date, "lastCreatedDate");
+	},
 	async add(storeName: string, data: any) {
 		const db = await dbPromise;
 		const tx = db.transaction(storeName, "readwrite");
@@ -33,21 +51,44 @@ export const dbActions = {
 	},
 	async getWeeklyTasks(date: Date = new Date()) {
 		const db = await dbPromise;
-		const weekStart = startOfWeek(date);
-		const weekEnd = endOfWeek(date);
-		const allTasks = await db.getAll("tasks");
-		return allTasks.filter(
-			(task) => task.date >= weekStart && task.date < weekEnd
+		const tx = db.transaction("tasks", "readonly");
+		const store = tx.objectStore("tasks");
+		const index = store.index("dateTime");
+		const tasks = [];
+
+		let cursor = await index.openCursor(
+			IDBKeyRange.bound(startOfWeek(date), endOfWeek(date), false, true)
 		);
+
+		while (cursor) {
+			tasks.push(cursor.value);
+			cursor = await cursor.continue();
+		}
+
+		await tx.done;
+		return tasks;
 	},
-	async getDailyTasks(date: Date = new Date()) {
+	async getDailyTasks(date: Date) {
 		const db = await dbPromise;
 		const thisDay = new Date(startOfDay(date));
-		const nextDay = new Date(thisDay.getDate() + 1);
-		const allTasks = await db.getAll("tasks");
-		return allTasks.filter(
-			(task) => task.date >= thisDay && task.date < nextDay
+		const nextDay = new Date(thisDay);
+		nextDay.setDate(nextDay.getDate() + 1);
+		const tx = db.transaction("tasks", "readonly");
+		const store = tx.objectStore("tasks");
+		const index = store.index("dateTime");
+		const tasks = [];
+
+		let cursor = await index.openCursor(
+			IDBKeyRange.bound(startOfDay(date), nextDay.toISOString(), false, true)
 		);
+
+		while (cursor) {
+			tasks.push(cursor.value);
+			cursor = await cursor.continue();
+		}
+		await tx.done;
+
+		return tasks;
 	},
 	async batchCreateDailyTasks(tasks: Task[]) {
 		const db = await dbPromise;
@@ -62,5 +103,37 @@ export const dbActions = {
 		const store = tx.objectStore(storeName);
 		await store.delete(id);
 		await tx.done;
+	},
+	async batchDeleteTasks(habit: Habit) {
+		const db = await dbPromise;
+		const tx = db.transaction("tasks", "readwrite");
+		const store = tx.objectStore("tasks");
+		const index = store.index("habitId");
+
+		let cursor = await index.openCursor();
+
+		while (cursor) {
+			if (cursor.value.habitId === habit.id) {
+				await cursor.delete();
+			}
+			cursor = await cursor.continue();
+		}
+		await tx.done;
+	},
+	async logError(error: unknown) {
+		try {
+			const db = await dbPromise;
+			const tx = db.transaction("errorLogs", "readwrite");
+			const store = tx.objectStore("errorLogs");
+			if (error) {
+				await store.put({
+					timestamp: new Date().toISOString(),
+					error: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+				});
+			}
+			await tx.done;
+		} catch (e) {
+			console.log("error logging error: ", e);
+		}
 	},
 };

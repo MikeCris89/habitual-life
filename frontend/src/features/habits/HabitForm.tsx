@@ -9,10 +9,8 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
-	BadType,
-	CounterType,
 	DayKey,
 	DayKeys,
 	DaysOfWeek,
@@ -33,10 +31,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import PageNav from "../../components/PageNav";
 import { Add, RemoveCircleOutline } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { startOfDay } from "../../utils/timeUtils";
-import { useGetHabitsQuery } from "./habitsApi";
+import {
+	useAddHabitMutation,
+	useEditHabitMutation,
+	useGetHabitsQuery,
+} from "./habitsApi";
 
 const initTimeOfDay = {
 	id: 0,
@@ -79,17 +80,36 @@ const initTypes: Record<HabitType, Habit> = {
 
 const HabitForm: React.FC = () => {
 	const navigate = useNavigate();
-	//const dispatch = useDispatch<AppDispatch>();
-
 	const { id, type } = useParams();
 	const {
 		data: habits,
-		isLoading,
-		error,
-		isFetching,
-		refetch,
+		isLoading: fetchLoading,
+		error: fetchError,
 	} = useGetHabitsQuery();
-	const [searchParams] = useSearchParams();
+
+	const [
+		addHabit,
+		{
+			isLoading: addLoading,
+			isSuccess: addSuccess,
+			isError: addIsError,
+			error: addError,
+		},
+	] = useAddHabitMutation();
+
+	const [
+		editHabit,
+		{
+			isLoading: editLoading,
+			isSuccess: editSuccess,
+			isError: editIsError,
+			error: editError,
+		},
+	] = useEditHabitMutation();
+
+	if (fetchError) throw new Error("Error fetching habits.");
+
+	//const [searchParams] = useSearchParams();
 
 	const habitToEdit = useMemo(() => {
 		if (id) return habits?.find((habit) => habit.id === id);
@@ -99,9 +119,8 @@ const HabitForm: React.FC = () => {
 	const habitType = useMemo(() => {
 		if (habitToEdit) return habitToEdit.type;
 		if (type && isValidType(type)) return type;
-		navigate(-1);
 		throw new Error("Habit Type not found.");
-	}, [type, habitToEdit, navigate]);
+	}, [type, habitToEdit]);
 
 	const [habit, setHabit] = useState<Habit>({
 		...(habitToEdit ?? initTypes[habitType]),
@@ -224,16 +243,13 @@ const HabitForm: React.FC = () => {
 		e.preventDefault();
 
 		if (id) {
-			dispatch(editHabit(habit));
+			editHabit(habit);
 			navigate(-1);
 		} else {
-			dispatch(addHabit(habit));
-			dispatch(addDailyTasks({ habits: [habit] }));
+			addHabit(habit);
+			// addDailyTasks({ habits: [habit] });
 		}
-		setHabit({
-			...initHabit,
-			createdAt: new Date().toISOString(),
-		});
+		navigate(-1);
 	};
 
 	return (
@@ -372,7 +388,7 @@ const HabitForm: React.FC = () => {
 						<FormControlLabel
 							control={
 								<Switch
-									checked={habit.minMax}
+									checked={habit.max}
 									onChange={(e) =>
 										setHabit((prev) => {
 											if (isCounterHabit(prev))
@@ -389,7 +405,7 @@ const HabitForm: React.FC = () => {
 						/>
 						<Box className="flex-between">
 							<Typography variant="h6">
-								{habit.minMax ? "Maximum" : "Minimum"} /day
+								{habit.max ? "Maximum" : "Minimum"} /day
 							</Typography>
 							{/* <Typography variant="body2">/day</Typography> */}
 							<TextField

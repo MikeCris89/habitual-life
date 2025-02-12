@@ -1,16 +1,15 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { selectBadTasksToday } from "../legacy/oldSelectors";
-import { Task } from "../../utils/types";
+import { BadTask, Task } from "../../utils/types";
 import { Check } from "@mui/icons-material";
-import { checkOff } from "../legacy/tasksSlice";
+import { useCheckOffTaskMutation } from "./tasksApi";
 
 type TaskProps = {
 	task: Task;
 };
 
 const TasksToday: React.FC<TaskProps> = ({ task }) => {
-	const dispatch = useDispatch();
+	const [checkOffTask, { isLoading: loadingCheck, error: errorCheck }] =
+		useCheckOffTaskMutation();
 	return (
 		<Box>
 			<Paper className="flex-between" sx={{ p: 1 }}>
@@ -30,7 +29,7 @@ const TasksToday: React.FC<TaskProps> = ({ task }) => {
 					variant={task.complete ? "contained" : "outlined"}
 					onClick={() => {
 						console.log("onClick Task: ", task);
-						dispatch(checkOff(task));
+						checkOffTask(task);
 					}}
 					sx={{
 						borderRadius: "50%",
@@ -45,15 +44,15 @@ const TasksToday: React.FC<TaskProps> = ({ task }) => {
 		</Box>
 	);
 };
-
-const BadTasksToday: React.FC = () => {
-	const tasksToday = useSelector(selectBadTasksToday);
-
+type Props = {
+	tasks: BadTask[];
+};
+const BadTasksToday: React.FC<Props> = ({ tasks }) => {
 	return (
 		<div>
-			{tasksToday && tasksToday.length > 0 ? (
+			{tasks && tasks.length > 0 ? (
 				<Box className="flex-center col gap2">
-					{tasksToday.map((task, i) => (
+					{tasks.map((task, i) => (
 						<Box key={`${task.id}-${i}`} sx={{ width: "100%" }}>
 							<TasksToday task={task} />
 						</Box>

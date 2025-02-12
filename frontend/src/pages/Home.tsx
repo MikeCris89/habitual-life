@@ -2,30 +2,47 @@ import { Box, Button } from "@mui/material";
 import PageNav from "../components/PageNav";
 import GoodTasksToday from "../features/tasks/GoodTasksToday";
 import CounterTasksToday from "../features/tasks/CounterTasksToday";
-import { useDispatch, useSelector } from "react-redux";
-import {
-	selectHabits,
-	selectTasksToday,
-} from "../features/legacy/oldSelectors";
-import { addDailyTasks } from "../features/legacy/tasksSlice";
 import BadTasksToday from "../features/tasks/BadTasksToday";
 import { useState } from "react";
+import { useGetHabitsQuery } from "../features/habits/habitsApi";
+import {
+	useCreateDailyTasksMutation,
+	useGetDailyTasksQuery,
+} from "../features/tasks/tasksApi";
+import { isBadTask, isCounterTask, isGoodTask } from "../utils/types";
 
 const Home = () => {
-	const dispatch = useDispatch();
-	const habits = useSelector(selectHabits);
-	const tasksToday = useSelector(selectTasksToday);
+	const {
+		data: habits,
+		isLoading: loadingHabits,
+		error: errorHabits,
+	} = useGetHabitsQuery();
+	const {
+		data: tasksToday = [],
+		isLoading: loadingTasks,
+		error: loadingError,
+	} = useGetDailyTasksQuery();
+	const [
+		createDailyTasks,
+		{ isLoading: loadingCreateTasks, error: errorCreateTasks },
+	] = useCreateDailyTasksMutation();
+
 	const [tab, setTab] = useState(false);
 
-	if (!tasksToday && habits) {
-		dispatch(addDailyTasks({ habits: habits }));
-	}
+	// if ((!tasksToday || !tasksToday.length) && habits) {
+	// 	createDailyTasks(habits);
+	// }
+
+	const goodTasks = tasksToday.filter(isGoodTask);
+	const badTasks = tasksToday.filter(isBadTask);
+	const counterTasks = tasksToday.filter(isCounterTask);
+
 	return (
 		<Box sx={{ width: "100%" }}>
 			<PageNav title="Home" />
 			<Box className="flex-column">
 				<Box sx={{ height: "100%", overflow: "hidden", width: "100%" }}>
-					<CounterTasksToday />
+					<CounterTasksToday tasks={counterTasks} />
 				</Box>
 				<Box sx={{ width: "80%", margin: "auto" }}>
 					<Box className="flex-center">
@@ -44,7 +61,11 @@ const Home = () => {
 							No-no List
 						</Button>
 					</Box>
-					{!tab ? <GoodTasksToday /> : <BadTasksToday />}
+					{!tab ? (
+						<GoodTasksToday tasks={goodTasks} />
+					) : (
+						<BadTasksToday tasks={badTasks} />
+					)}
 				</Box>
 			</Box>
 		</Box>

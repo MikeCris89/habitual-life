@@ -2,29 +2,44 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { Days } from "./HabitCard";
 import PageNav from "../../components/PageNav";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../legacy/thunksStore";
 import { formatTime } from "../../utils/timeUtils";
-import { deleteHabit } from "../legacy/habitsSlice";
 import { isGoodHabit } from "../../utils/types";
-import { deleteTasks } from "../legacy/tasksSlice";
+import { useDeleteHabitMutation, useGetHabitsQuery } from "./habitsApi";
+import { useDeleteAllTasksMutation } from "../tasks/tasksApi";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
-	const habits = useSelector((state: RootState) => state.habits);
+	const { data: habits, isLoading, error } = useGetHabitsQuery();
+	const [
+		deleteHabit,
+		{
+			isLoading: delHabitLoading,
+			isSuccess: delHabitSuccess,
+			error: delHabitError,
+		},
+	] = useDeleteHabitMutation();
+
+	const [
+		deleteTask,
+		{
+			isLoading: delTaskLoading,
+			isSuccess: delTaskSuccess,
+			error: delTaskError,
+		},
+	] = useDeleteAllTasksMutation();
 
 	if (!id) return <div>No Habit Selected.</div>;
+	if (!habits || error) throw new Error();
 
 	const habit = habits.find((habit) => habit.id === id);
 
 	if (!habit) return <div>Habit not found.</div>;
 
 	const handleDelete = () => {
-		dispatch(deleteHabit(habit.id));
-		dispatch(deleteTasks(habit));
+		deleteHabit(habit.id);
+		deleteTask(habit);
 		navigate(-1);
 	};
 

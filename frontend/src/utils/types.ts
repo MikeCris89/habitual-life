@@ -139,18 +139,26 @@ export const isValidType = (type: string): type is HabitType => {
 };
 
 export const isGoodHabit = (habit: Habit): habit is GoodType => {
-	return habit.type === HabitTypes.GOOD && "timeOfDay" in habit;
+	return habit.type === HabitTypes.GOOD;
 };
 
 export const isCounterHabit = (habit: Habit): habit is CounterType => {
-	return habit.type === HabitTypes.COUNTER && "max" in habit;
+	return habit.type === HabitTypes.COUNTER;
+};
+
+export const isBadHabit = (habit: Habit): habit is BadType => {
+	return habit.type === HabitTypes.BAD;
 };
 
 // TASKS
-export const isGoodTask = (task: Task): task is Task & GoodTask => {
-	return task.type === HabitTypes.GOOD && "timeOfDay" in task;
+export const isGoodTask = (task: Task): task is GoodTask => {
+	return task.type === HabitTypes.GOOD;
 };
 
-export const isCounterTask = (task: Task): task is Task & CounterTask => {
-	return task.type === HabitTypes.COUNTER && "count" in task;
+export const isCounterTask = (task: Task): task is CounterTask => {
+	return task.type === HabitTypes.COUNTER;
+};
+
+export const isBadTask = (task: Task): task is BadTask => {
+	return task.type === HabitTypes.BAD;
 };

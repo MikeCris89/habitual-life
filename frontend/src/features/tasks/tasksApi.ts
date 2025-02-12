@@ -1,39 +1,26 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../utils/indexedDb";
 import {
-	BadTask,
 	CounterTask,
 	DayKeys,
-	GoodTask,
 	Habit,
-	HabitTypes,
 	isCounterHabit,
 	Task,
 	TaskBase,
-	WeeklyTasks,
 } from "../../utils/types";
-import { endOfWeek, startOfDay, startOfWeek } from "../../utils/timeUtils";
+import { startOfDay } from "../../utils/timeUtils";
 import { nanoid } from "nanoid";
-
-// const initWeekly: WeeklyTasks = {
-// 	weekStart: startOfWeek(),
-// 	weekEnd: endOfWeek(),
-// 	tasks: {},
-// 	stats: { good: [], bad: [], counter: [] },
-// 	id: nanoid(),
-// };
 
 const createTask = (habit: Habit, date: string): Task => {
 	const baseTask: TaskBase = {
 		title: habit.title,
 		habitId: habit.id,
-		//type: habit.type,
 		dateTime: date,
 		complete: false,
 		id: nanoid(),
 	};
 
-	if (habit.type === HabitTypes.COUNTER) {
+	if (isCounterHabit(habit)) {
 		return {
 			...baseTask,
 			type: habit.type,
@@ -51,10 +38,11 @@ export const tasksApi = createApi({
 	baseQuery: fakeBaseQuery(),
 	tagTypes: ["Tasks"],
 	endpoints: (builder) => ({
-		fetchDailyTasks: builder.query<Task[], Date>({
-			queryFn: async (date = new Date()) => {
+		getDailyTasks: builder.query<Task[], Date | void>({
+			queryFn: async (date) => {
 				try {
-					const data = await dbActions.getDailyTasks(date);
+					const thisDate = date ?? new Date();
+					const data = await dbActions.getDailyTasks(thisDate);
 					return { data };
 				} catch (e) {
 					return { error: { message: "Failed to fetch weekly tasks." } };
@@ -66,7 +54,12 @@ export const tasksApi = createApi({
 			queryFn: async (habits) => {
 				try {
 					if (!Array.isArray(habits)) habits = [habits];
+
 					const today = new Date(startOfDay());
+					const lastDateCreated = await dbActions.getLastCreatedDate();
+					if (lastDateCreated === startOfDay()) {
+						return { data: undefined };
+					}
 					const thisDay = DayKeys[new Date().getDay()];
 					const tasksToday = habits
 						.filter((habit) => habit.daysOfWeek[thisDay].isTrue)
@@ -86,10 +79,11 @@ export const tasksApi = createApi({
 							);
 						});
 					await dbActions.batchCreateDailyTasks(tasksToday);
+					await dbActions.setLastCreateDate(startOfDay());
 					return { data: undefined };
 				} catch (e) {
 					return {
-						error: { message: `Error batch creating dialy tasks. Error: ${e}` },
+						error: { message: `Error batch creating daily tasks. Error: ${e}` },
 					};
 				}
 			},
@@ -107,6 +101,7 @@ export const tasksApi = createApi({
 					return { error: { message: `Error checking off task. Error: ${e}` } };
 				}
 			},
+			invalidatesTags: ["Tasks"],
 		}),
 		incrementCounter: builder.mutation({
 			queryFn: async (arg: { task: CounterTask; value?: number }) => {
@@ -122,44 +117,27 @@ export const tasksApi = createApi({
 				}
 			},
 		}),
-		// newWeeklyTasks: builder.mutation<void, Habit[]>({
-		// 	queryFn: async (habits) => {
-		// 		const weeklyTasks = { ...initWeekly };
-		// 		const weekStart = new Date(startOfWeek());
-		// 		const today = new Date(startOfDay());
-		// 		habits.forEach((habit) => {
-		// 			Object.entries(habit.daysOfWeek).forEach(([day, { isTrue }], i) => {
-		// 				if (!isTrue) return;
-		// 				const dayIndex = DayKeys.findIndex((el) => el === day);
-		// 				const thisDay = new Date(
-		// 					today.setDate(weekStart.getDate() + dayIndex)
-		// 				);
-		// 				if (habit.timeOfDay?.length) {
-		// 					habit.timeOfDay.forEach(({ time }) =>
-		// 						weeklyTasks.tasks[thisDay.toISOString()].push(
-		// 							createTask(
-		// 								habit,
-		// 								new Date(
-		// 									thisDay.setHours(
-		// 										new Date(time).getHours(),
-		// 										new Date(time).getMinutes(),
-		// 										0,
-		// 										0
-		// 									)
-		// 								).toISOString()
-		// 							)
-		// 						)
-		// 					);
-		// 				} else {
-		// 					weeklyTasks.tasks[thisDay.toISOString()].push(
-		// 						createTask(habit, thisDay.toISOString())
-		// 					);
-		// 				}
-		// 			});
-		// 		});
-		// 		await dbActions.add("weeklyTasks", weeklyTasks);
-		// 	},
-		// 	invalidatesTags: ["Tasks"],
-		// }),
+		deleteAllTasks: builder.mutation<void, Habit>({
+			queryFn: async (habit) => {
+				try {
+					const data = await dbActions.batchDeleteTasks(habit);
+					return { data };
+				} catch (e) {
+					return {
+						error: {
+							message: "error batch deleting tasks.",
+						},
+					};
+				}
+			},
+		}),
 	}),
 });
+
+export const {
+	useGetDailyTasksQuery,
+	useCreateDailyTasksMutation,
+	useCheckOffTaskMutation,
+	useIncrementCounterMutation,
+	useDeleteAllTasksMutation,
+} = tasksApi;

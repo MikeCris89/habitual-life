@@ -9,13 +9,13 @@ import {
 import HabitCard from "../features/habits/HabitCard";
 import { Habit, HabitType } from "../utils/types";
 import PageNav from "../components/PageNav";
-import { useSelector } from "react-redux";
-import { RootState } from "../features/legacy/thunksStore";
 import useDisplay from "../hooks/useDisplay";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Close, Search } from "@mui/icons-material";
 import AddMenu from "../components/AddMenu";
 import { memo, useState } from "react";
+import { useGetHabitsQuery } from "../features/habits/habitsApi";
+import { handleError } from "../utils/errors";
 
 type ListProps = {
 	habits?: Habit[];
@@ -23,8 +23,9 @@ type ListProps = {
 };
 
 const HabitsList: React.FC<ListProps> = memo(({ search }) => {
-	let habits = useSelector((state: RootState) => state.habits);
-	if (search)
+	let { data: habits, isLoading, error } = useGetHabitsQuery();
+
+	if (habits && search)
 		habits = habits.filter((habit) =>
 			habit.title.toLowerCase().includes(search.toLowerCase())
 		);
@@ -36,7 +37,7 @@ const HabitsList: React.FC<ListProps> = memo(({ search }) => {
 				width: "100%",
 			}}
 		>
-			{habits.map((habit: Habit) => (
+			{habits?.map((habit: Habit) => (
 				<Box key={habit.id} sx={{ width: "100%" }}>
 					<HabitCard habit={habit} />
 				</Box>

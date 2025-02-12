@@ -1,6 +1,6 @@
-import { dbActions } from "./indexedDb";
-import { startOfWeek } from "./timeUtils";
-import { Habit, WeeklyTasks } from "./types";
+import { Habit, WeeklyTasks } from "./../../utils/types";
+import { dbActions } from "../../utils/indexedDb";
+import { startOfWeek } from "../../utils/timeUtils";
 
 export const getHabitsOld = async (): Promise<Habit[]> => {
 	const data = await dbActions.getAll("habits");

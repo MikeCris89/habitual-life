@@ -9,13 +9,13 @@ export const habitsApi = createApi({
 		getHabits: builder.query<Habit[], void>({
 			queryFn: async () => {
 				try {
-					const data = await dbActions.getAll("habits");
+					const data = (await dbActions.getAll("habits")) ?? [];
 					return { data };
 				} catch (error) {
 					return {
 						error: {
 							status: "Custom_Error",
-							message: "Failed to fetch habits.",
+							message: `Failed to fetch habits.`,
 						},
 					};
 				}

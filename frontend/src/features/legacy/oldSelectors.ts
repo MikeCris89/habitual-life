@@ -1,9 +1,9 @@
 import { createSelector } from "reselect";
-import { RootState } from "./thunksStore";
+import { RootStateOld } from "./thunksStore";
 import { DayKeys, HabitTypes, Task } from "../../utils/types";
 import { startOfDay } from "../../utils/timeUtils";
 
-export const selectHabits = (state: RootState) => state.habits.habits;
+export const selectHabits = (state: RootStateOld) => state.habits.habits;
 
 export const selectHabitsToday = createSelector([selectHabits], (habits) =>
 	habits.filter(
@@ -12,7 +12,7 @@ export const selectHabitsToday = createSelector([selectHabits], (habits) =>
 );
 
 // TASKS
-export const selectTasks = (state: RootState) => state.weeklyTasks;
+export const selectTasks = (state: RootStateOld) => state.weeklyTasks;
 
 export const selectTasksToday = createSelector(
 	[selectTasks],
