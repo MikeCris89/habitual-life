@@ -9,7 +9,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
 	DayKey,
 	DayKeys,
@@ -32,17 +32,16 @@ import dayjs, { Dayjs } from "dayjs";
 import PageNav from "../../components/PageNav";
 import { Add, RemoveCircleOutline } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { startOfDay } from "../../utils/timeUtils";
 import {
 	useAddHabitMutation,
 	useEditHabitMutation,
 	useGetHabitsQuery,
 } from "./habitsApi";
-
-const initTimeOfDay = {
-	id: 0,
-	time: startOfDay(),
-};
+import { nanoid } from "nanoid";
+import { handleError } from "../../utils/errors";
+import { useCreateDailyTasksMutation } from "../tasks/tasksApi";
+import { useDispatch } from "react-redux";
+import { setError, setLoading, setSuccess } from "../loading/loadingSlice";
 
 const initHabit: HabitBase = {
 	title: "",
@@ -56,13 +55,14 @@ const initHabit: HabitBase = {
 		Saturday: { isTrue: true, label: "S" },
 	},
 	createdAt: new Date().toISOString(),
-	timeOfDay: [{ ...initTimeOfDay }],
 	id: "",
 };
 
 const initTypes: Record<HabitType, Habit> = {
 	good: {
 		...initHabit,
+		timeOfDay: [],
+		allDay: true,
 		type: HabitTypes.GOOD,
 	},
 	bad: {
@@ -78,86 +78,86 @@ const initTypes: Record<HabitType, Habit> = {
 	},
 };
 
-const HabitForm: React.FC = () => {
+const HabitForm = () => {
 	const navigate = useNavigate();
 	const { id, type } = useParams();
-	const {
-		data: habits,
-		isLoading: fetchLoading,
-		error: fetchError,
-	} = useGetHabitsQuery();
+	const dispatch = useDispatch();
+	const { data: habits } = useGetHabitsQuery();
 
 	const [
 		addHabit,
-		{
-			isLoading: addLoading,
-			isSuccess: addSuccess,
-			isError: addIsError,
-			error: addError,
-		},
+		{ isLoading: addLoading, isSuccess: addSuccess, error: addError },
 	] = useAddHabitMutation();
 
 	const [
 		editHabit,
-		{
-			isLoading: editLoading,
-			isSuccess: editSuccess,
-			isError: editIsError,
-			error: editError,
-		},
+		{ isLoading: editLoading, isSuccess: editSuccess, error: editError },
 	] = useEditHabitMutation();
 
-	if (fetchError) throw new Error("Error fetching habits.");
+	const [
+		createDailyTasks,
+		{
+			isLoading: loadingCreateTasks,
+			isSuccess: createTasksSuccess,
+			error: createTasksError,
+		},
+	] = useCreateDailyTasksMutation();
 
-	//const [searchParams] = useSearchParams();
+	const isLoadingSubmit = editLoading || addLoading || loadingCreateTasks;
+	const errorSubmit = addError || editError || createTasksError;
+	const successSubmit = addSuccess || editSuccess || createTasksSuccess;
 
+	// Check if editing or adding new Habit
 	const habitToEdit = useMemo(() => {
-		if (id) return habits?.find((habit) => habit.id === id);
-		return undefined;
+		if (!id) return undefined;
+		const thisHabit = habits?.find((habit) => habit.id === id);
+		if (!thisHabit) handleError("habitToEdit: Habit not found");
+		return thisHabit;
 	}, [id, habits]);
 
+	// Get the habit type (good, bad, counter)
 	const habitType = useMemo(() => {
 		if (habitToEdit) return habitToEdit.type;
 		if (type && isValidType(type)) return type;
-		throw new Error("Habit Type not found.");
+		handleError(
+			`Habit Form: Habit type not found. Type: ${type}, habitToEdit: ${habitToEdit}`
+		);
 	}, [type, habitToEdit]);
 
 	const [habit, setHabit] = useState<Habit>({
 		...(habitToEdit ?? initTypes[habitType]),
 	});
 
-	// useEffect(() => {
-	// 	let habitToEdit;
-	// 	let addType;
-	// 	if (id) {
-	// 		habitToEdit = habits.find((habit) => habit.id === id);
-	// 		if (!habitToEdit) throw new Error(`Habit Not Found. ID: ${id}`);
-	// 		addType = habitToEdit.type;
-	// 	} else if (type) {
-	// 		addType = type;
-	// 	}
+	const [selectingTime, setSelectingTime] = useState<boolean>(false);
 
-	// 	if (!habitToEdit && (!addType || !isValidType(addType))) {
-	// 		navigate(-1);
-	// 		return;
-	// 	}
-	// 	if (!addType || !isValidType(addType)) {
-	// 		navigate(-1);
-	// 		return;
-	// 	}
+	// Submit Loading / Success / Error
+	useEffect(() => {
+		if (isLoadingSubmit) {
+			dispatch(
+				setLoading(editLoading ? "Editing new Habit" : "Adding new Habit")
+			);
+		}
+		if (errorSubmit) {
+			dispatch(
+				setError(editError ? "Error editing habit." : "Error adding habit.")
+			);
+		}
+		if (successSubmit) {
+			dispatch(setSuccess("Success"));
+		}
+	}, [
+		isLoadingSubmit,
+		errorSubmit,
+		dispatch,
+		editLoading,
+		editError,
+		successSubmit,
+		editSuccess,
+	]);
 
-	// 	setHabit(
-	// 		habitToEdit
-	// 			? { ...habitToEdit, daysOfWeek: { ...habitToEdit.daysOfWeek } }
-	// 			: addType === HabitTypes.BAD
-	// 			? { ...initHabit, type: addType, ...initTypes[addType], title: "No - " }
-	// 			: { ...initHabit, type: addType, ...initTypes[addType] }
-	// 	);
-	// }, [id, searchParams, habits, navigate, type]);
-
-	// GoodHabit time of day
-	const getTimeId = (habit: HabitBase & GoodType) => {
-		if ((habit.timeOfDay && habit.timeOfDay.length === 0) || !habit.timeOfDay)
+	// GoodHabit - get time of day id
+	const getTimeId = (habit: GoodType) => {
+		if ((habit.timeOfDay && !habit.timeOfDay.length) || !habit.timeOfDay)
 			return 0;
 		return (
 			habit.timeOfDay
@@ -183,6 +183,7 @@ const HabitForm: React.FC = () => {
 		});
 	};
 
+	// Generic field changes for string and number properties and days of week checkbox
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
@@ -215,9 +216,24 @@ const HabitForm: React.FC = () => {
 		}
 	};
 
-	// GoodHabit timeOfDay array
+	// GoddHabit - add new timeOfDay element to array
+	const handleAddTime = (time: Dayjs) => {
+		setHabit((prev) => {
+			if (isGoodHabit(prev))
+				return {
+					...prev,
+					timeOfDay: [
+						...prev.timeOfDay,
+						{ id: getTimeId(prev), time: time.toISOString() },
+					],
+				};
+			return prev;
+		});
+	};
+
+	// GoodHabit - edit existing timeOfDay array element
 	const handleChangeTime = (
-		time: Dayjs | null,
+		time: Dayjs,
 		entry: { id: number; time: string }
 	) => {
 		let date: Date;
@@ -239,21 +255,29 @@ const HabitForm: React.FC = () => {
 		});
 	};
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (id) {
-			editHabit(habit);
+		try {
+			if (id) {
+				await editHabit(habit);
+				navigate(-1);
+			} else {
+				const newHabit = await addHabit({
+					...habit,
+					id: nanoid(),
+				}).unwrap();
+				await createDailyTasks(newHabit);
+			}
 			navigate(-1);
-		} else {
-			addHabit(habit);
-			// addDailyTasks({ habits: [habit] });
+		} catch (e) {
+			dispatch(setError("Something went wrong."));
+			handleError(e);
 		}
-		navigate(-1);
 	};
 
 	return (
-		<Paper sx={{ p: 1, width: "600px" }}>
+		<Paper sx={{ p: 1, maxWidth: "600px" }}>
 			<PageNav back={true} title={id ? "Edit Habit" : "Add Habit"} />
 
 			<Box
@@ -330,55 +354,95 @@ const HabitForm: React.FC = () => {
 						className="flex-center col gap2"
 						sx={{ "& > *": { width: "100%" } }}
 					>
-						{habit.timeOfDay.map((entry, i) => (
-							<Box key={entry.id} className="flex-between gap1">
-								<LocalizationProvider dateAdapter={AdapterDayjs}>
-									<TimePicker
-										name="timeOfDay"
-										label="Time of Day"
-										value={entry.time ? dayjs(entry.time) : null}
-										onChange={(e) => handleChangeTime(e, entry)}
-									/>
-								</LocalizationProvider>
-								<Box
-									sx={{ color: "red" }}
-									onClick={() =>
-										setHabit((prev): Habit => {
-											if (isGoodHabit(prev))
-												return {
-													...prev,
-													timeOfDay: prev.timeOfDay.filter(
-														(el) => el.id !== entry.id
-													),
-												};
+						{/* All Day checkbox */}
+						<FormControlLabel
+							control={
+								<Checkbox
+									onChange={({ target: { checked } }) => {
+										setSelectingTime(!checked);
+										setHabit((prev) => {
+											if (isGoodHabit(prev)) {
+												return { ...prev, allDay: !prev.allDay, timeOfDay: [] };
+											}
 											return prev;
-										})
-									}
-								>
-									<RemoveCircleOutline />
-								</Box>
-							</Box>
-						))}
-						<Button
-							variant="outlined"
-							onClick={() =>
-								setHabit((prev): Habit => {
-									if (isGoodHabit(prev))
-										return {
-											...prev,
-											timeOfDay: [
-												...prev.timeOfDay,
-												{ ...initTimeOfDay, id: getTimeId(habit) },
-											],
-										};
-									return prev;
-								})
+										});
+									}}
+									checked={habit.allDay}
+									sx={{ margin: 0 }}
+								/>
 							}
-							disabled={habit.timeOfDay.length >= 6}
-							sx={{ width: "fit-content", alignSelf: "start" }}
-						>
-							<Add />
-						</Button>
+							label="All Day"
+							sx={{ margin: 0 }}
+						/>
+						{!habit.allDay &&
+							habit.timeOfDay
+								.slice()
+								.sort((a, b) => {
+									return (
+										new Date(a.time).getTime() - new Date(b.time).getTime()
+									);
+								})
+								.map((entry) => (
+									<Box key={entry.id} className="flex-between gap1">
+										<LocalizationProvider dateAdapter={AdapterDayjs}>
+											<TimePicker
+												name="timeOfDay"
+												label="Time of Day"
+												value={dayjs(entry.time)}
+												onChange={(e) => {
+													if (e) handleChangeTime(e, entry);
+												}}
+												disabled={habit.allDay}
+											/>
+										</LocalizationProvider>
+
+										<Button
+											sx={{ color: "red" }}
+											onClick={() =>
+												setHabit((prev) => {
+													if (isGoodHabit(prev))
+														return {
+															...prev,
+															timeOfDay: prev.timeOfDay.filter(
+																(el) => el.id !== entry.id
+															),
+															allDay: prev.timeOfDay.length === 1,
+														};
+													return prev;
+												})
+											}
+										>
+											<RemoveCircleOutline />
+										</Button>
+									</Box>
+								))}
+						{selectingTime && (
+							<LocalizationProvider dateAdapter={AdapterDayjs}>
+								<TimePicker
+									name="timeOfDay"
+									label="Time of Day"
+									value={null}
+									onAccept={(e) => {
+										if (e) {
+											handleAddTime(e);
+											setSelectingTime(false);
+										}
+									}}
+									open
+									onClose={() => setSelectingTime(false)}
+								/>
+							</LocalizationProvider>
+						)}
+						{!habit.allDay && (
+							<Button
+								variant="outlined"
+								onClick={() => setSelectingTime(true)}
+								disabled={habit.timeOfDay.length >= 6 || selectingTime}
+								sx={{ width: "fit-content", alignSelf: "start" }}
+							>
+								<Add />
+							</Button>
+						)}
 					</Box>
 				)}
 

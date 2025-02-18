@@ -36,7 +36,7 @@ export const getTasksOld = async (): Promise<WeeklyTasks | null> => {
 
 export const setDataOld = async (key: string, data: unknown): Promise<void> => {
 	if (data !== undefined && data !== null) {
-		await dbActions.add(key, data);
+		await dbActions.put(key, data);
 	}
 };
 

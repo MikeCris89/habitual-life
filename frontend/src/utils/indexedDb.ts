@@ -1,6 +1,7 @@
 import { openDB } from "idb";
 import { endOfWeek, startOfDay, startOfWeek } from "./timeUtils";
-import { Habit, Task } from "./types";
+import { Habit, MetaData, Task } from "./types";
+import { handleError } from "./errors";
 
 const dbPromise = openDB("habitsDB", 1, {
 	upgrade(db) {
@@ -16,7 +17,7 @@ const dbPromise = openDB("habitsDB", 1, {
 			store.createIndex("dateTime", "dateTime", { unique: false });
 		}
 		if (!db.objectStoreNames.contains("meta")) {
-			db.createObjectStore("meta", { keyPath: "key" });
+			db.createObjectStore("meta", { keyPath: "userId" });
 		}
 		if (!db.objectStoreNames.contains("errorLogs")) {
 			db.createObjectStore("errorLogs", { keyPath: "id", autoIncrement: true });
@@ -25,15 +26,21 @@ const dbPromise = openDB("habitsDB", 1, {
 });
 
 export const dbActions = {
-	async getLastCreatedDate(): Promise<string | null> {
+	async setMetaData(data: MetaData) {
 		const db = await dbPromise;
-		return await db.get("meta", "lastCreatedDate");
+		await db.put("meta", data);
 	},
-	async setLastCreateDate(date: string) {
+	async setLastCreatedDate(userId: string) {
 		const db = await dbPromise;
-		await db.put("meta", date, "lastCreatedDate");
+		const existingMeta = await db.get("meta", userId);
+		if (!existingMeta) {
+			handleError("setLastCreatedDate: No existing meta data.");
+		}
+		const newData = { ...existingMeta, lastCreatedDate: startOfDay() };
+		await db.put("meta", newData);
+		return newData;
 	},
-	async add(storeName: string, data: any) {
+	async put(storeName: string, data: any) {
 		const db = await dbPromise;
 		const tx = db.transaction(storeName, "readwrite");
 		const store = tx.objectStore(storeName);
@@ -90,12 +97,13 @@ export const dbActions = {
 
 		return tasks;
 	},
-	async batchCreateDailyTasks(tasks: Task[]) {
+	async batchCreateDailyTasks(tasks: Task[]): Promise<Task[]> {
 		const db = await dbPromise;
 		const tx = db.transaction("tasks", "readwrite");
 		const store = tx.objectStore("tasks");
 		await Promise.all(tasks.map((task) => store.put(task)));
 		await tx.done;
+		return tasks;
 	},
 	async delete(storeName: string, id: string) {
 		const db = await dbPromise;

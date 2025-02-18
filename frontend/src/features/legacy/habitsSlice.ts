@@ -16,7 +16,7 @@ const initialState: {
 export const addHabit = createAsyncThunk<Habit, Habit>(
 	"habits/addHabit",
 	async (newHabit: Habit, thunkAPI) => {
-		const resp = await dbActions.add("habits", { ...newHabit, id: nanoid() });
+		const resp = await dbActions.put("habits", { ...newHabit, id: nanoid() });
 		return resp;
 	}
 );
@@ -31,7 +31,7 @@ export const deleteHabit = createAsyncThunk<void, string>(
 export const editHabit = createAsyncThunk<Habit, Habit>(
 	"habits/editHabit",
 	async (habit, thunkAPI) => {
-		const resp = await dbActions.add("habits", habit);
+		const resp = await dbActions.put("habits", habit);
 		return resp;
 	}
 );

@@ -1,17 +1,20 @@
 import { Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { handleError } from "../utils/errors";
-import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { handleError, logError } from "../utils/errors";
+import { useEffect, useRef, useState } from "react";
 
-type ErrorProps = {
+interface ErrorProps {
 	error: Error;
 	resetErrorBoundary: () => void;
-};
+}
 
-const ErrorFallback: React.FC<ErrorProps> = ({ error, resetErrorBoundary }) => {
+const ErrorFallback = ({ error, resetErrorBoundary }: ErrorProps) => {
 	const navigate = useNavigate();
 	const [logged, setLogged] = useState<Boolean>(false);
+	const location = useLocation();
+	const isFirstRender = useRef(true);
 
+	// dont log the error if coming from handleError. handleError will do error log.
 	useEffect(() => {
 		if (!logged) {
 			if (
@@ -20,22 +23,37 @@ const ErrorFallback: React.FC<ErrorProps> = ({ error, resetErrorBoundary }) => {
 				error.message === "handleErrorThrow"
 			) {
 			} else {
-				handleError(error, false);
+				logError(error);
 				setLogged(true);
 			}
 		}
 	}, [error, logged]);
 
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+		resetErrorBoundary();
+	}, [location.pathname, resetErrorBoundary, isFirstRender]);
+
 	const handleReset = () => {
 		resetErrorBoundary();
-		navigate("/", { replace: true });
+		navigate(location.pathname, { replace: true });
 	};
 	return (
-		<div role="alert">
-			<Typography variant="h4">
-				An error has occurred. Please refresh the application.
+		<div
+			role="alert"
+			style={{ height: "100%", width: "100%", textAlign: "center" }}
+			className="flex-center col gap2"
+		>
+			<Typography variant="h6">
+				An error has occurred. <br />
+				Please refresh the application.
 			</Typography>
-			<Button onClick={handleReset}>Refresh</Button>
+			<Button variant="outlined" onClick={handleReset}>
+				Refresh
+			</Button>
 		</div>
 	);
 };

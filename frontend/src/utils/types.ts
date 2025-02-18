@@ -1,8 +1,18 @@
-// export interface Progress {
-// 	id: number;
-// 	time: string | undefined;
-// 	complete: boolean;
-// }
+// Habits
+export interface HabitBase {
+	title: string;
+	daysOfWeek: DaysOfWeek;
+	id: string;
+	createdAt: string;
+}
+
+export const HabitTypes = {
+	GOOD: "good",
+	BAD: "bad",
+	COUNTER: "counter",
+} as const;
+
+export type HabitType = (typeof HabitTypes)[keyof typeof HabitTypes];
 
 export interface TimeOfDay {
 	id: number;
@@ -12,6 +22,7 @@ export interface TimeOfDay {
 export interface GoodType extends HabitBase {
 	type: "good";
 	timeOfDay: TimeOfDay[];
+	allDay: boolean;
 }
 
 export interface BadType extends HabitBase {
@@ -24,30 +35,35 @@ export interface CounterType extends HabitBase {
 	total: number;
 }
 
-export const HabitTypes = {
-	GOOD: "good",
-	BAD: "bad",
-	COUNTER: "counter",
-} as const;
-
-export type HabitType = (typeof HabitTypes)[keyof typeof HabitTypes];
-
-// export type Habit =
-// 	| (HabitBase & GoodType)
-// 	| (HabitBase & BadType)
-// 	| (HabitBase & CounterType);
-
 export type Habit = GoodType | BadType | CounterType;
 
-export interface HabitBase {
+// Tasks
+export interface TaskBase {
 	title: string;
-	daysOfWeek: DaysOfWeek;
-	// type: HabitType;
-	timeOfDay: TimeOfDay[];
-	// minMax?: boolean;
 	id: string;
-	createdAt: string;
+	habitId: string;
+	dateTime: string;
+	complete: boolean;
 }
+export interface GoodTask extends TaskBase {
+	type: "good";
+	allDay: boolean;
+}
+
+export interface BadTask extends TaskBase {
+	type: "bad";
+}
+
+export interface CounterTask extends TaskBase {
+	type: "counter";
+	max: boolean;
+	total: number;
+	count: number;
+}
+
+export type Task = GoodTask | BadTask | CounterTask;
+
+export type Stats = Record<HabitType, HabitStats[]>;
 
 export interface HabitStats {
 	title: string; // to have quick access to title of habit
@@ -57,41 +73,6 @@ export interface HabitStats {
 	totalCount?: number; // total count for counter types
 	completeCount?: number; //counter for counter types
 }
-
-export interface GoodTask extends TaskBase {
-	type: "good";
-	//timeOfDay: TimeOfDay;
-	//complete: boolean;
-}
-export interface BadTask extends TaskBase {
-	type: "bad";
-	//complete: boolean;
-}
-
-export interface CounterTask extends TaskBase {
-	type: "counter";
-	max: boolean;
-	total: number;
-	count: number;
-	//complete: boolean;
-}
-
-export type Task = GoodTask | BadTask | CounterTask;
-
-export interface TaskBase {
-	title: string;
-	id: string;
-	//type: HabitType;
-	habitId: string;
-	dateTime: string;
-	// timeOfDay?: TimeOfDay;
-	// minMax?: boolean;
-	// count?: number;
-	complete: boolean;
-	// total?: number;
-}
-
-export type Stats = Record<HabitType, HabitStats[]>;
 
 export interface WeeklyTasks {
 	weekStart: string;
@@ -127,6 +108,12 @@ export type DayKey = (typeof DayKeys)[number];
 
 export type DaysOfWeek = Record<DayKey, Day>;
 
+export type MetaData = {
+	userId: string;
+	lastCreatedDate: string;
+	theme: string;
+};
+
 /** TYPEGUARD FUNCTIONS */
 
 export const isDayKey = (name: string): name is DayKey => {
@@ -150,7 +137,7 @@ export const isBadHabit = (habit: Habit): habit is BadType => {
 	return habit.type === HabitTypes.BAD;
 };
 
-// TASKS
+// TASK TYPES
 export const isGoodTask = (task: Task): task is GoodTask => {
 	return task.type === HabitTypes.GOOD;
 };

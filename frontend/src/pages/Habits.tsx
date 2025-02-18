@@ -8,22 +8,20 @@ import {
 } from "@mui/material";
 import HabitCard from "../features/habits/HabitCard";
 import { Habit, HabitType } from "../utils/types";
-import PageNav from "../components/PageNav";
 import useDisplay from "../hooks/useDisplay";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Close, Search } from "@mui/icons-material";
 import AddMenu from "../components/AddMenu";
 import { memo, useState } from "react";
 import { useGetHabitsQuery } from "../features/habits/habitsApi";
-import { handleError } from "../utils/errors";
 
-type ListProps = {
+interface ListProps {
 	habits?: Habit[];
 	search?: string;
-};
+}
 
-const HabitsList: React.FC<ListProps> = memo(({ search }) => {
-	let { data: habits, isLoading, error } = useGetHabitsQuery();
+const HabitsList = memo(({ search }: ListProps) => {
+	let { data: habits } = useGetHabitsQuery();
 
 	if (habits && search)
 		habits = habits.filter((habit) =>
@@ -31,12 +29,7 @@ const HabitsList: React.FC<ListProps> = memo(({ search }) => {
 		);
 
 	return (
-		<Box
-			className="flex-center col gap2"
-			sx={{
-				width: "100%",
-			}}
-		>
+		<Box className="flex-center col gap2">
 			{habits?.map((habit: Habit) => (
 				<Box key={habit.id} sx={{ width: "100%" }}>
 					<HabitCard habit={habit} />
@@ -46,11 +39,13 @@ const HabitsList: React.FC<ListProps> = memo(({ search }) => {
 	);
 });
 
-const HabitBar: React.FC<{
+interface BarProps {
 	search: string;
 	setSearch: React.Dispatch<React.SetStateAction<string>>;
 	setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}> = memo(({ search, setSearch, setOpenModal }) => (
+}
+
+const HabitBar = memo(({ search, setSearch, setOpenModal }: BarProps) => (
 	<Paper
 		className="flex-between"
 		sx={{
@@ -60,7 +55,8 @@ const HabitBar: React.FC<{
 			zIndex: 1,
 			p: 1,
 			backgroundColor: "#e7e7e7",
-			m: 1,
+			marginBottom: "10px",
+			//m: 1,
 		}}
 	>
 		<Box className="flex-center gap2">
@@ -103,7 +99,7 @@ const HabitBar: React.FC<{
 	</Paper>
 ));
 
-const Habits: React.FC = () => {
+const Habits = () => {
 	const [openModal, setOpenModal] = useState<boolean>(false);
 	const [search, setSearch] = useState<string>("");
 	const { id, type } = useParams();
@@ -127,8 +123,6 @@ const Habits: React.FC = () => {
 			className="flex col"
 			sx={{ overflow: "hidden", height: "100%", width: "100%" }}
 		>
-			<PageNav title="Habits" />
-
 			{/** Modal for AddMenu */}
 
 			<Modal
@@ -141,23 +135,23 @@ const Habits: React.FC = () => {
 				</Paper>
 			</Modal>
 
-			<Box sx={{ height: "100%", width: "100%", overflow: "hidden" }}>
+			<Box sx={{ flex: 1, width: "100%", minHeight: 0 }}>
 				{/* Mobile - full page  */}
 				{isMobile && (
 					<Box
 						sx={{
-							overflow: "auto",
 							height: "100%",
 							maxWidth: "600px",
+							margin: "auto",
 						}}
 					>
 						{!isOutlet && (
 							<Box
-								className="flex col"
 								sx={{
-									minHeight: "100%",
+									minHeight: 0,
 									position: "relative",
-									justifyContent: "start",
+									height: "100%",
+									overflowY: "auto",
 								}}
 							>
 								<HabitBar

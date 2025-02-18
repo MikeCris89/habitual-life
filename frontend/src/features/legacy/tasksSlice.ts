@@ -19,6 +19,7 @@ const initTask: Task = {
 	dateTime: "",
 	id: "",
 	complete: false,
+	allDay: true,
 };
 
 const initialState: WeeklyTasks = {
@@ -45,6 +46,13 @@ const createTask = (habit: Habit, date: string): Task => {
 			max: habit.max,
 			total: habit.total,
 			count: 0,
+		};
+	}
+	if (isGoodHabit(habit)) {
+		return {
+			...task,
+			type: habit.type,
+			allDay: habit.allDay,
 		};
 	}
 	return { ...task, type: habit.type };

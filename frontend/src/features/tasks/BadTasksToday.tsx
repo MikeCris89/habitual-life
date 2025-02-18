@@ -11,7 +11,7 @@ const TasksToday: React.FC<TaskProps> = ({ task }) => {
 	const [checkOffTask, { isLoading: loadingCheck, error: errorCheck }] =
 		useCheckOffTaskMutation();
 	return (
-		<Box>
+		<>
 			<Paper className="flex-between" sx={{ p: 1 }}>
 				<Box
 					sx={{
@@ -41,7 +41,7 @@ const TasksToday: React.FC<TaskProps> = ({ task }) => {
 					<Check />
 				</Button>
 			</Paper>
-		</Box>
+		</>
 	);
 };
 type Props = {
@@ -49,19 +49,19 @@ type Props = {
 };
 const BadTasksToday: React.FC<Props> = ({ tasks }) => {
 	return (
-		<div>
+		<Box className="flex-center col gap2">
 			{tasks && tasks.length > 0 ? (
-				<Box className="flex-center col gap2">
+				<>
 					{tasks.map((task, i) => (
 						<Box key={`${task.id}-${i}`} sx={{ width: "100%" }}>
 							<TasksToday task={task} />
 						</Box>
 					))}
-				</Box>
+				</>
 			) : (
-				<Typography variant="h4">No Tasks for today.</Typography>
+				<Typography variant="h6">No Tasks for today.</Typography>
 			)}
-		</div>
+		</Box>
 	);
 };
 

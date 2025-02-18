@@ -2,14 +2,22 @@ import { configureStore } from "@reduxjs/toolkit";
 import { habitsApi } from "../features/habits/habitsApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { tasksApi } from "../features/tasks/tasksApi";
+import { metaApi } from "../features/meta/metaApi";
+import loadingReducer from "../features/loading/loadingSlice";
 
 export const store = configureStore({
 	reducer: {
 		[habitsApi.reducerPath]: habitsApi.reducer,
 		[tasksApi.reducerPath]: tasksApi.reducer,
+		[metaApi.reducerPath]: metaApi.reducer,
+		loading: loadingReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(habitsApi.middleware, tasksApi.middleware),
+		getDefaultMiddleware().concat(
+			habitsApi.middleware,
+			tasksApi.middleware,
+			metaApi.middleware
+		),
 });
 
 setupListeners(store.dispatch);

@@ -4,7 +4,9 @@ import {
 	CounterTask,
 	DayKeys,
 	Habit,
+	HabitTypes,
 	isCounterHabit,
+	isGoodHabit,
 	Task,
 	TaskBase,
 } from "../../utils/types";
@@ -23,10 +25,18 @@ const createTask = (habit: Habit, date: string): Task => {
 	if (isCounterHabit(habit)) {
 		return {
 			...baseTask,
-			type: habit.type,
+			type: HabitTypes.COUNTER,
 			max: habit.max,
 			total: habit.total,
 			count: 0,
+		};
+	}
+
+	if (isGoodHabit(habit)) {
+		return {
+			...baseTask,
+			type: HabitTypes.GOOD,
+			allDay: habit.allDay,
 		};
 	}
 	const newTask = { ...baseTask, type: habit.type };
@@ -45,27 +55,27 @@ export const tasksApi = createApi({
 					const data = await dbActions.getDailyTasks(thisDate);
 					return { data };
 				} catch (e) {
-					return { error: { message: "Failed to fetch weekly tasks." } };
+					return { error: { message: `Failed to fetch weekly tasks: ${e}` } };
 				}
 			},
 			providesTags: ["Tasks"],
 		}),
-		createDailyTasks: builder.mutation<void, Habit[] | Habit>({
-			queryFn: async (habits) => {
+		createDailyTasks: builder.mutation({
+			queryFn: async (habits: Habit[] | Habit) => {
 				try {
 					if (!Array.isArray(habits)) habits = [habits];
+					console.log("createDailyTasks start", habits);
 
 					const today = new Date(startOfDay());
-					const lastDateCreated = await dbActions.getLastCreatedDate();
-					if (lastDateCreated === startOfDay()) {
-						return { data: undefined };
-					}
 					const thisDay = DayKeys[new Date().getDay()];
 					const tasksToday = habits
 						.filter((habit) => habit.daysOfWeek[thisDay].isTrue)
 						.flatMap((habit) => {
-							return habit.timeOfDay.map(({ time }) =>
-								createTask(
+							if (!isGoodHabit(habit) || habit.allDay)
+								return createTask(habit, startOfDay());
+
+							return habit.timeOfDay.map(({ time }) => {
+								return createTask(
 									habit,
 									new Date(
 										today.setHours(
@@ -75,24 +85,33 @@ export const tasksApi = createApi({
 											0
 										)
 									).toISOString()
-								)
-							);
+								);
+							});
 						});
-					await dbActions.batchCreateDailyTasks(tasksToday);
-					await dbActions.setLastCreateDate(startOfDay());
-					return { data: undefined };
+					console.log("createDailyTasks - tasksToday: ", tasksToday);
+					const data = await dbActions.batchCreateDailyTasks(tasksToday);
+					return { data };
 				} catch (e) {
 					return {
 						error: { message: `Error batch creating daily tasks. Error: ${e}` },
 					};
 				}
 			},
-			invalidatesTags: ["Tasks"],
+			async onQueryStarted(habits, { dispatch, queryFulfilled }) {
+				const { data: tasks } = await queryFulfilled;
+				dispatch(
+					tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
+						tasks?.forEach((task) => {
+							draft.push(task);
+						});
+					})
+				);
+			},
 		}),
 		checkOffTask: builder.mutation<Task, Task>({
 			queryFn: async (task) => {
 				try {
-					const data = await dbActions.add("tasks", {
+					const data = await dbActions.put("tasks", {
 						...task,
 						complete: !task.complete,
 					});
@@ -107,7 +126,7 @@ export const tasksApi = createApi({
 			queryFn: async (arg: { task: CounterTask; value?: number }) => {
 				try {
 					const { task, value = 1 } = arg;
-					const data = await dbActions.add("tasks", {
+					const data = await dbActions.put("tasks", {
 						...task,
 						count: task.count + value,
 					});
@@ -125,11 +144,12 @@ export const tasksApi = createApi({
 				} catch (e) {
 					return {
 						error: {
-							message: "error batch deleting tasks.",
+							message: `error batch deleting tasks: ${e}`,
 						},
 					};
 				}
 			},
+			invalidatesTags: ["Tasks"],
 		}),
 	}),
 });
