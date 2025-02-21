@@ -16,20 +16,18 @@ const loadingSlice = createSlice({
 	name: "loading",
 	initialState,
 	reducers: {
-		setLoading: (state, action: PayloadAction<string>) => {
+		setLoading: (state) => {
 			state.isLoading = true;
 			state.status = "idle";
-			state.message = action.payload;
 		},
-		setSuccess: (state, action: PayloadAction<string>) => {
+		setSuccess: (state) => {
 			state.isLoading = false;
 			state.status = "success";
-			state.message = action.payload;
 		},
-		setError: (state, action: PayloadAction<string>) => {
+		setError: (state, action: PayloadAction<string | undefined>) => {
 			state.isLoading = false;
 			state.status = "error";
-			state.message = action.payload;
+			state.message = action?.payload || "Error";
 		},
 		resetLoading: (state) => {
 			state.isLoading = false;

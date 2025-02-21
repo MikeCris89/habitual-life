@@ -9,7 +9,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	DayKey,
 	DayKeys,
@@ -39,7 +39,11 @@ import {
 } from "./habitsApi";
 import { nanoid } from "nanoid";
 import { handleError } from "../../utils/errors";
-import { useCreateDailyTasksMutation } from "../tasks/tasksApi";
+import {
+	useCreateDailyTasksMutation,
+	useDeleteTasksMutation,
+	useGetDailyTasksQuery,
+} from "../tasks/tasksApi";
 import { useDispatch } from "react-redux";
 import { setError, setLoading, setSuccess } from "../loading/loadingSlice";
 
@@ -86,26 +90,39 @@ const HabitForm = () => {
 
 	const [
 		addHabit,
-		{ isLoading: addLoading, isSuccess: addSuccess, error: addError },
+		// { isLoading: addLoading, isSuccess: addSuccess, error: addError },
 	] = useAddHabitMutation();
 
 	const [
 		editHabit,
-		{ isLoading: editLoading, isSuccess: editSuccess, error: editError },
+		// { isLoading: editLoading, isSuccess: editSuccess, error: editError },
 	] = useEditHabitMutation();
 
 	const [
 		createDailyTasks,
-		{
-			isLoading: loadingCreateTasks,
-			isSuccess: createTasksSuccess,
-			error: createTasksError,
-		},
+		// {
+		// 	isLoading: loadingCreateTasks,
+		// 	isSuccess: createTasksSuccess,
+		// 	error: createTasksError,
+		// },
 	] = useCreateDailyTasksMutation();
 
-	const isLoadingSubmit = editLoading || addLoading || loadingCreateTasks;
-	const errorSubmit = addError || editError || createTasksError;
-	const successSubmit = addSuccess || editSuccess || createTasksSuccess;
+	const { data: dailyTasks } = useGetDailyTasksQuery();
+
+	const [deleteTasks] = useDeleteTasksMutation();
+
+	// const isLoadingSubmit = useMemo(
+	// 	() => editLoading || addLoading || loadingCreateTasks,
+	// 	[editLoading, addLoading, loadingCreateTasks]
+	// );
+	// const errorSubmit = useMemo(
+	// 	() => addError || editError || createTasksError,
+	// 	[addError, editError, createTasksError]
+	// );
+	// const successSubmit = useMemo(
+	// 	() => !isLoadingSubmit && !errorSubmit && (addSuccess || editSuccess),
+	// 	[isLoadingSubmit, errorSubmit, addSuccess, editSuccess]
+	// );
 
 	// Check if editing or adding new Habit
 	const habitToEdit = useMemo(() => {
@@ -130,30 +147,32 @@ const HabitForm = () => {
 
 	const [selectingTime, setSelectingTime] = useState<boolean>(false);
 
+	// const handleNavigateBack = useCallback(() => {
+	// 	navigate(-1);
+	// }, [navigate]);
+
 	// Submit Loading / Success / Error
-	useEffect(() => {
-		if (isLoadingSubmit) {
-			dispatch(
-				setLoading(editLoading ? "Editing new Habit" : "Adding new Habit")
-			);
-		}
-		if (errorSubmit) {
-			dispatch(
-				setError(editError ? "Error editing habit." : "Error adding habit.")
-			);
-		}
-		if (successSubmit) {
-			dispatch(setSuccess("Success"));
-		}
-	}, [
-		isLoadingSubmit,
-		errorSubmit,
-		dispatch,
-		editLoading,
-		editError,
-		successSubmit,
-		editSuccess,
-	]);
+	// useEffect(() => {
+	// 	console.log("form useEffect render");
+	// 	if (isLoadingSubmit) {
+	// 		dispatch(setLoading());
+	// 	} else if (errorSubmit) {
+	// 		dispatch(
+	// 			setError(editError ? "Error editing habit." : "Error adding habit.")
+	// 		);
+	// 	} else if (successSubmit) {
+	// 		console.log("success submit ");
+	// 		dispatch(setSuccess("Success"));
+	// 		setTimeout(() => handleNavigateBack(), 750);
+	// 	}
+	// }, [
+	// 	isLoadingSubmit,
+	// 	errorSubmit,
+	// 	dispatch,
+	// 	editError,
+	// 	successSubmit,
+	// 	handleNavigateBack,
+	// ]);
 
 	// GoodHabit - get time of day id
 	const getTimeId = (habit: GoodType) => {
@@ -259,17 +278,27 @@ const HabitForm = () => {
 		e.preventDefault();
 
 		try {
-			if (id) {
-				await editHabit(habit);
-				navigate(-1);
+			dispatch(setLoading());
+			if (habitToEdit) {
+				await editHabit(habit).unwrap();
+				const tasksToDelete =
+					dailyTasks?.filter(
+						(task) => task.habitId === habit.id && !task.complete
+					) ?? [];
+
+				if (tasksToDelete.length) {
+					await deleteTasks(tasksToDelete).unwrap();
+				}
+				await createDailyTasks(habit).unwrap();
 			} else {
 				const newHabit = await addHabit({
 					...habit,
 					id: nanoid(),
 				}).unwrap();
-				await createDailyTasks(newHabit);
+				await createDailyTasks(newHabit).unwrap();
 			}
-			navigate(-1);
+			dispatch(setSuccess());
+			setTimeout(() => navigate(-1), 750);
 		} catch (e) {
 			dispatch(setError("Something went wrong."));
 			handleError(e);

@@ -1,5 +1,5 @@
 import { openDB } from "idb";
-import { endOfWeek, startOfDay, startOfWeek } from "./timeUtils";
+import { endOfWeek, nextDay, startOfDay, startOfWeek } from "./timeUtils";
 import { Habit, MetaData, Task } from "./types";
 import { handleError } from "./errors";
 
@@ -77,16 +77,13 @@ export const dbActions = {
 	},
 	async getDailyTasks(date: Date) {
 		const db = await dbPromise;
-		const thisDay = new Date(startOfDay(date));
-		const nextDay = new Date(thisDay);
-		nextDay.setDate(nextDay.getDate() + 1);
 		const tx = db.transaction("tasks", "readonly");
 		const store = tx.objectStore("tasks");
 		const index = store.index("dateTime");
 		const tasks = [];
 
 		let cursor = await index.openCursor(
-			IDBKeyRange.bound(startOfDay(date), nextDay.toISOString(), false, true)
+			IDBKeyRange.bound(startOfDay(date), nextDay(date), false, true)
 		);
 
 		while (cursor) {
@@ -109,10 +106,17 @@ export const dbActions = {
 		const db = await dbPromise;
 		const tx = db.transaction(storeName, "readwrite");
 		const store = tx.objectStore(storeName);
-		await store.delete(id);
+		store.delete(id);
 		await tx.done;
 	},
-	async batchDeleteTasks(habit: Habit) {
+	async batchDeleteTasks(tasks: Task[]) {
+		const db = await dbPromise;
+		const tx = db.transaction("tasks", "readwrite");
+		const store = tx.objectStore("tasks");
+		await Promise.all(tasks.map((task) => store.delete(task.id)));
+		await tx.done;
+	},
+	async batchDeleteAllTasks(habit: Habit) {
 		const db = await dbPromise;
 		const tx = db.transaction("tasks", "readwrite");
 		const store = tx.objectStore("tasks");

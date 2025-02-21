@@ -2,10 +2,10 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { Days } from "./HabitCard";
 import PageNav from "../../components/PageNav";
-import { formatTime } from "../../utils/timeUtils";
 import { isGoodHabit } from "../../utils/types";
 import { useDeleteHabitMutation, useGetHabitsQuery } from "./habitsApi";
 import { useDeleteAllTasksMutation } from "../tasks/tasksApi";
+import dayjs from "dayjs";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
@@ -57,9 +57,7 @@ const HabitDetails: React.FC = () => {
 				{habit.type}
 				{isGoodHabit(habit) &&
 					habit.timeOfDay.map((el, i) => (
-						<Box key={i}>
-							{new Date(formatTime(el.time)).toLocaleTimeString()}
-						</Box>
+						<Box key={i}>{dayjs(el.time).format("h:mm A")}</Box>
 					))}
 			</Typography>
 

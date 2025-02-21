@@ -14,7 +14,7 @@ const LoadingModal = () => {
 		if (status === "success" || status === "error") {
 			setTimeout(() => {
 				dispatch(resetLoading());
-			}, 1000);
+			}, 750);
 		}
 	}, [status, dispatch]);
 
@@ -52,7 +52,7 @@ const LoadingModal = () => {
 					) : status === "success" ? (
 						<>
 							<Typography variant="h6" color="green">
-								✅ {message}
+								✅ Success
 							</Typography>
 						</>
 					) : (
