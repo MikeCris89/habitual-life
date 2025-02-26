@@ -1,9 +1,16 @@
 import { openDB } from "idb";
-import { endOfWeek, nextDay, startOfDay, startOfWeek } from "./timeUtils";
+import {
+	dayBefore,
+	endOfWeek,
+	nextDay,
+	startOfDay,
+	startOfWeek,
+	statsStartDate,
+} from "./timeUtils";
 import { Habit, MetaData, Task } from "./types";
 import { handleError } from "./errors";
 
-const dbPromise = openDB("habitsDB", 1, {
+const dbPromise = openDB("habitsDB", 2, {
 	upgrade(db) {
 		if (!db.objectStoreNames.contains("habits")) {
 			db.createObjectStore("habits", { keyPath: "id" });
@@ -40,6 +47,16 @@ export const dbActions = {
 		await db.put("meta", newData);
 		return newData;
 	},
+	async putMetaGoal(userId: string, goal: number) {
+		const db = await dbPromise;
+		const existingMeta = await db.get("meta", userId);
+		if (!existingMeta) {
+			handleError("putMetaGoal: No existing meta data.");
+		}
+		const newData = { ...existingMeta, goal };
+		await db.put("meta", newData);
+		return newData;
+	},
 	async put(storeName: string, data: any) {
 		const db = await dbPromise;
 		const tx = db.transaction(storeName, "readwrite");
@@ -56,7 +73,7 @@ export const dbActions = {
 		const db = await dbPromise;
 		return await db.getAll(storeName);
 	},
-	async getWeeklyTasks(date: Date = new Date()) {
+	async getWeeklyTasks(date: string = new Date().toISOString()) {
 		const db = await dbPromise;
 		const tx = db.transaction("tasks", "readonly");
 		const store = tx.objectStore("tasks");
@@ -75,7 +92,7 @@ export const dbActions = {
 		await tx.done;
 		return tasks;
 	},
-	async getDailyTasks(date: Date) {
+	async getDailyTasks(): Promise<Task[]> {
 		const db = await dbPromise;
 		const tx = db.transaction("tasks", "readonly");
 		const store = tx.objectStore("tasks");
@@ -83,13 +100,36 @@ export const dbActions = {
 		const tasks = [];
 
 		let cursor = await index.openCursor(
-			IDBKeyRange.bound(startOfDay(date), nextDay(date), false, true)
+			IDBKeyRange.bound(startOfDay(), nextDay(), false, true)
 		);
 
 		while (cursor) {
 			tasks.push(cursor.value);
 			cursor = await cursor.continue();
 		}
+		await tx.done;
+
+		return tasks;
+	},
+	async getTasksByRange(
+		startDate: string = statsStartDate(),
+		endDate: string = dayBefore()
+	): Promise<Task[]> {
+		const db = await dbPromise;
+		const tx = db.transaction("tasks", "readonly");
+		const store = tx.objectStore("tasks");
+		const index = store.index("dateTime");
+		const tasks = [];
+
+		let cursor = await index.openCursor(
+			IDBKeyRange.bound(startOfDay(startDate), nextDay(endDate), false, true)
+		);
+
+		while (cursor) {
+			tasks.push(cursor.value);
+			cursor = await cursor.continue();
+		}
+
 		await tx.done;
 
 		return tasks;

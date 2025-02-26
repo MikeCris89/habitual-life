@@ -3,6 +3,7 @@ import { useGetHabitsQuery } from "../features/habits/habitsApi";
 import {
 	useCreateDailyTasksMutation,
 	useGetDailyTasksQuery,
+	useGetTasksByRangeQuery,
 } from "../features/tasks/tasksApi";
 import Loading from "../components/Loading";
 import { useEffect } from "react";
@@ -12,12 +13,16 @@ import {
 	useSetLastCreatedDateMutation,
 } from "../features/meta/metaApi";
 import { startOfDay } from "../utils/timeUtils";
+import { useDispatch } from "react-redux";
+import { setPastStats } from "../features/stats/statsSlice";
+import { setRemainingWeeklyTasks } from "../features/calendar/calendarSlice";
 
 interface Props {
 	children: ReactNode;
 }
 
 const DataLoader = ({ children }: Props) => {
+	const dispatch = useDispatch();
 	const {
 		data: habits,
 		isLoading: loadingHabits,
@@ -46,6 +51,23 @@ const DataLoader = ({ children }: Props) => {
 		{ isLoading: loadingSetMeta, error: errorSetMeta },
 	] = useSetLastCreatedDateMutation();
 
+	const { data: pastTasks, isLoading: loadingPastTasks } =
+		useGetTasksByRangeQuery();
+
+	useEffect(() => {
+		if (habits && !loadingHabits) {
+			console.log("DataLoader - Dispatching setRemainingWeeklyTasks");
+			dispatch(setRemainingWeeklyTasks(habits));
+		}
+	}, [habits, loadingHabits, dispatch]);
+
+	useEffect(() => {
+		if (pastTasks && !loadingPastTasks) {
+			console.log("DataLoader - Dispatching setPastStats");
+			dispatch(setPastStats(pastTasks));
+		}
+	}, [loadingPastTasks, pastTasks, dispatch]);
+
 	useEffect(() => {
 		if (
 			!loadingMeta &&
@@ -54,14 +76,7 @@ const DataLoader = ({ children }: Props) => {
 			metaData?.userId &&
 			metaData.lastCreatedDate !== startOfDay()
 		) {
-			console.log(
-				"DataLoader - creating daily tasks - metaData: ",
-				metaData.lastCreatedDate
-			);
-			console.log(
-				"DataLoader - creating daily tasks - startOfDay: ",
-				startOfDay()
-			);
+			console.log("DataLoader - creating daily tasks.");
 			try {
 				createDailyTasks(habits);
 				setLastCreatedDate(metaData.userId);
@@ -96,6 +111,9 @@ const DataLoader = ({ children }: Props) => {
 	}, [error]);
 
 	if (isLoading) return <Loading />;
+	//console.log("habits", habits);
+	//console.log("Tasks Today", tasksToday);
+	//console.log("pastTasks ", pastTasks);
 
 	return <>{children}</>;
 };

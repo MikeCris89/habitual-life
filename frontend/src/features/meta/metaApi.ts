@@ -18,6 +18,7 @@ export const metaApi = createApi({
 							userId: nanoid(),
 							lastCreatedDate: "",
 							theme: "light",
+							goal: 70,
 						};
 						await dbActions.setMetaData(metaInit);
 						return { data: metaInit };
@@ -48,7 +49,24 @@ export const metaApi = createApi({
 			},
 			invalidatesTags: ["MetaData"],
 		}),
+		setGoal: builder.mutation({
+			queryFn: async ({ userId, goal }) => {
+				try {
+					const data = await dbActions.putMetaGoal(userId, goal);
+					return { data };
+				} catch (e) {
+					return {
+						error: { message: `Error setting last created date: ${e}` },
+					};
+				}
+			},
+			invalidatesTags: ["MetaData"],
+		}),
 	}),
 });
 
-export const { useGetMetaQuery, useSetLastCreatedDateMutation } = metaApi;
+export const {
+	useGetMetaQuery,
+	useSetLastCreatedDateMutation,
+	useSetGoalMutation,
+} = metaApi;

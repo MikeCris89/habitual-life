@@ -112,6 +112,7 @@ export type MetaData = {
 	userId: string;
 	lastCreatedDate: string;
 	theme: string;
+	goal: 70;
 };
 
 /** TYPEGUARD FUNCTIONS */

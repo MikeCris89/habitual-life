@@ -62,6 +62,7 @@ const GoodTasksToday = ({ tasks }: GoodProps) => {
 		},
 		{ tasksAllDay: [], tasksByTime: [] }
 	);
+
 	return (
 		<Box
 			className="flex-center col"
@@ -69,18 +70,13 @@ const GoodTasksToday = ({ tasks }: GoodProps) => {
 		>
 			{tasks && tasks.length > 0 ? (
 				<>
-					{tasksAllDay && tasksAllDay.length && (
+					{tasksAllDay && (
 						<Box
 							sx={{
 								display: "grid",
 								gridTemplateColumns: "1fr 3fr",
-								//position: "sticky",
 								width: "100%",
-								//top: 0,
-								//zIndex: 1,
 								alignItems: "start",
-								//minHeight: 0,
-								// border: "1px solid grey",
 								borderRadius: "8px",
 								p: 1,
 								borderBottom: "1px solid grey",
@@ -98,9 +94,6 @@ const GoodTasksToday = ({ tasks }: GoodProps) => {
 								className="flex-center col gap2"
 								sx={{
 									flex: 1,
-									//minHeight: 0,
-									//overflowY: "auto",
-									//maxHeight: "200px",
 								}}
 							>
 								{tasksAllDay.map((task) => (

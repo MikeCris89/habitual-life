@@ -22,6 +22,7 @@ export const habitsApi = createApi({
 					};
 				}
 			},
+			keepUnusedDataFor: 12 * 60 * 60,
 			providesTags: ["Habits"],
 		}),
 		addHabit: builder.mutation<Habit, Habit>({

@@ -5,6 +5,7 @@ import BadTasksToday from "../features/tasks/BadTasksToday";
 import { useState } from "react";
 import { useGetDailyTasksQuery } from "../features/tasks/tasksApi";
 import { isBadTask, isCounterTask, isGoodTask } from "../utils/types";
+import StatsSummary from "../features/stats/StatsSummary";
 
 const Home = () => {
 	const { data: tasksToday = [] } = useGetDailyTasksQuery();
@@ -20,6 +21,7 @@ const Home = () => {
 			sx={{ overflow: "hidden", flex: 1, height: "100%", minHeight: 0 }}
 			className="flex-center col"
 		>
+			<StatsSummary />
 			<Box sx={{ width: "100%" }}>
 				<CounterTasksToday tasks={counterTasks} />
 			</Box>

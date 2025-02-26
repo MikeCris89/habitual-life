@@ -5,6 +5,7 @@ import { tasksApi } from "../features/tasks/tasksApi";
 import { metaApi } from "../features/meta/metaApi";
 import loadingReducer from "../features/loading/loadingSlice";
 import calendarReducer from "../features/calendar/calendarSlice";
+import statsReducer from "../features/stats/statsSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
 		[metaApi.reducerPath]: metaApi.reducer,
 		loading: loadingReducer,
 		calendar: calendarReducer,
+		stats: statsReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(

@@ -10,8 +10,14 @@ import {
 	Task,
 	TaskBase,
 } from "../../utils/types";
-import { nextDay, startOfDay } from "../../utils/timeUtils";
+import {
+	dayBefore,
+	nextDay,
+	startOfDay,
+	statsStartDate,
+} from "../../utils/timeUtils";
 import { nanoid } from "nanoid";
+import dayjs from "dayjs";
 
 const createTask = (habit: Habit, date: string): Task => {
 	const baseTask: TaskBase = {
@@ -43,19 +49,63 @@ const createTask = (habit: Habit, date: string): Task => {
 	return newTask;
 };
 
-export const generateTasks = (
+export const generateTestTasksData = (
 	habits: Habit[],
-	startDate: Date = new Date(startOfDay()),
-	endDate: Date = new Date(nextDay())
+	completionRate: number,
+	startDate: string = startOfDay(),
+	endDate: string = nextDay()
 ): Task[] => {
 	const tasks = [];
+	const end = dayjs(endDate);
 	for (
-		let date = new Date(startDate);
-		date < endDate;
-		date.setDate(date.getDate() + 1)
+		let date = dayjs(startDate);
+		date.isBefore(end);
+		date = date.add(1, "day")
 	) {
-		console.log("new", startDate, date);
-		const dayKey = DayKeys[date.getDay()];
+		const dayKey = DayKeys[date.day()];
+		const dailyTasks = habits
+			.filter((habit) => habit.daysOfWeek[dayKey].isTrue)
+			.flatMap((habit) => {
+				if (!isGoodHabit(habit) || habit.allDay)
+					return {
+						...createTask(habit, date.toISOString()),
+						complete: Math.random() * 100 <= completionRate,
+					};
+
+				return habit.timeOfDay.map(({ time }) => {
+					const thisTime = dayjs(time);
+					return {
+						...createTask(
+							habit,
+							date
+								.hour(thisTime.hour())
+								.minute(thisTime.minute())
+								.second(0)
+								.millisecond(0)
+								.toISOString()
+						),
+						complete: Math.random() * 100 <= completionRate,
+					};
+				});
+			});
+		tasks.push(...dailyTasks);
+	}
+	return tasks;
+};
+
+export const generateTasks = (
+	habits: Habit[],
+	startDate: string = startOfDay(),
+	endDate: string = nextDay()
+): Task[] => {
+	const tasks = [];
+	const end = dayjs(endDate);
+	for (
+		let date = dayjs(startDate);
+		date.isBefore(end);
+		date = date.add(1, "day")
+	) {
+		const dayKey = DayKeys[date.day()];
 		const dailyTasks = habits
 			.filter((habit) => habit.daysOfWeek[dayKey].isTrue)
 			.flatMap((habit) => {
@@ -63,12 +113,15 @@ export const generateTasks = (
 					return createTask(habit, date.toISOString());
 
 				return habit.timeOfDay.map(({ time }) => {
-					const thisTime = new Date(time);
+					const thisTime = dayjs(time);
 					return createTask(
 						habit,
-						new Date(
-							date.setHours(thisTime.getHours(), thisTime.getMinutes(), 0, 0)
-						).toISOString()
+						date
+							.hour(thisTime.hour())
+							.minute(thisTime.minute())
+							.second(0)
+							.millisecond(0)
+							.toISOString()
 					);
 				});
 			});
@@ -80,31 +133,72 @@ export const generateTasks = (
 export const tasksApi = createApi({
 	reducerPath: "tasksApi",
 	baseQuery: fakeBaseQuery(),
-	tagTypes: ["Tasks", "DailyTasks", "WeeklyTasks"],
+	tagTypes: ["Tasks", "DailyTasks", "WeeklyTasks", "TasksByRange"],
 	endpoints: (builder) => ({
-		getDailyTasks: builder.query<Task[], string | void>({
-			queryFn: async (date) => {
+		getTasksByRange: builder.query<
+			Task[],
+			{ startDate?: string; endDate?: string } | void
+		>({
+			queryFn: async ({ startDate, endDate } = {}) => {
 				try {
-					const thisDate = date ? new Date(date) : new Date();
-					const data = await dbActions.getDailyTasks(thisDate);
+					const start = startDate ?? statsStartDate();
+					const end = endDate ?? dayBefore();
+					const data = await dbActions.getTasksByRange(start, end);
+					return { data };
+				} catch (e) {
+					return {
+						error: { message: `Failed to fetch tasks by date range: ${e}` },
+					};
+				}
+			},
+			keepUnusedDataFor: 12 * 60 * 60,
+			providesTags: ["TasksByRange"],
+		}),
+		getDailyTasks: builder.query<Task[], void>({
+			queryFn: async () => {
+				try {
+					const data = await dbActions.getDailyTasks();
 					return { data };
 				} catch (e) {
 					return { error: { message: `Failed to fetch daily tasks: ${e}` } };
 				}
 			},
+			keepUnusedDataFor: 12 * 60 * 60, // 12 hours
 			providesTags: ["Tasks", "DailyTasks"],
 		}),
-		getWeeklyTasks: builder.query<Task[], string | void>({
-			queryFn: async (date) => {
+		// getWeeklyTasks: builder.query<Task[], string | void>({
+		// 	queryFn: async (date) => {
+		// 		try {
+		// 			const thisDate = date ? new Date(date) : new Date();
+		// 			const data = await dbActions.getWeeklyTasks(thisDate);
+		// 			return { data };
+		// 		} catch (e) {
+		// 			return { error: { message: `Failed to fetch weekly tasks: ${e}` } };
+		// 		}
+		// 	},
+		// 	keepUnusedDataFor: 12 * 60 * 60,
+		// 	providesTags: ["Tasks", "WeeklyTasks"],
+		// }),
+		createTestTaskData: builder.mutation({
+			queryFn: async ({ startDate, endDate, habits, completionRate }) => {
 				try {
-					const thisDate = date ? new Date(date) : new Date();
-					const data = await dbActions.getWeeklyTasks(thisDate);
+					const data = generateTestTasksData(
+						habits,
+						completionRate,
+						startDate,
+						endDate
+					);
+					await dbActions.batchCreateDailyTasks(data);
 					return { data };
 				} catch (e) {
-					return { error: { message: `Failed to fetch weekly tasks: ${e}` } };
+					return {
+						error: {
+							message: `Error batch creating task test data. Error: ${e}`,
+						},
+					};
 				}
 			},
-			providesTags: ["Tasks", "WeeklyTasks"],
+			invalidatesTags: ["TasksByRange"],
 		}),
 		createDailyTasks: builder.mutation({
 			queryFn: async (habits: Habit[] | Habit) => {
@@ -194,8 +288,10 @@ export const tasksApi = createApi({
 });
 
 export const {
+	useGetTasksByRangeQuery,
 	useGetDailyTasksQuery,
-	useGetWeeklyTasksQuery,
+	//useGetWeeklyTasksQuery,
+	useCreateTestTaskDataMutation,
 	useCreateDailyTasksMutation,
 	useCheckOffTaskMutation,
 	useIncrementCounterMutation,

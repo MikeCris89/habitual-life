@@ -1,19 +1,23 @@
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DayKeys, GoodTask } from "../../utils/types";
 import dayjs from "dayjs";
 import { startOfWeek } from "../../utils/timeUtils";
 import { CalendarIcon } from "@mui/x-date-pickers";
+import "./calendarStyles.css";
 
 interface Props {
 	tasks: GoodTask[];
 }
 
 const GoodCalendar = ({ tasks }: Props) => {
-	const weekStart = new Date(startOfWeek());
+	const weekStart = startOfWeek();
 	const columns = [
+		{ label: "", date: "" },
 		...DayKeys.map((day, i) => ({
 			label: day.slice(0, 1),
-			date: new Date(weekStart.setDate(weekStart.getDate() + i)).toISOString,
+			date: new Date(
+				new Date(weekStart).setDate(new Date(weekStart).getDate() + i)
+			).toISOString(),
 		})),
 	];
 	const { min, max } = tasks.reduce<{ min: number; max: number }>(
@@ -32,7 +36,10 @@ const GoodCalendar = ({ tasks }: Props) => {
 		},
 		{ min: 7, max: 22 }
 	);
-	const rows = [{ label: "All Day", date: "" }];
+	const rows = [
+		{ label: "", date: "" },
+		{ label: "All Day", date: "" },
+	];
 
 	for (let x = min; x <= max; x++) {
 		const labelDate = new Date();
@@ -43,8 +50,6 @@ const GoodCalendar = ({ tasks }: Props) => {
 		});
 	}
 
-	console.log("good calendar render ");
-
 	return (
 		<Box
 			sx={{
@@ -53,129 +58,332 @@ const GoodCalendar = ({ tasks }: Props) => {
 				overflowX: "hidden",
 				minHeight: 0,
 				maxWidth: "100%",
+				padding: "5px",
 			}}
 		>
 			<Box
 				sx={{
 					display: "grid",
-					//gridTemplate: `fit-content repeat(${rows.length}, 1fr) / 40px repeat(${columns.length}, 1fr)`,
-					gridTemplateColumns: "40px repeat(7, 1fr)",
-					gridAutoRows: "minmax(30px, auto)",
+					gridTemplateColumns: "30px repeat(7, 1fr)",
+					gridAutoRows: "minmax(20px, auto)",
 					maxWidth: "100%",
 					minWidth: 0,
-					border: "1px solid black",
+					border: "1px solid  rgba(0, 0, 0, 0.3)",
+					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
+					borderRadius: "8px",
 					"& > *": {
-						borderRight: "1px solid rgba(0, 0, 0, 0.3)",
-						borderBottom: "1px solid rgba(0, 0, 0, 0.3)",
-						background: "linear-gradient(to bottom, #f8f8f8 50%, #ffffff 50%)",
-						backgroundSize: "100% 40px",
+						//borderRight: "1px solid rgba(0, 0, 0, 0.3)",
+						//borderBottom: "1px solid rgba(0, 0, 0, 0.3)",
 					},
 				}}
 			>
-				{/* Empty Box - Top-Left */}
-				<Box
-					className="flex-center"
-					sx={{
-						gridColumn: "1",
-						gridRow: "1",
-						borderRight: "1px solid rgba(0, 0, 0, 0.3)",
-						borderBottom: "1px solid rgba(0, 0, 0, 0.3)",
-					}}
-				>
-					<CalendarIcon />
-				</Box>
-				{/* Column Labels */}
-				{columns.map(({ label, date }, i) => (
-					<Box
-						key={`${date}-${i}`}
-						className="flex-center"
-						sx={{
-							gridRow: "1",
-							gridColumn: `${i + 2}`,
-							textAlign: "center",
-						}}
-					>
-						<Typography variant="body2" sx={{ fontSize: "12px" }}>
-							{label}
-						</Typography>
-					</Box>
-				))}
-				{/* Rows Labels */}
-				{rows.map(({ label, date }, i) => (
-					<Box
-						key={`${label}-${i}`}
-						className="flex-center"
-						sx={{
-							gridRow: `${i + 2}`,
-							gridColumn: "1",
-							textAlign: "center",
-						}}
-					>
-						<Typography variant="body2" sx={{ fontSize: "8px" }}>
-							{label}
-						</Typography>
-					</Box>
-				))}
-				{/* Task Data */}
 				{columns.map((col, colIndex) => {
 					return rows.map((row, rowIndex) => {
+						// Calendar Icon - box top left
+						if (rowIndex === 0 && colIndex === 0)
+							return (
+								<Box
+									key={`${colIndex}-${rowIndex}`}
+									className="flex-center"
+									sx={{
+										gridColumn: 1,
+										gridRow: 1,
+										borderRadius: "8px 0 0 0",
+									}}
+								>
+									<CalendarIcon />
+								</Box>
+							);
+
+						// Column labels - 1st row
+						if (rowIndex === 0)
+							return (
+								<Box
+									key={`${colIndex}-${rowIndex}`}
+									className={`flex-center col-header ${
+										colIndex - 1 === new Date().getDay() ? "today" : ""
+									}`}
+									sx={{
+										gridColumn: `${colIndex + 1}`,
+										gridRow: 1,
+										borderRadius: colIndex === 7 ? "0 8px 0 0" : 0,
+										padding: "6px 0",
+										borderBottom: "1px solid black",
+									}}
+								>
+									<Typography
+										variant="body2"
+										sx={{ fontSize: "14px", fontWeight: "bold" }}
+									>
+										{col.label}
+									</Typography>
+								</Box>
+							);
+
+						// Row Labels - 1st column
+						if (colIndex === 0)
+							return (
+								<Box
+									key={`${colIndex}-${rowIndex}`}
+									className="flex-center row-label"
+									sx={{
+										gridColumn: 1,
+										gridRow: `${rowIndex + 1}`,
+										borderRadius:
+											rowIndex === rows.length - 1 ? "0 0 0 8px" : 0,
+										flexShrink: 1,
+										textAlign: "center",
+										padding: "6px 0",
+										whiteSpace: "wrap",
+										borderBottom: "none",
+									}}
+								>
+									<Typography
+										variant="body2"
+										sx={{ fontSize: "10px", fontWeight: "bold" }}
+									>
+										{row.label}
+									</Typography>
+								</Box>
+							);
+						// Task Data
+						// return (
+						// 	<Box
+						// 		key={`${colIndex}-${rowIndex}`}
+						// 		className={`flex-center col grid-item ${
+						// 			colIndex - 1 === new Date().getDay() ? "today" : ""
+						// 		}  ${rowIndex === rows.length - 1 ? "last-row-item" : ""}`}
+						// 		sx={{
+						// 			gridColumn: `${colIndex + 1}`,
+						// 			gridRow: `${rowIndex + 1}`,
+						// 			borderRadius:
+						// 				colIndex === columns.length - 1 &&
+						// 				rowIndex === rows.length - 1
+						// 					? "0 0 12px 0"
+						// 					: "8px",
+
+						// 			overflow: "hidden",
+						// 			borderRight: "1px solid rgba(0, 0, 0, 0.1)",
+						// 			borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+						// 			background: "rgba(0, 0, 0, 0.05)",
+						// 			transition: "background 0.2s ease-in-out",
+						// 			"&:hover": {
+						// 				background: "rgba(0, 0, 0, 0.1)",
+						// 				cursor: "pointer",
+						// 			},
+						// 			//padding: "10px 1px",
+						// 		}}
+						// 	>
+						// 		{tasks
+						// 			.filter((task) => {
+						// 				const taskDate = new Date(task.dateTime);
+						// 				const rowHour = new Date(row.date).getHours();
+						// 				if (rowIndex === 1 && taskDate.getDay() === colIndex - 1)
+						// 					return task.allDay;
+						// 				return (
+						// 					!task.allDay &&
+						// 					taskDate.getHours() === rowHour &&
+						// 					taskDate.getDay() === colIndex - 1
+						// 				);
+						// 			})
+						// 			.sort(
+						// 				(a, b) =>
+						// 					new Date(a.dateTime).getMinutes() -
+						// 					new Date(b.dateTime).getMinutes()
+						// 			)
+						// 			.map((task, i, arr) => {
+						// 				return (
+						// 					<Box
+						// 						key={task.id}
+						// 						className={`flex-center col task-item`}
+						// 						sx={{
+						// 							//flexShrink: 1,
+						// 							textAlign: "center",
+						// 							overflow: "hidden",
+						// 							whiteSpace: "nowrap",
+						// 							textOverflow: "ellipsis",
+						// 							width: "100%",
+						// 							//padding: "10px 1px",
+						// 							minWidth: "0",
+						// 							background: "white",
+						// 							height: "100%",
+						// 							// background:
+						// 							// 	"linear-gradient(to bottom, #f8f8f8 50%, #ffffff 50%)",
+						// 							//backgroundSize: "100% 40px",
+						// 							borderRadius: 0,
+						// 						}}
+						// 					>
+						// 						{new Date(task.dateTime).getMinutes() !== 0 &&
+						// 							new Date(
+						// 								arr[Math.max(0, i - 1)].dateTime
+						// 							).getMinutes() !==
+						// 								new Date(task.dateTime).getMinutes() && (
+						// 								<Typography
+						// 									variant="body2"
+						// 									sx={{
+						// 										fontSize: "8px",
+						// 										width: "100%",
+						// 									}}
+						// 								>
+						// 									{dayjs(task.dateTime).format("HH:mm")}
+						// 								</Typography>
+						// 							)}
+						// 						<Typography
+						// 							variant="body2"
+						// 							sx={{
+						// 								fontSize: "10px",
+						// 								whiteSpace: "nowrap",
+						// 								overflow: "hidden",
+						// 								textAlign: "center",
+						// 								//textOverflow: "ellipsis",
+						// 								display: "block",
+						// 								width: "95%",
+						// 								//maxWidth: "100%",
+						// 								backgroundColor: "rgba(0, 123, 255, 0.1)",
+						// 								border: "1px solid rgba(0, 123, 255, 0.3)",
+						// 								borderRadius: "6px",
+						// 								padding: "1px 2px",
+						// 								boxShadow: "1px 1px 3px rgba(0, 0, 0, 0.2)",
+						// 								//margin: "6px 0",
+						// 								"&:hover": {
+						// 									backgroundColor: "rgba(0, 123, 255, 0.2)",
+						// 									cursor: "pointer",
+						// 									transform: "scale(1.05)",
+						// 								},
+						// 								height: "21px",
+						// 							}}
+						// 						>
+						// 							{task.title}
+						// 						</Typography>
+						// 					</Box>
+						// 				);
+						// 			})}
+						// 	</Box>
+						// );
+
+						// Task Data 2
+						const gridTasks = tasks
+							.filter((task) => {
+								const taskDate = new Date(task.dateTime);
+								const rowHour = new Date(row.date).getHours();
+								if (rowIndex === 1 && taskDate.getDay() === colIndex - 1)
+									return task.allDay;
+								return (
+									!task.allDay &&
+									taskDate.getHours() === rowHour &&
+									taskDate.getDay() === colIndex - 1
+								);
+							})
+							.sort(
+								(a, b) =>
+									new Date(a.dateTime).getMinutes() -
+									new Date(b.dateTime).getMinutes()
+							);
+
+						const taskExists = !!gridTasks.length;
+
+						// All Day row - row 2
+						// if (rowIndex === 1) {
+						// 	return (
+						// 		<Box
+						// 			key={`${colIndex}-${rowIndex}`}
+						// 			sx={{
+						// 				gridRow: "2",
+						// 				gridColumn: " 2 /-1",
+						// 				borderRadius: "8px",
+						// 				bgcolor: "primary.light",
+						// 			}}
+						// 		></Box>
+						// 	);
+						// }
 						return (
 							<Box
+								className={`flex-center col gap2 grid-item ${
+									colIndex - 1 === new Date().getDay() ? "today" : ""
+								}  ${rowIndex === rows.length - 1 ? "last-row-item" : ""}`}
 								key={`${colIndex}-${rowIndex}`}
-								className="flex-center col gap1"
 								sx={{
-									gridColumn: `${colIndex + 2}`,
-									gridRow: `${rowIndex + 2}`,
-									minHeight: "30px",
-									padding: "2px",
-									//minWidth: 0,
-									overflow: "hidden",
+									whiteSpace: "nowrap",
+									textOverflow: "ellipsis",
+									width: "100%",
+									minWidth: "0",
+									height: "100%",
+									gridColumn: `${colIndex + 1}`,
+									gridRow: `${rowIndex + 1}`,
+									padding: "3px 2px",
+									//borderTop: taskExists ? "1px solid black" : "none",
+									//borderBottom: taskExists ? "1px solid black" : "none",
 								}}
 							>
-								{tasks &&
-									tasks
-										.filter((task) => {
-											const taskDate = new Date(task.dateTime);
-											const rowDate = new Date(row.date);
-											return (
-												taskDate.getDay() === colIndex &&
-												(rowIndex === 0
-													? task.allDay
-													: !task.allDay &&
-													  taskDate.getHours() === rowDate.getHours())
-											);
-										})
-										.map((task) => (
+								<Box
+									className="flex-center col gap2"
+									sx={{
+										borderRadius: "8px",
+										overflow: "hidden",
+										borderRight: "1px solid rgba(0, 0, 0, 0.1)",
+										borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
+										background: taskExists ? "white" : "rgba(0, 0, 0, 0.05)",
+										transition: "background 0.2s ease-in-out",
+										"&:hover": {
+											background: taskExists ? "" : "rgba(0, 0, 0, 0.1)",
+											cursor: "pointer",
+										},
+										textAlign: "center",
+										width: "100%",
+										height: "100%",
+										padding: "10px 2px",
+									}}
+								>
+									{gridTasks.map((task, i, arr) => {
+										return (
 											<Box
 												key={task.id}
-												sx={{
-													flexShrink: 1,
-													textAlign: "center",
-													//outline: "1px solid black",
-													//borderRadius: "12px",
-													//padding: "2px 3px",
-													overflow: "hidden",
-													whiteSpace: "nowrap",
-													textOverflow: "ellipsis",
-													maxWidth: "90%",
-													minWidth: "0",
-												}}
+												className="flex-center col "
+												sx={{ height: "100%", width: "100%" }}
 											>
+												{new Date(task.dateTime).getMinutes() !== 0 &&
+													new Date(
+														arr[Math.max(0, i - 1)].dateTime
+													).getMinutes() !==
+														new Date(task.dateTime).getMinutes() && (
+														<Typography
+															variant="body2"
+															sx={{
+																fontSize: "10px",
+																width: "100%",
+															}}
+														>
+															{dayjs(task.dateTime).format("HH:mm")}
+														</Typography>
+													)}
 												<Typography
 													variant="body2"
 													sx={{
-														fontSize: "10px",
+														fontSize: "11px",
 														whiteSpace: "nowrap",
 														overflow: "hidden",
-														textOverflow: "ellipsis",
+														textAlign: "center",
 														display: "block",
-														maxWidth: "100%",
+														width: "95%",
+														backgroundColor: "rgba(0, 123, 255, 0.1)",
+														border: "1px solid rgba(0, 123, 255, 0.3)",
+														borderRadius: "6px",
+														padding: "1px 2px",
+														boxShadow: "1px 1px 3px rgba(0, 0, 0, 0.2)",
+														"&:hover": {
+															backgroundColor: "rgba(0, 123, 255, 0.2)",
+															cursor: "pointer",
+															transform: "scale(1.05)",
+														},
+														height: "21px",
 													}}
 												>
 													{task.title}
 												</Typography>
 											</Box>
-										))}
+										);
+									})}
+								</Box>
 							</Box>
 						);
 					});
