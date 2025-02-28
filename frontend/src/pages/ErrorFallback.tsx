@@ -1,6 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { handleError, logError } from "../utils/errors";
+import { logError } from "../utils/errors";
 import { useEffect, useRef, useState } from "react";
 
 interface ErrorProps {
@@ -34,8 +34,14 @@ const ErrorFallback = ({ error, resetErrorBoundary }: ErrorProps) => {
 			isFirstRender.current = false;
 			return;
 		}
-		resetErrorBoundary();
-	}, [location.pathname, resetErrorBoundary, isFirstRender]);
+		// Only reset when the user actively navigates, not when the same page re-renders
+		const unlisten = () => {
+			resetErrorBoundary();
+		};
+
+		// Listen for navigation changes
+		return () => unlisten();
+	}, [location.key, resetErrorBoundary]);
 
 	const handleReset = () => {
 		resetErrorBoundary();

@@ -6,12 +6,12 @@ import { generateTasks } from "../tasks/tasksApi";
 
 interface CalendarState {
 	selectedWeek: string;
-	remainingWeeklyTasks: Task[];
+	weeklyTasks: Task[];
 }
 
 const initialState: CalendarState = {
 	selectedWeek: startOfWeek(),
-	remainingWeeklyTasks: [],
+	weeklyTasks: [],
 };
 
 const calendarSlice = createSlice({
@@ -22,9 +22,9 @@ const calendarSlice = createSlice({
 			state.selectedWeek = action.payload;
 		},
 		setRemainingWeeklyTasks: (state, action: PayloadAction<Habit[]>) => {
-			state.remainingWeeklyTasks = generateTasks(
+			state.weeklyTasks = generateTasks(
 				action.payload,
-				nextDay(),
+				startOfWeek(),
 				endOfWeek()
 			);
 		},

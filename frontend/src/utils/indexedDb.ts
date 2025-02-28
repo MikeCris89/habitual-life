@@ -7,8 +7,9 @@ import {
 	startOfWeek,
 	statsStartDate,
 } from "./timeUtils";
-import { Habit, MetaData, Task } from "./types";
+import { Habit, Task } from "./types";
 import { handleError } from "./errors";
+import { MetaData } from "../features/meta/metaApi";
 
 const dbPromise = openDB("habitsDB", 2, {
 	upgrade(db) {
@@ -43,7 +44,10 @@ export const dbActions = {
 		if (!existingMeta) {
 			handleError("setLastCreatedDate: No existing meta data.");
 		}
-		const newData = { ...existingMeta, lastCreatedDate: startOfDay() };
+		const newData: MetaData = {
+			...existingMeta,
+			lastCreatedDate: startOfDay(),
+		};
 		await db.put("meta", newData);
 		return newData;
 	},
@@ -53,7 +57,12 @@ export const dbActions = {
 		if (!existingMeta) {
 			handleError("putMetaGoal: No existing meta data.");
 		}
-		const newData = { ...existingMeta, goal };
+		const currGoal = existingMeta.goal;
+		currGoal[startOfDay()] = goal;
+		const newData: MetaData = {
+			...existingMeta,
+			goal: { ...currGoal },
+		};
 		await db.put("meta", newData);
 		return newData;
 	},

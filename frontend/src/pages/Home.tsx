@@ -16,6 +16,8 @@ const Home = () => {
 	const badTasks = tasksToday.filter(isBadTask);
 	const counterTasks = tasksToday.filter(isCounterTask);
 
+	console.log("Homepage render ");
+
 	return (
 		<Box
 			sx={{ overflow: "hidden", flex: 1, height: "100%", minHeight: 0 }}

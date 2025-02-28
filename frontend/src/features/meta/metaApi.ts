@@ -1,8 +1,15 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../utils/indexedDb";
-import { MetaData } from "../../utils/types";
 import { nanoid } from "nanoid";
 import { handleError } from "../../utils/errors";
+import { startOfDay } from "../../utils/timeUtils";
+
+export type MetaData = {
+	userId: string;
+	lastCreatedDate: string;
+	theme: string;
+	goal: Record<string, number>;
+};
 
 export const metaApi = createApi({
 	reducerPath: "metaApi",
@@ -18,7 +25,7 @@ export const metaApi = createApi({
 							userId: nanoid(),
 							lastCreatedDate: "",
 							theme: "light",
-							goal: 70,
+							goal: { [startOfDay()]: 70 },
 						};
 						await dbActions.setMetaData(metaInit);
 						return { data: metaInit };

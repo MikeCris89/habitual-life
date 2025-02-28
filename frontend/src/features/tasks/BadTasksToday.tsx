@@ -48,6 +48,7 @@ type Props = {
 	tasks: BadTask[];
 };
 const BadTasksToday: React.FC<Props> = ({ tasks }) => {
+	console.log("BadTasksToday render");
 	return (
 		<Box className="flex-center col gap2">
 			{tasks && tasks.length > 0 ? (

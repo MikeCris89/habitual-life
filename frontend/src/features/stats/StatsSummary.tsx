@@ -1,24 +1,22 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import { useCreateTestTaskDataMutation } from "../tasks/tasksApi";
 import { useGetHabitsQuery } from "../habits/habitsApi";
 import { startOfDay, statsStartDate } from "../../utils/timeUtils";
 import { useSelector } from "react-redux";
-import { selectDailyStats, selectMonthlyStats } from "./statsSelectors";
+import { selectCurrentGoal, selectCurrentStats } from "./statsSelectors";
 import { RootState } from "../../app/store";
 
 const StatsSummary = () => {
 	const [createTestData, { isLoading }] = useCreateTestTaskDataMutation();
 	const { data: habits } = useGetHabitsQuery();
 	const today = startOfDay();
+	const goal = useSelector((state: RootState) => selectCurrentGoal(state));
 
 	const pastStats = useSelector((state: RootState) => state.stats);
-	const monthlyStats = useSelector((state: RootState) =>
-		selectMonthlyStats(state)
+
+	const { completionRate } = useSelector((state: RootState) =>
+		selectCurrentStats(state)
 	);
-	// const weeklyStats = useSelector((state: RootState) =>
-	// 	selectWeeklyStats(state, weeklyProps)
-	// );
-	const dailyStats = useSelector((state: RootState) => selectDailyStats(state));
 
 	const handleTestData = async () => {
 		if (habits) {
@@ -32,22 +30,41 @@ const StatsSummary = () => {
 	};
 
 	//console.log("pastStats", pastStats);
-	// console.log("weeklyStats ", weeklyStats);
-	// console.log("monthlyStats ", monthlyStats);
 
 	return (
-		<Box>
+		<Box className="flex-center col" sx={{ width: "90%" }}>
 			<Button onClick={handleTestData} loading={isLoading}>
 				Add Tasks
 			</Button>
 			{pastStats && (
-				<Box>
-					<Box>
-						Monthly Stats: {monthlyStats.completionRate}%
-						{monthlyStats.forecastStatus}
+				<Box sx={{ width: "100%" }}>
+					<Box className="flex-between gap2" sx={{ width: "100%" }}>
+						<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							Progress:
+						</Typography>
+						<Box sx={{ width: "100%", mr: 1 }}>
+							<LinearProgress
+								variant="determinate"
+								value={completionRate}
+								sx={{
+									height: 8,
+									borderRadius: 5,
+									backgroundColor: "#ddd",
+									"& .MuiLinearProgress-bar": {
+										backgroundColor:
+											completionRate >= goal
+												? "green"
+												: completionRate >= goal - 10
+												? "orange"
+												: "red",
+									},
+								}}
+							/>
+						</Box>
+						<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							{completionRate}%
+						</Typography>
 					</Box>
-					{/* <Box>Weekly Stats: {weeklyStats.completionRate}% </Box> */}
-					<Box>Daily Stats: {dailyStats.completionRate}% </Box>
 				</Box>
 			)}
 		</Box>

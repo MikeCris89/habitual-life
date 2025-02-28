@@ -108,13 +108,6 @@ export type DayKey = (typeof DayKeys)[number];
 
 export type DaysOfWeek = Record<DayKey, Day>;
 
-export type MetaData = {
-	userId: string;
-	lastCreatedDate: string;
-	theme: string;
-	goal: 70;
-};
-
 /** TYPEGUARD FUNCTIONS */
 
 export const isDayKey = (name: string): name is DayKey => {

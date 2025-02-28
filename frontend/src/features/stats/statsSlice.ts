@@ -4,7 +4,7 @@ import { startOfDay } from "../../utils/timeUtils";
 
 interface DayStats {
 	totalTasks: number;
-	completeTasks: number;
+	completedTasks: number;
 	completionRate: number;
 }
 
@@ -23,18 +23,18 @@ const statsSlice = createSlice({
 				if (!state[dateKey])
 					state[dateKey] = {
 						totalTasks: 0,
-						completeTasks: 0,
+						completedTasks: 0,
 						completionRate: 0,
 					};
 
 				// update state
 				state[dateKey].totalTasks++;
-				if (task.complete) state[dateKey].completeTasks++;
+				if (task.complete) state[dateKey].completedTasks++;
 
 				// completion rate
-				const { totalTasks, completeTasks } = state[dateKey];
+				const { totalTasks, completedTasks } = state[dateKey];
 				state[dateKey].completionRate =
-					totalTasks > 0 ? Math.round((completeTasks / totalTasks) * 100) : 0;
+					totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 			});
 		},
 	},

@@ -30,7 +30,7 @@ export const logError = async (error: unknown) => {
 	if (pastErrors.length >= MAX_ERROR_LOGS) pastErrors.shift(); // Remove oldest entry
 
 	pastErrors.push(error);
-	dbActions.logError(error).catch((e) => console.error(e));
+	await dbActions.logError(error).catch((e) => console.error(e));
 	console.error(error);
 };
 

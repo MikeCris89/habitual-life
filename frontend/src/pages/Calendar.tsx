@@ -1,61 +1,37 @@
 import { Box } from "@mui/material";
-import { useGetHabitsQuery } from "../features/habits/habitsApi";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectRemainingWeeklyTasks } from "../features/calendar/calendarSelectors";
 import { RootState } from "../app/store";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { GoodTask, isGoodTask, Task } from "../utils/types";
-import { endOfWeek, startOfDay, startOfWeek } from "../utils/timeUtils";
+import { startOfWeek } from "../utils/timeUtils";
 import GoodCalendar from "../features/calendar/GoodCalendar";
-import { useGetTasksByRangeQuery } from "../features/tasks/tasksApi";
+import {
+	useGetDailyTasksQuery,
+	useGetTasksByRangeQuery,
+} from "../features/tasks/tasksApi";
 
 const Calendar = () => {
-	//const dispatch = useDispatch();
 	const [weeklyTasks, setWeeklyTasks] = useState<Task[]>([]);
+	const EMPTY_ARR: Task[] = [];
 
-	//const { data: habitList } = useGetHabitsQuery();
-
-	// const selectedWeek = useSelector(
-	// 	(state: RootState) => state.calendar.selectedWeek
-	// );
-
-	const { data: existingTasks } = useGetTasksByRangeQuery();
-
-	// const habits = useMemo(() => habitList ?? [], [habitList]);
-
-	// const { weekStart, weekEnd, isCurrentWeek } = useMemo(() => {
-	// 	const today = startOfDay();
-	// 	const weekStart = startOfWeek(selectedWeek);
-	// 	const weekEnd = endOfWeek(selectedWeek);
-	// 	return {
-	// 		weekStart,
-	// 		weekEnd,
-	// 		isCurrentWeek: today >= weekStart && today < weekEnd,
-	// 	};
-	// }, [selectedWeek]);
-
-	// const missingTasks = useSelector((state: RootState) =>
-	// 	selectMissingWeeklyTasks(state, habits, weekStart)
-	// );
-
-	const missingTasks = useSelector((state: RootState) =>
-		selectRemainingWeeklyTasks(state)
+	const missingTasks = useSelector(
+		(state: RootState) => selectRemainingWeeklyTasks(state) ?? EMPTY_ARR
 	);
-	// SAVE FOR FUTURE - for history / existing tasks
-	// useEffect(() => {
-	// 	console.log(
-	// 		"calendar useEffect render",
-	// 		missingTasks,
-	// 		existingTasks,
-	// 		isCurrentWeek
-	// 	);
-	// 	setWeeklyTasks(
-	// 		isCurrentWeek
-	// 			? [...missingTasks, ...(existingTasks ?? [])]
-	// 			: [...(existingTasks ?? [])]
-	// 	);
 
-	// }, [missingTasks, existingTasks, isCurrentWeek]);
+	// DO NOT DELETE - for future set up
+	// const { data: existingTasks = EMPTY_ARR } = useGetTasksByRangeQuery();
+	// const { data: tasksToday = EMPTY_ARR } = useGetDailyTasksQuery();
+
+	// useEffect(() => {
+	// 	setWeeklyTasks([
+	// 		...existingTasks.filter(
+	// 			(task) => new Date(task.dateTime) >= new Date(startOfWeek())
+	// 		),
+	// 		...missingTasks,
+	// 		...tasksToday,
+	// 	]);
+	// }, [missingTasks, existingTasks, tasksToday]);
 
 	// READ ONLY - for viewing weekly set up
 	useEffect(() => {
