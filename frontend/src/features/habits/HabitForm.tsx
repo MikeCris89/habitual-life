@@ -4,12 +4,15 @@ import {
 	Checkbox,
 	FormControlLabel,
 	FormGroup,
+	FormLabel,
 	Paper,
 	Switch,
 	TextField,
+	ToggleButton,
+	ToggleButtonGroup,
 	Typography,
 } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
 	DayKey,
 	DayKeys,
@@ -22,7 +25,15 @@ import {
 	isCounterHabit,
 	isDayKey,
 	isGoodHabit,
-	isValidType,
+	isNoneTimer,
+	isTimerType,
+	isValidHabitType,
+	NoneTimer,
+	RoundTimer,
+	SingleTimer,
+	Timer,
+	TimerType,
+	TimerTypes,
 } from "../../utils/types";
 import { dayActive, dayStyle } from "../../utils/styles";
 import { TimePicker } from "@mui/x-date-pickers";
@@ -46,6 +57,8 @@ import {
 } from "../tasks/tasksApi";
 import { useDispatch } from "react-redux";
 import { setError, setLoading, setSuccess } from "../loading/loadingSlice";
+import DurationPicker from "../../components/DurationPicker";
+import NumberField from "../../components/NumberField";
 
 const initHabit: HabitBase = {
 	title: "",
@@ -62,12 +75,35 @@ const initHabit: HabitBase = {
 	id: "",
 };
 
+const initNoneTimer: NoneTimer = {
+	type: TimerTypes.NONE,
+};
+
+const initSingleTimer: SingleTimer = {
+	type: TimerTypes.SINGLE,
+	duration: 0,
+};
+const initRoundTimer: RoundTimer = {
+	type: TimerTypes.ROUND,
+	duration: 0,
+	rounds: 1,
+	breakDuration: 0,
+	sets: 1,
+};
+
+const initTimers: Record<TimerType, Timer> = {
+	[TimerTypes.NONE]: { ...initNoneTimer },
+	[TimerTypes.SINGLE]: { ...initSingleTimer },
+	[TimerTypes.ROUND]: { ...initRoundTimer },
+};
+
 const initTypes: Record<HabitType, Habit> = {
 	good: {
 		...initHabit,
 		timeOfDay: [],
 		allDay: true,
 		type: HabitTypes.GOOD,
+		timer: { ...initNoneTimer },
 	},
 	bad: {
 		...initHabit,
@@ -77,7 +113,7 @@ const initTypes: Record<HabitType, Habit> = {
 	counter: {
 		...initHabit,
 		type: HabitTypes.COUNTER,
-		max: false,
+		isMax: false,
 		total: 0,
 	},
 };
@@ -87,42 +123,12 @@ const HabitForm = () => {
 	const { id, type } = useParams();
 	const dispatch = useDispatch();
 	const { data: habits } = useGetHabitsQuery();
-
-	const [
-		addHabit,
-		// { isLoading: addLoading, isSuccess: addSuccess, error: addError },
-	] = useAddHabitMutation();
-
-	const [
-		editHabit,
-		// { isLoading: editLoading, isSuccess: editSuccess, error: editError },
-	] = useEditHabitMutation();
-
-	const [
-		createDailyTasks,
-		// {
-		// 	isLoading: loadingCreateTasks,
-		// 	isSuccess: createTasksSuccess,
-		// 	error: createTasksError,
-		// },
-	] = useCreateDailyTasksMutation();
-
+	const onAcceptRef = useRef(false);
+	const [addHabit] = useAddHabitMutation();
+	const [editHabit] = useEditHabitMutation();
+	const [createDailyTasks] = useCreateDailyTasksMutation();
 	const { data: dailyTasks } = useGetDailyTasksQuery();
-
 	const [deleteTasks] = useDeleteTasksMutation();
-
-	// const isLoadingSubmit = useMemo(
-	// 	() => editLoading || addLoading || loadingCreateTasks,
-	// 	[editLoading, addLoading, loadingCreateTasks]
-	// );
-	// const errorSubmit = useMemo(
-	// 	() => addError || editError || createTasksError,
-	// 	[addError, editError, createTasksError]
-	// );
-	// const successSubmit = useMemo(
-	// 	() => !isLoadingSubmit && !errorSubmit && (addSuccess || editSuccess),
-	// 	[isLoadingSubmit, errorSubmit, addSuccess, editSuccess]
-	// );
 
 	// Check if editing or adding new Habit
 	const habitToEdit = useMemo(() => {
@@ -135,7 +141,7 @@ const HabitForm = () => {
 	// Get the habit type (good, bad, counter)
 	const habitType = useMemo(() => {
 		if (habitToEdit) return habitToEdit.type;
-		if (type && isValidType(type)) return type;
+		if (type && isValidHabitType(type)) return type;
 		handleError(
 			`Habit Form: Habit type not found. Type: ${type}, habitToEdit: ${habitToEdit}`
 		);
@@ -144,35 +150,7 @@ const HabitForm = () => {
 	const [habit, setHabit] = useState<Habit>({
 		...(habitToEdit ?? initTypes[habitType]),
 	});
-
 	const [selectingTime, setSelectingTime] = useState<boolean>(false);
-
-	// const handleNavigateBack = useCallback(() => {
-	// 	navigate(-1);
-	// }, [navigate]);
-
-	// Submit Loading / Success / Error
-	// useEffect(() => {
-	// 	console.log("form useEffect render");
-	// 	if (isLoadingSubmit) {
-	// 		dispatch(setLoading());
-	// 	} else if (errorSubmit) {
-	// 		dispatch(
-	// 			setError(editError ? "Error editing habit." : "Error adding habit.")
-	// 		);
-	// 	} else if (successSubmit) {
-	// 		console.log("success submit ");
-	// 		dispatch(setSuccess("Success"));
-	// 		setTimeout(() => handleNavigateBack(), 750);
-	// 	}
-	// }, [
-	// 	isLoadingSubmit,
-	// 	errorSubmit,
-	// 	dispatch,
-	// 	editError,
-	// 	successSubmit,
-	// 	handleNavigateBack,
-	// ]);
 
 	// GoodHabit - get time of day id
 	const getTimeId = (habit: GoodType) => {
@@ -236,40 +214,90 @@ const HabitForm = () => {
 	};
 
 	// GoddHabit - add new timeOfDay element to array
-	const handleAddTime = (time: Dayjs) => {
+	const handleAddTime = (time: Dayjs | null) => {
+		console.log("add time start");
+
 		setHabit((prev) => {
 			if (isGoodHabit(prev))
-				return {
-					...prev,
-					timeOfDay: [
-						...prev.timeOfDay,
-						{ id: getTimeId(prev), time: time.toISOString() },
-					],
-				};
+				if (time) {
+					return {
+						...prev,
+						timeOfDay: [
+							...prev.timeOfDay,
+							{ id: getTimeId(prev), time: time.toISOString() },
+						],
+					};
+				} else {
+					if (prev.timeOfDay.length === 0) return { ...prev, allDay: true };
+				}
 			return prev;
 		});
 	};
 
 	// GoodHabit - edit existing timeOfDay array element
 	const handleChangeTime = (
-		time: Dayjs,
+		time: Dayjs | null,
 		entry: { id: number; time: string }
 	) => {
+		console.log("handle change time");
 		let date: Date;
 		if (time) {
 			date = new Date(time.toISOString());
 
 			date.setDate(date.getDate());
 		}
-
 		setHabit((prev) => {
-			if (isGoodHabit(prev))
-				return {
-					...prev,
-					timeOfDay: prev.timeOfDay.map((el) =>
-						el.id === entry.id ? { ...entry, time: date?.toISOString() } : el
-					),
-				};
+			if (isGoodHabit(prev)) {
+				if (date) {
+					console.log("date exists");
+					return {
+						...prev,
+						timeOfDay: prev.timeOfDay.map((el) =>
+							el.id === entry.id ? { ...entry, time: date.toISOString() } : el
+						),
+					};
+				} else {
+					console.log("No date exists");
+					if (prev.timeOfDay.length === 0) {
+						return { ...prev, allDay: true };
+					} else {
+						return prev;
+					}
+				}
+			}
+			return prev;
+		});
+	};
+
+	// GoodHabit - set timers - TYPE
+	const handleTimerType = (
+		event: React.MouseEvent<HTMLElement>,
+		type: string
+	) => {
+		setHabit((prev) => {
+			if (isGoodHabit(prev) && isTimerType(type)) {
+				return { ...prev, timer: { ...initTimers[type] } };
+			}
+			return prev;
+		});
+	};
+
+	// goodhabit - set timer duration for single / round
+	const handleTimerDuration = (
+		msDuration: number,
+		type: "duration" | "break"
+	) => {
+		setHabit((prev) => {
+			if (isGoodHabit(prev)) {
+				if (type === "duration")
+					return { ...prev, timer: { ...prev.timer, duration: msDuration } };
+
+				if (type === "break")
+					return {
+						...prev,
+						timer: { ...prev.timer, breakDuration: msDuration },
+					};
+			}
 			return prev;
 		});
 	};
@@ -330,6 +358,7 @@ const HabitForm = () => {
 					required
 				/>
 
+				{/* Title and Days Of Week */}
 				<FormGroup
 					sx={{ display: "flex", flexDirection: "column", width: "100%" }}
 				>
@@ -377,7 +406,7 @@ const HabitForm = () => {
 					</Box>
 				</FormGroup>
 
-				{/**GoodHabit Time of Day List */}
+				{/**GoodHabit */}
 				{isGoodHabit(habit) && (
 					<Box
 						className="flex-center col gap2"
@@ -419,7 +448,7 @@ const HabitForm = () => {
 												label="Time of Day"
 												value={dayjs(entry.time)}
 												onChange={(e) => {
-													if (e) handleChangeTime(e, entry);
+													handleChangeTime(e, entry);
 												}}
 												disabled={habit.allDay}
 											/>
@@ -452,13 +481,16 @@ const HabitForm = () => {
 									label="Time of Day"
 									value={null}
 									onAccept={(e) => {
-										if (e) {
-											handleAddTime(e);
-											setSelectingTime(false);
-										}
+										handleAddTime(e);
+										onAcceptRef.current = true;
+										setSelectingTime(false);
 									}}
 									open
-									onClose={() => setSelectingTime(false)}
+									onClose={() => {
+										if (!onAcceptRef.current) handleAddTime(null);
+										onAcceptRef.current = false;
+										setSelectingTime(false);
+									}}
 								/>
 							</LocalizationProvider>
 						)}
@@ -472,6 +504,129 @@ const HabitForm = () => {
 								<Add />
 							</Button>
 						)}
+						{/* Timers */}
+						<Box sx={{ borderRadius: "12px", padding: "5px 10px" }}>
+							<FormControlLabel
+								control={
+									<Switch
+										onChange={({ target }) => {
+											setHabit((prev) => {
+												if (isGoodHabit(prev))
+													return {
+														...prev,
+														timer: !target.checked
+															? { ...initNoneTimer }
+															: {
+																	...initSingleTimer,
+															  },
+													};
+												return prev;
+											});
+										}}
+									/>
+								}
+								label="Timer"
+							/>
+							{!isNoneTimer(habit.timer) && (
+								<Box className="flex-center col" sx={{ gap: "25px" }}>
+									<ToggleButtonGroup
+										color="primary"
+										value={habit.timer.type}
+										exclusive
+										onChange={handleTimerType}
+									>
+										<ToggleButton size="small" value={TimerTypes.SINGLE}>
+											Single
+										</ToggleButton>
+										<ToggleButton size="small" value={TimerTypes.ROUND}>
+											Round
+										</ToggleButton>
+									</ToggleButtonGroup>
+
+									{/* Single Timer */}
+									<Box
+										className="flex col"
+										sx={{
+											width: "100%",
+											gap: "10px",
+											"& *": { width: "100%" },
+										}}
+									>
+										{habit.timer.type === TimerTypes.SINGLE && (
+											<Box className="flex-between">
+												<FormLabel>Duration</FormLabel>
+												<DurationPicker
+													handleChange={(num) =>
+														handleTimerDuration(num, "duration")
+													}
+													value={habit.timer.duration}
+												/>
+											</Box>
+										)}
+										{/* Round Timer */}
+										{habit.timer.type === TimerTypes.ROUND && (
+											<>
+												<Box className="flex-between" sx={{ width: "100%" }}>
+													<FormLabel>Number of Sets</FormLabel>
+													<NumberField
+														value={habit.timer.sets}
+														min={1}
+														max={10}
+														handleChange={(num) =>
+															setHabit((prev) => {
+																if (isGoodHabit(prev)) {
+																	return {
+																		...prev,
+																		timer: { ...prev.timer, sets: num },
+																	};
+																}
+																return prev;
+															})
+														}
+													/>
+												</Box>
+												<Box className="flex-between" sx={{ width: "100%" }}>
+													<FormLabel>Rounds per Set</FormLabel>
+													<NumberField
+														value={habit.timer.rounds}
+														min={1}
+														handleChange={(num) =>
+															setHabit((prev) => {
+																if (isGoodHabit(prev)) {
+																	return {
+																		...prev,
+																		timer: { ...prev.timer, rounds: num },
+																	};
+																}
+																return prev;
+															})
+														}
+													/>
+												</Box>
+												<Box className="flex-between">
+													<FormLabel>Duration per Round</FormLabel>
+													<DurationPicker
+														handleChange={(num) =>
+															handleTimerDuration(num, "duration")
+														}
+														value={habit.timer.duration}
+													/>
+												</Box>
+												<Box className="flex-between">
+													<FormLabel>Break per Round</FormLabel>
+													<DurationPicker
+														handleChange={(num) =>
+															handleTimerDuration(num, "break")
+														}
+														value={habit.timer.breakDuration}
+													/>
+												</Box>
+											</>
+										)}
+									</Box>
+								</Box>
+							)}
+						</Box>
 					</Box>
 				)}
 
@@ -481,7 +636,7 @@ const HabitForm = () => {
 						<FormControlLabel
 							control={
 								<Switch
-									checked={habit.max}
+									checked={habit.isMax}
 									onChange={(e) =>
 										setHabit((prev) => {
 											if (isCounterHabit(prev))
@@ -498,7 +653,7 @@ const HabitForm = () => {
 						/>
 						<Box className="flex-between">
 							<Typography variant="h6">
-								{habit.max ? "Maximum" : "Minimum"} /day
+								{habit.isMax ? "Maximum" : "Minimum"} /day
 							</Typography>
 							{/* <Typography variant="body2">/day</Typography> */}
 							<TextField

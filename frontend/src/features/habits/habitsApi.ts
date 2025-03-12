@@ -114,6 +114,7 @@ export const habitsApi = createApi({
 
 export const {
 	useGetHabitsQuery,
+	useLazyGetHabitsQuery,
 	useAddHabitMutation,
 	useEditHabitMutation,
 	useDeleteHabitMutation,

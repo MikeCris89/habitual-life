@@ -1,11 +1,24 @@
-// Habits
-export interface HabitBase {
-	title: string;
-	daysOfWeek: DaysOfWeek;
-	id: string;
-	createdAt: string;
+// Timers
+export interface NoneTimer {
+	type: "none";
 }
 
+export interface SingleTimer {
+	type: "single";
+	duration: number;
+}
+
+export interface RoundTimer {
+	type: "round";
+	duration: number;
+	rounds: number;
+	sets: number;
+	breakDuration: number;
+}
+
+export type Timer = SingleTimer | RoundTimer | NoneTimer;
+
+// Habits
 export const HabitTypes = {
 	GOOD: "good",
 	BAD: "bad",
@@ -13,6 +26,21 @@ export const HabitTypes = {
 } as const;
 
 export type HabitType = (typeof HabitTypes)[keyof typeof HabitTypes];
+
+export const TimerTypes = {
+	SINGLE: "single",
+	ROUND: "round",
+	NONE: "none",
+} as const;
+
+export type TimerType = (typeof TimerTypes)[keyof typeof TimerTypes];
+
+export interface HabitBase {
+	title: string;
+	daysOfWeek: DaysOfWeek;
+	id: string;
+	createdAt: string;
+}
 
 export interface TimeOfDay {
 	id: number;
@@ -23,16 +51,25 @@ export interface GoodType extends HabitBase {
 	type: "good";
 	timeOfDay: TimeOfDay[];
 	allDay: boolean;
+	timer: Timer;
 }
 
 export interface BadType extends HabitBase {
 	type: "bad";
 }
 
+export interface MacrosType {
+	title: string;
+	total: number;
+	units: string;
+	id: number;
+}
+
 export interface CounterType extends HabitBase {
 	type: "counter";
-	max: boolean;
+	isMax: boolean;
 	total: number;
+	macros?: MacrosType[];
 }
 
 export type Habit = GoodType | BadType | CounterType;
@@ -45,24 +82,32 @@ export interface TaskBase {
 	dateTime: string;
 	complete: boolean;
 }
+
 export interface GoodTask extends TaskBase {
 	type: "good";
 	allDay: boolean;
+	timer: Timer;
 }
 
 export interface BadTask extends TaskBase {
 	type: "bad";
 }
 
+export interface MacrosTask extends MacrosType {
+	count: number;
+}
+
 export interface CounterTask extends TaskBase {
 	type: "counter";
-	max: boolean;
+	isMax: boolean;
 	total: number;
 	count: number;
+	macros?: MacrosTask[];
 }
 
 export type Task = GoodTask | BadTask | CounterTask;
 
+// Stats
 export type Stats = Record<HabitType, HabitStats[]>;
 
 export interface HabitStats {
@@ -114,8 +159,25 @@ export const isDayKey = (name: string): name is DayKey => {
 	return DayKeys.includes(name as any);
 };
 
+// TIMER TYPES
+export const isTimerType = (name: string): name is TimerType => {
+	return Object.values(TimerTypes).includes(name as any);
+};
+
+export const isNoneTimer = (timer: Timer): timer is NoneTimer => {
+	return !!timer?.type && timer.type === TimerTypes.NONE;
+};
+
+export const isSingleTimer = (timer: Timer): timer is SingleTimer => {
+	return timer.type === TimerTypes.SINGLE;
+};
+
+export const isRoundTimer = (timer: Timer): timer is RoundTimer => {
+	return timer.type === TimerTypes.ROUND;
+};
+
 // HABIT TYPES
-export const isValidType = (type: string): type is HabitType => {
+export const isValidHabitType = (type: string): type is HabitType => {
 	return Object.values(HabitTypes).some((entry) => entry === type);
 };
 

@@ -1,19 +1,12 @@
-import {
-	Box,
-	Button,
-	Modal,
-	Paper,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Box, Paper, TextField, Typography } from "@mui/material";
 import HabitCard from "../features/habits/HabitCard";
-import { Habit, HabitType } from "../utils/types";
+import { Habit } from "../utils/types";
 import useDisplay from "../hooks/useDisplay";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import { Close, Search } from "@mui/icons-material";
-import AddMenu from "../components/AddMenu";
 import { memo, useState } from "react";
 import { useGetHabitsQuery } from "../features/habits/habitsApi";
+import AddButton from "../components/AddButton";
 
 interface ListProps {
 	habits?: Habit[];
@@ -42,10 +35,9 @@ const HabitsList = memo(({ search }: ListProps) => {
 interface BarProps {
 	search: string;
 	setSearch: React.Dispatch<React.SetStateAction<string>>;
-	setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HabitBar = memo(({ search, setSearch, setOpenModal }: BarProps) => (
+const HabitBar = memo(({ search, setSearch }: BarProps) => (
 	<Paper
 		className="flex-between"
 		sx={{
@@ -56,7 +48,6 @@ const HabitBar = memo(({ search, setSearch, setOpenModal }: BarProps) => (
 			p: 1,
 			backgroundColor: "#e7e7e7",
 			marginBottom: "10px",
-			//m: 1,
 		}}
 	>
 		<Box className="flex-center gap2">
@@ -76,41 +67,19 @@ const HabitBar = memo(({ search, setSearch, setOpenModal }: BarProps) => (
 					},
 					"& .MuiInputBase-input": { fontSize: "12px", p: 1 },
 					"& label": { fontSize: "12px" },
-					//color: "primary.contrastText",
-					//"& > *": { backgroundColor: "primary.contrastText" },
-					// "& label[data-shrink='true']": {
-					// 	border: "1px solid black",
-					// 	borderRadius: "4px",
-					// },
 				}}
 			/>
 			{search && <Close fontSize="small" onClick={() => setSearch("")} />}
 		</Box>
-		<Button
-			variant="contained"
-			// sx={{
-			// 	color: "primary.contrastText",
-			// 	borderColor: "primary.contrastText",
-			// }}
-			onClick={() => setOpenModal(true)}
-		>
-			add
-		</Button>
+		<AddButton />
 	</Paper>
 ));
 
 const Habits = () => {
-	const [openModal, setOpenModal] = useState<boolean>(false);
 	const [search, setSearch] = useState<string>("");
 	const { id, type } = useParams();
 	const location = useLocation();
 	const { isMobile } = useDisplay();
-	const navigate = useNavigate();
-
-	const handleMenuNav = (type: HabitType) => {
-		navigate(`add/${type}`);
-		setOpenModal(false);
-	};
 
 	const isAdd = location.pathname.includes("/add") && type;
 	const isEdit = location.pathname.includes("/edit") && id;
@@ -123,18 +92,6 @@ const Habits = () => {
 			className="flex col"
 			sx={{ overflow: "hidden", height: "100%", width: "100%" }}
 		>
-			{/** Modal for AddMenu */}
-
-			<Modal
-				open={openModal}
-				onClose={() => setOpenModal(false)}
-				className="flex-center"
-			>
-				<Paper sx={{ p: 3 }}>
-					<AddMenu callback={handleMenuNav} />
-				</Paper>
-			</Modal>
-
 			<Box sx={{ flex: 1, width: "100%", minHeight: 0 }}>
 				{/* Mobile - full page  */}
 				{isMobile && (
@@ -154,11 +111,7 @@ const Habits = () => {
 									overflowY: "auto",
 								}}
 							>
-								<HabitBar
-									search={search}
-									setSearch={setSearch}
-									setOpenModal={setOpenModal}
-								/>
+								<HabitBar search={search} setSearch={setSearch} />
 								<HabitsList search={search} />
 							</Box>
 						)}
@@ -191,11 +144,7 @@ const Habits = () => {
 									position: "relative",
 								}}
 							>
-								<HabitBar
-									search={search}
-									setSearch={setSearch}
-									setOpenModal={setOpenModal}
-								/>
+								<HabitBar search={search} setSearch={setSearch} />
 								<HabitsList search={search} />
 							</Box>
 

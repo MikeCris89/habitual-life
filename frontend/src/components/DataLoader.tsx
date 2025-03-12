@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useGetHabitsQuery } from "../features/habits/habitsApi";
+import { useLazyGetHabitsQuery } from "../features/habits/habitsApi";
 import {
 	useCreateDailyTasksMutation,
 	useGetDailyTasksQuery,
@@ -15,7 +15,6 @@ import {
 import { startOfDay } from "../utils/timeUtils";
 import { useDispatch } from "react-redux";
 import { setPastStats } from "../features/stats/statsSlice";
-import { setRemainingWeeklyTasks } from "../features/calendar/calendarSlice";
 
 interface Props {
 	children: ReactNode;
@@ -23,22 +22,6 @@ interface Props {
 
 const DataLoader = ({ children }: Props) => {
 	const dispatch = useDispatch();
-	const {
-		data: habits,
-		isLoading: loadingHabits,
-		error: errorHabits,
-	} = useGetHabitsQuery();
-
-	const {
-		data: tasksToday,
-		isLoading: loadingTasks,
-		error: errorTasks,
-	} = useGetDailyTasksQuery(undefined, { skip: loadingHabits });
-
-	const [
-		createDailyTasks,
-		{ isLoading: loadingCreateTasks, error: errorCreateTasks },
-	] = useCreateDailyTasksMutation();
 
 	const {
 		data: metaData,
@@ -46,69 +29,82 @@ const DataLoader = ({ children }: Props) => {
 		error: errorMeta,
 	} = useGetMetaQuery();
 
+	const {
+		data: tasksToday,
+		isLoading: loadingTasks,
+		error: errorTasks,
+	} = useGetDailyTasksQuery();
+
+	const [fetchHabits, { isFetching: loadingHabits, error: errorHabits }] =
+		useLazyGetHabitsQuery();
+
+	const [
+		createDailyTasks,
+		{ isLoading: loadingCreateTasks, error: errorCreateTasks },
+	] = useCreateDailyTasksMutation();
+
 	const [
 		setLastCreatedDate,
 		{ isLoading: loadingSetMeta, error: errorSetMeta },
 	] = useSetLastCreatedDateMutation();
 
-	const { data: pastTasks, isLoading: loadingPastTasks } =
-		useGetTasksByRangeQuery();
+	const {
+		data: pastTasks,
+		isLoading: loadingPastTasks,
+		error: errorPastTasks,
+	} = useGetTasksByRangeQuery();
 
 	useEffect(() => {
-		if (habits && !loadingHabits) {
-			console.log("DataLoader - Dispatching setRemainingWeeklyTasks");
-			dispatch(setRemainingWeeklyTasks(habits));
+		if (pastTasks) {
+			console.log("DataLoader - Dispatching setPastStats", pastTasks);
+			dispatch(setPastStats(pastTasks.dataArray));
 		}
-	}, [habits, loadingHabits, dispatch]);
+	}, [pastTasks, dispatch]);
 
 	useEffect(() => {
-		if (pastTasks && !loadingPastTasks) {
-			console.log("DataLoader - Dispatching setPastStats");
-			dispatch(setPastStats(pastTasks));
-		}
-	}, [loadingPastTasks, pastTasks, dispatch]);
-
-	useEffect(() => {
-		if (
-			!loadingMeta &&
-			!loadingHabits &&
-			habits &&
-			metaData?.userId &&
-			metaData.lastCreatedDate !== startOfDay()
-		) {
-			console.log("DataLoader - creating daily tasks.");
+		const createTasks = async () => {
+			console.log("creating daily tasks.");
 			try {
-				createDailyTasks(habits);
-				setLastCreatedDate(metaData.userId);
+				const habits = await fetchHabits().unwrap();
+				if (habits && habits.length) {
+					await createDailyTasks(habits);
+				}
+				await setLastCreatedDate(metaData.userId);
 			} catch (e) {
 				handleError(
 					`DataLoader failed to create tasks and update meta data. ${e} `
 				);
 			}
+		};
+		if (metaData?.userId && metaData.lastCreatedDate !== startOfDay()) {
+			console.log("Tasks not created for today. ");
+			createTasks();
 		}
-	}, [
-		loadingMeta,
-		metaData,
-		createDailyTasks,
-		habits,
-		loadingHabits,
-		setLastCreatedDate,
-	]);
+	}, [metaData, createDailyTasks, setLastCreatedDate, fetchHabits]);
 
 	const isLoading =
 		loadingHabits ||
 		loadingTasks ||
 		loadingCreateTasks ||
 		loadingMeta ||
-		loadingSetMeta;
+		loadingSetMeta ||
+		loadingPastTasks;
+
 	const error =
-		errorHabits || errorTasks || errorCreateTasks || errorMeta || errorSetMeta;
+		errorHabits ||
+		errorTasks ||
+		errorCreateTasks ||
+		errorMeta ||
+		errorSetMeta ||
+		errorPastTasks;
 
 	useEffect(() => {
 		if (error) {
 			handleError(error);
 		}
 	}, [error]);
+
+	console.log("DataLoader Rendering");
 
 	if (isLoading) return <Loading />;
 	//console.log("habits", habits);

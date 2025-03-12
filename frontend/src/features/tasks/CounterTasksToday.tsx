@@ -1,14 +1,18 @@
 import { Box, Button, Typography } from "@mui/material";
-import { CounterTask } from "../../utils/types";
-import { useIncrementCounterMutation } from "./tasksApi";
-type Props = {
-	tasks: CounterTask[];
-};
-const CounterTasksToday: React.FC<Props> = ({ tasks }) => {
+import { isCounterTask } from "../../utils/types";
+import { useGetDailyTasksQuery, useIncrementCounterMutation } from "./tasksApi";
+
+const CounterTasksToday = () => {
+	const tasks = useGetDailyTasksQuery(undefined, {
+		selectFromResult: ({ data = [] }) => data.filter(isCounterTask),
+	});
+
 	const [incrementTask, { isLoading, error }] = useIncrementCounterMutation();
+
+	console.log("CounterTaskToday render ");
 	return (
 		<Box sx={{ p: 2, width: "100%" }}>
-			{tasks && (
+			{tasks && tasks.length > 0 && (
 				<Box className="flex-center gap4" sx={{ overflow: "auto" }}>
 					{tasks.map((task) => (
 						<Box

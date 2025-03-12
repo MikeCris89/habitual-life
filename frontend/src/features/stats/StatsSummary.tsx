@@ -7,41 +7,20 @@ import { selectCurrentGoal, selectCurrentStats } from "./statsSelectors";
 import { RootState } from "../../app/store";
 
 const StatsSummary = () => {
-	const [createTestData, { isLoading }] = useCreateTestTaskDataMutation();
-	const { data: habits } = useGetHabitsQuery();
-	const today = startOfDay();
-	const goal = useSelector((state: RootState) => selectCurrentGoal(state));
+	const goal = useSelector(selectCurrentGoal);
 
 	const pastStats = useSelector((state: RootState) => state.stats);
 
-	const { completionRate } = useSelector((state: RootState) =>
-		selectCurrentStats(state)
-	);
+	const { completionRate } = useSelector(selectCurrentStats);
 
-	const handleTestData = async () => {
-		if (habits) {
-			await createTestData({
-				habits,
-				completionRate: 70,
-				startDate: statsStartDate(),
-				endDate: today,
-			});
-		}
-	};
-
-	//console.log("pastStats", pastStats);
+	console.log("StatsSummary Rendering ", pastStats);
 
 	return (
 		<Box className="flex-center col" sx={{ width: "90%" }}>
-			<Button onClick={handleTestData} loading={isLoading}>
-				Add Tasks
-			</Button>
 			{pastStats && (
-				<Box sx={{ width: "100%" }}>
-					<Box className="flex-between gap2" sx={{ width: "100%" }}>
-						<Typography variant="body1" sx={{ fontWeight: "bold" }}>
-							Progress:
-						</Typography>
+				<Box className="flex-center col" sx={{ width: "100%" }}>
+					<Typography variant="body2">Avg Completion Rate</Typography>
+					<Box className="flex-between gap2" sx={{ width: "80%" }}>
 						<Box sx={{ width: "100%", mr: 1 }}>
 							<LinearProgress
 								variant="determinate"
@@ -52,9 +31,9 @@ const StatsSummary = () => {
 									backgroundColor: "#ddd",
 									"& .MuiLinearProgress-bar": {
 										backgroundColor:
-											completionRate >= goal
+											completionRate >= goal - 5
 												? "green"
-												: completionRate >= goal - 10
+												: completionRate >= goal - 15
 												? "orange"
 												: "red",
 									},

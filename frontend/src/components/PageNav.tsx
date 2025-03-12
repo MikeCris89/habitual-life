@@ -2,10 +2,10 @@ import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-type PageProps = {
+interface PageProps {
 	back?: boolean;
 	title: string;
-};
+}
 
 const navStyle = {
 	display: "grid",
@@ -14,7 +14,7 @@ const navStyle = {
 	justifyItems: "center",
 };
 
-const PageNav: React.FC<PageProps> = ({ back = false, title = "" }) => {
+const PageNav = ({ back = false, title = "" }: PageProps) => {
 	const navigate = useNavigate();
 
 	return (

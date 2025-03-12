@@ -3,7 +3,6 @@ import { RootState } from "../../app/store";
 import { Task } from "../../utils/types";
 import { endOfWeek, startOfDay, startOfWeek } from "../../utils/timeUtils";
 import { tasksApi } from "../tasks/tasksApi";
-import { selectRemainingWeeklyTasks } from "../calendar/calendarSelectors";
 import { metaApi } from "../meta/metaApi";
 
 export enum ForecastStatus {
@@ -54,31 +53,15 @@ export const selectTasksToday = (state: RootState) =>
 	tasksApi.endpoints.getDailyTasks.select(undefined)(state)?.data ??
 	EMPTY_ARRAY;
 
-export const selectPastMonthlyRates = createSelector(
-	[selectStats],
-	(pastStats) => {
-		let totalTasks = 0;
-		let completedTasks = 0;
-
-		for (const dayStat of Object.values(pastStats)) {
-			totalTasks += dayStat.totalTasks;
-			completedTasks += dayStat.completedTasks;
-		}
-
-		return { totalTasks, completedTasks };
-	}
-);
-
 export const selectCurrentStats = createSelector(
-	[selectPastMonthlyRates, selectTasksToday, selectGoals],
-	(monthlyRates, tasksToday, goals) => {
-		const currentGoal = getGoalForDate(goals);
+	[selectStats, selectTasksToday, selectCurrentGoal],
+	(stats, tasksToday, currentGoal) => {
 		const totalCompletedToday = tasksToday.filter(
 			(task) => task.complete
 		).length;
-		const totalTasks = monthlyRates.totalTasks + tasksToday.length;
+		const totalTasks = stats.totalTasks + tasksToday.length;
 
-		const completedTasks = monthlyRates.completedTasks + totalCompletedToday;
+		const completedTasks = stats.completedTasks + totalCompletedToday;
 
 		const completionRate =
 			totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
@@ -88,6 +71,21 @@ export const selectCurrentStats = createSelector(
 		return { completionRate, status };
 	}
 );
+
+// export const selectPastMonthlyRates = createSelector(
+// 	[selectStats],
+// 	(pastStats) => {
+// 		let totalTasks = 0;
+// 		let completedTasks = 0;
+
+// 		for (const dayStat of Object.values(pastStats)) {
+// 			totalTasks += dayStat.totalTasks;
+// 			completedTasks += dayStat.completedTasks;
+// 		}
+
+// 		return { totalTasks, completedTasks };
+// 	}
+// );
 
 // OLD KEEP FOR FUTURE POSSIBLY
 // export const selectCurrentWeekRates = createSelector(

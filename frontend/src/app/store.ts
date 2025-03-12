@@ -4,8 +4,9 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { tasksApi } from "../features/tasks/tasksApi";
 import { metaApi } from "../features/meta/metaApi";
 import loadingReducer from "../features/loading/loadingSlice";
-import calendarReducer from "../features/calendar/calendarSlice";
 import statsReducer from "../features/stats/statsSlice";
+import modalReducer from "../features/modal/modalSlice";
+import timerReducer from "../features/timer/timerSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -13,8 +14,9 @@ export const store = configureStore({
 		[tasksApi.reducerPath]: tasksApi.reducer,
 		[metaApi.reducerPath]: metaApi.reducer,
 		loading: loadingReducer,
-		calendar: calendarReducer,
+		modal: modalReducer,
 		stats: statsReducer,
+		timer: timerReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(

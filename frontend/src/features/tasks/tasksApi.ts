@@ -32,7 +32,7 @@ const createTask = (habit: Habit, date: string): Task => {
 		return {
 			...baseTask,
 			type: HabitTypes.COUNTER,
-			max: habit.max,
+			isMax: habit.isMax,
 			total: habit.total,
 			count: 0,
 		};
@@ -43,6 +43,7 @@ const createTask = (habit: Habit, date: string): Task => {
 			...baseTask,
 			type: HabitTypes.GOOD,
 			allDay: habit.allDay,
+			timer: { ...habit.timer },
 		};
 	}
 	const newTask = { ...baseTask, type: habit.type };
@@ -133,18 +134,29 @@ export const generateTasks = (
 export const tasksApi = createApi({
 	reducerPath: "tasksApi",
 	baseQuery: fakeBaseQuery(),
-	tagTypes: ["Tasks", "DailyTasks", "WeeklyTasks", "TasksByRange"],
+	tagTypes: ["Tasks", "DailyTasks", "TasksByRange"],
 	endpoints: (builder) => ({
 		getTasksByRange: builder.query<
-			Task[],
-			{ startDate?: string; endDate?: string } | void
+			{ dataArray: Task[]; dataByHabitId: Record<string, Task[]> },
+			{
+				startDate?: string;
+				endDate?: string;
+			} | void
 		>({
 			queryFn: async ({ startDate, endDate } = {}) => {
 				try {
 					const start = startDate ?? statsStartDate();
 					const end = endDate ?? dayBefore();
-					const data = await dbActions.getTasksByRange(start, end);
-					return { data };
+					const dataArray = await dbActions.getTasksByRange(start, end);
+					const dataByHabitId = dataArray.reduce<Record<string, Task[]>>(
+						(acc, task) => {
+							if (!acc[task.habitId]) acc[task.habitId] = [];
+							acc[task.habitId].push(task);
+							return acc;
+						},
+						{}
+					);
+					return { data: { dataArray, dataByHabitId } };
 				} catch (e) {
 					return {
 						error: { message: `Failed to fetch tasks by date range: ${e}` },
@@ -152,7 +164,7 @@ export const tasksApi = createApi({
 				}
 			},
 			keepUnusedDataFor: 12 * 60 * 60,
-			providesTags: ["TasksByRange"],
+			providesTags: ["Tasks", "TasksByRange"],
 		}),
 		getDailyTasks: builder.query<Task[], void>({
 			queryFn: async () => {
@@ -166,19 +178,6 @@ export const tasksApi = createApi({
 			keepUnusedDataFor: 12 * 60 * 60, // 12 hours
 			providesTags: ["Tasks", "DailyTasks"],
 		}),
-		// getWeeklyTasks: builder.query<Task[], string | void>({
-		// 	queryFn: async (date) => {
-		// 		try {
-		// 			const thisDate = date ? new Date(date) : new Date();
-		// 			const data = await dbActions.getWeeklyTasks(thisDate);
-		// 			return { data };
-		// 		} catch (e) {
-		// 			return { error: { message: `Failed to fetch weekly tasks: ${e}` } };
-		// 		}
-		// 	},
-		// 	keepUnusedDataFor: 12 * 60 * 60,
-		// 	providesTags: ["Tasks", "WeeklyTasks"],
-		// }),
 		createTestTaskData: builder.mutation({
 			queryFn: async ({ startDate, endDate, habits, completionRate }) => {
 				try {
@@ -237,7 +236,7 @@ export const tasksApi = createApi({
 					return { error: { message: `Error checking off task. Error: ${e}` } };
 				}
 			},
-			invalidatesTags: ["Tasks", "DailyTasks"],
+			invalidatesTags: ["DailyTasks"],
 		}),
 		incrementCounter: builder.mutation({
 			queryFn: async (arg: { task: CounterTask; value?: number }) => {
@@ -267,7 +266,7 @@ export const tasksApi = createApi({
 					};
 				}
 			},
-			invalidatesTags: ["Tasks", "DailyTasks", "WeeklyTasks"],
+			invalidatesTags: ["Tasks"],
 		}),
 		deleteAllTasks: builder.mutation<void, Habit>({
 			queryFn: async (habit) => {
@@ -282,7 +281,7 @@ export const tasksApi = createApi({
 					};
 				}
 			},
-			invalidatesTags: ["Tasks", "DailyTasks", "WeeklyTasks"],
+			invalidatesTags: ["Tasks"],
 		}),
 	}),
 });
@@ -290,7 +289,6 @@ export const tasksApi = createApi({
 export const {
 	useGetTasksByRangeQuery,
 	useGetDailyTasksQuery,
-	//useGetWeeklyTasksQuery,
 	useCreateTestTaskDataMutation,
 	useCreateDailyTasksMutation,
 	useCheckOffTaskMutation,

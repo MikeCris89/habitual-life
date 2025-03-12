@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import router from "./utils/router";
 import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import LoadingModal from "./features/loading/LoadingModal";
+import GlobalModal from "./features/modal/GlobalModal";
 
 function App() {
 	const theme = createTheme({

@@ -28,3 +28,21 @@ export const endOfWeek = (stringDate: string = startOfDay()): string => {
 export const statsStartDate = () => {
 	return dayjs(startOfDay()).subtract(30, "days").toISOString();
 };
+
+export const formatMsTime = (ms: number): string => {
+	const minutes = Math.floor(ms / 1000 / 60);
+	let seconds = Math.floor((ms / 1000) % 60);
+
+	return `${minutes.toString().padStart(2, "0")}:${seconds
+		.toString()
+		.padStart(2, "0")}`;
+};
+
+export const formatSecondsTime = (sec: number): string => {
+	const minutes = Math.floor(sec / 60);
+	let seconds = Math.floor(sec % 60);
+
+	return `${minutes.toString().padStart(2, "0")}:${seconds
+		.toString()
+		.padStart(2, "0")}`;
+};

@@ -33,7 +33,7 @@ const LoadingModal = () => {
 					display: "flex",
 					alignItems: "center",
 					justifyContent: "center",
-					backgroundColor: "rgba(0, 0, 0, 0.5)", // ✅ Low opacity overlay
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
 				}}
 			>
 				<Box

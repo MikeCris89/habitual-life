@@ -3,15 +3,15 @@ import { DaysOfWeek, Habit } from "../../utils/types";
 import { useNavigate } from "react-router-dom";
 import { dayStyle, dayActive } from "../../utils/styles";
 
-type CardProps = {
+interface CardProps {
 	habit: Habit;
-};
+}
 
-type DaysProps = {
+interface DaysProps {
 	days: DaysOfWeek;
-};
+}
 
-export const Days: React.FC<DaysProps> = ({ days }) => {
+export const Days = ({ days }: DaysProps) => {
 	return (
 		<Box className="flex gap1" style={{ float: "right" }}>
 			{days &&
@@ -36,11 +36,11 @@ export const Days: React.FC<DaysProps> = ({ days }) => {
 	);
 };
 
-const HabitCard: React.FC<CardProps> = ({ habit }) => {
+const HabitCard = ({ habit }: CardProps) => {
 	const navigate = useNavigate();
 
 	const handleClick = () => {
-		navigate(`/habits/${habit.id}`);
+		navigate(`/${habit.id}`);
 	};
 
 	return (
@@ -53,12 +53,6 @@ const HabitCard: React.FC<CardProps> = ({ habit }) => {
 			}}
 			onClick={handleClick}
 		>
-			{/* <Typography
-				variant="body1"
-				sx={{ fontSize: "8px", p: 0, opacity: "0.6" }}
-			>
-				{habit.type[0].toUpperCase() + habit.type.slice(1)} Habit
-			</Typography> */}
 			<Typography variant="h6">{habit.title}</Typography>
 
 			<Days days={habit.daysOfWeek} />

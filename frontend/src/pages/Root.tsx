@@ -5,6 +5,9 @@ import useDisplay from "../hooks/useDisplay";
 import DataLoader from "../components/DataLoader";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./ErrorFallback";
+import { Suspense } from "react";
+import Loading from "../components/Loading";
+import GlobalModal from "../features/modal/GlobalModal";
 
 const Root = () => {
 	const { isMobile } = useDisplay();
@@ -19,20 +22,22 @@ const Root = () => {
 				overflow: "hidden",
 			}}
 		>
+			<GlobalModal />
 			<NavBar isMobile={isMobile} />
 
 			<Box
 				sx={{
 					width: "100%",
 					height: "100%",
-					//p: 1,
 					overflow: "hidden",
 					flex: 1,
 				}}
 			>
 				<ErrorBoundary FallbackComponent={ErrorFallback}>
 					<DataLoader>
-						<Outlet />
+						<Suspense fallback={<Loading />}>
+							<Outlet />
+						</Suspense>
 					</DataLoader>
 				</ErrorBoundary>
 			</Box>
