@@ -1,3 +1,8 @@
+// Preset Id's
+export const PresetId = {
+	calorieCounter: "preset_calories",
+} as const;
+
 // Timers
 export interface NoneTimer {
 	type: "none";
@@ -62,7 +67,7 @@ export interface MacrosType {
 	title: string;
 	total: number;
 	units: string;
-	id: number;
+	id: string;
 }
 
 export interface CounterType extends HabitBase {

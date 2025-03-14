@@ -6,7 +6,9 @@ import {
 	Habit,
 	HabitTypes,
 	isCounterHabit,
+	isCounterTask,
 	isGoodHabit,
+	isGoodTask,
 	Task,
 	TaskBase,
 } from "../../utils/types";
@@ -224,6 +226,24 @@ export const tasksApi = createApi({
 				);
 			},
 		}),
+		editTask: builder.mutation<Task, Task>({
+			queryFn: async (task) => {
+				try {
+					const data = await dbActions.put("tasks", task);
+					return { data };
+				} catch (e) {
+					return { error: { message: `Error editing task. Error: ${e}` } };
+				}
+			},
+			onQueryStarted(task, { dispatch }) {
+				dispatch(
+					tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
+						let index = draft.findIndex((el) => el.id === task.id);
+						if (index !== -1) draft[index] = { ...task };
+					})
+				);
+			},
+		}),
 		checkOffTask: builder.mutation<Task, Task>({
 			queryFn: async (task) => {
 				try {
@@ -236,7 +256,14 @@ export const tasksApi = createApi({
 					return { error: { message: `Error checking off task. Error: ${e}` } };
 				}
 			},
-			invalidatesTags: ["DailyTasks"],
+			async onQueryStarted(task, { dispatch }) {
+				dispatch(
+					tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
+						const taskToUpdate = draft.find((el) => el.id === task.id);
+						if (taskToUpdate) taskToUpdate.complete = !taskToUpdate.complete;
+					})
+				);
+			},
 		}),
 		incrementCounter: builder.mutation({
 			queryFn: async (arg: { task: CounterTask; value?: number }) => {
@@ -250,6 +277,17 @@ export const tasksApi = createApi({
 				} catch (e) {
 					return { error: { message: `Error incrementing task. Error: ${e}` } };
 				}
+			},
+			async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+				const { task, value = 1 } = arg;
+
+				dispatch(
+					tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
+						const taskToUpdate = draft.find((el) => el.id === task.id);
+						if (taskToUpdate && isCounterTask(taskToUpdate))
+							taskToUpdate.count += value;
+					})
+				);
 			},
 		}),
 		deleteTasks: builder.mutation<void, Task[]>({
@@ -291,6 +329,7 @@ export const {
 	useGetDailyTasksQuery,
 	useCreateTestTaskDataMutation,
 	useCreateDailyTasksMutation,
+	useEditTaskMutation,
 	useCheckOffTaskMutation,
 	useIncrementCounterMutation,
 	useDeleteTasksMutation,

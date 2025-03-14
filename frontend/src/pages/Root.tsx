@@ -28,9 +28,10 @@ const Root = () => {
 			<Box
 				sx={{
 					width: "100%",
-					height: "100%",
 					overflow: "hidden",
 					flex: 1,
+					minHeight: 0,
+					"& >*": { width: "100%", minHeight: 0, height: "100%" },
 				}}
 			>
 				<ErrorBoundary FallbackComponent={ErrorFallback}>

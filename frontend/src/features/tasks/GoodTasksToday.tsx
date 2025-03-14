@@ -2,28 +2,29 @@ import { Box, Typography } from "@mui/material";
 import { isGoodTask, Task } from "../../utils/types";
 import { useGetDailyTasksQuery, useGetTasksByRangeQuery } from "./tasksApi";
 import dayjs from "dayjs";
-import { selectCurrentGoal } from "../stats/statsSelectors";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
 import TaskCard from "../../components/TaskCard";
 
 const GoodTasksToday = () => {
-	const { tasksAllDay, tasksByTime } = useGetDailyTasksQuery(undefined, {
-		selectFromResult: ({ data = [] }) =>
-			data.filter(isGoodTask).reduce<Record<string, Task[]>>(
-				(acc, task) => {
-					acc.allTasks.push(task);
-					task.allDay ? acc.tasksAllDay.push(task) : acc.tasksByTime.push(task);
-					return acc;
-				},
-				{ allTasks: [], tasksAllDay: [], tasksByTime: [] }
-			),
-	});
+	const { tasksAllDay, tasksByTime, allTasks } = useGetDailyTasksQuery(
+		undefined,
+		{
+			selectFromResult: ({ data = [] }) => {
+				return data.filter(isGoodTask).reduce<Record<string, Task[]>>(
+					(acc, task) => {
+						acc.allTasks.push(task);
+						task.allDay
+							? acc.tasksAllDay.push(task)
+							: acc.tasksByTime.push(task);
+						return acc;
+					},
+					{ allTasks: [], tasksAllDay: [], tasksByTime: [] }
+				);
+			},
+		}
+	);
 
-	const { data: { dataByHabitId: pastTasks = {} } = {} } =
-		useGetTasksByRangeQuery();
-
-	const goal = useSelector((state: RootState) => selectCurrentGoal(state));
+	const { dataByHabitId: pastTasks = {} } =
+		useGetTasksByRangeQuery()?.data ?? {};
 
 	const sortedTasksByTime = [...tasksByTime].sort(
 		(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
@@ -32,7 +33,7 @@ const GoodTasksToday = () => {
 		(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
 	);
 
-	console.log("GoodTasksToday Rendering", tasksAllDay);
+	console.log("GoodTasksToday Rendering", allTasks);
 
 	return (
 		<Box className="flex-center col" sx={{ p: 1, gap: "10px" }}>
@@ -69,7 +70,6 @@ const GoodTasksToday = () => {
 							<Box key={`${task.id}`} sx={{ width: "100%" }}>
 								<TaskCard
 									task={task}
-									goal={goal}
 									pastTasks={pastTasks[task.habitId] ?? []}
 								/>
 							</Box>
@@ -120,11 +120,7 @@ const GoodTasksToday = () => {
 									</Box>
 								)}
 							</Box>
-							<TaskCard
-								task={task}
-								goal={goal}
-								pastTasks={pastTasks[task.habitId] ?? []}
-							/>
+							<TaskCard task={task} pastTasks={pastTasks[task.habitId] ?? []} />
 						</Box>
 					);
 				})}

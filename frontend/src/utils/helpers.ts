@@ -1,5 +1,37 @@
+import { Task } from "./types";
+
+//Convert string to number - only number ch & .
 export const stringToNum = (value: string): number => {
-	// Keeps numbers & decimal points
 	const num = value.replace(/[^0-9.]/g, "");
-	return num === "" ? NaN : Number(num);
+	const cleaned = num.split(".").length > 2 ? num.replace(/\.+$/, "") : num;
+
+	return cleaned === "" ? 0 : Number(cleaned);
+};
+
+// Clean number as a string - only number ch & .
+export const numberString = (value: string): string => {
+	const num = value.replace(/[^0-9.]/g, "");
+	const cleaned = num.split(".").length > 2 ? num.replace(/\.+$/, "") : num;
+
+	return cleaned;
+};
+
+// Get Completion Rate for task and task history
+export const getCompletionRate = (pastTasks: Task[], task: Task) => {
+	const totalTasks = pastTasks.length + 1;
+	const completed =
+		pastTasks.filter((el) => el.complete).length + (task.complete ? 1 : 0);
+
+	return Math.round((completed / totalTasks) * 100);
+};
+
+export const getMaxNumFromObjArr = <T extends Record<string, any>>(
+	arr: T[],
+	field: keyof T,
+	initValue: number = 0
+): number => {
+	return arr.reduce((acc, entry) => {
+		const value = Number(entry[field]);
+		return isNaN(value) ? acc : Math.max(acc, value);
+	}, initValue);
 };

@@ -1,11 +1,4 @@
-import {
-	Box,
-	Button,
-	IconButton,
-	LinearProgress,
-	Paper,
-	Typography,
-} from "@mui/material";
+import { Box, Button, IconButton, Paper, Typography } from "@mui/material";
 import {
 	isGoodTask,
 	isNoneTimer,
@@ -26,27 +19,21 @@ import { openModal } from "../features/modal/modalSlice";
 import { formatMsTime } from "../utils/timeUtils";
 import { setTimer } from "../features/timer/timerSlice";
 import { useNavigate } from "react-router-dom";
+import ProgressBar from "./ProgressBar";
+import { getCompletionRate } from "../utils/helpers";
 
 interface CardProps {
 	task: Task;
-	goal: number;
 	pastTasks: Task[];
 	circleIcon?: boolean;
 }
 
-const TaskCard = ({ task, goal, pastTasks, circleIcon = false }: CardProps) => {
+const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 	const [checkOffTask] = useCheckOffTaskMutation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const totalTasks = pastTasks.length + 1;
-	const completeTasks = pastTasks.filter((task) => task.complete).length ?? 0;
 
-	const completionRate =
-		totalTasks > 0
-			? Math.round(
-					((completeTasks + (task.complete ? 1 : 0)) / totalTasks) * 100
-			  )
-			: 0;
+	const completionRate = getCompletionRate(pastTasks, task);
 
 	return (
 		<Paper className="flex-center col gap2" sx={{ p: 2, overflowX: "hidden" }}>
@@ -131,26 +118,7 @@ const TaskCard = ({ task, goal, pastTasks, circleIcon = false }: CardProps) => {
 					</Button>
 				)}
 			</Box>
-			<Box sx={{ width: "100%", mr: 1 }}>
-				<LinearProgress
-					variant="determinate"
-					value={completionRate}
-					sx={{
-						borderRadius: 5,
-						backgroundColor: "#ddd",
-						"& .MuiLinearProgress-bar": {
-							backgroundColor:
-								completionRate >= goal + 5
-									? "primary.main"
-									: completionRate >= goal - 5
-									? "green"
-									: completionRate >= goal - 20
-									? "orange"
-									: "red",
-						},
-					}}
-				/>
-			</Box>
+			<ProgressBar completionRate={completionRate} />
 		</Paper>
 	);
 };

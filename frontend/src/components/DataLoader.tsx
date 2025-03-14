@@ -1,5 +1,8 @@
-import { ReactNode } from "react";
-import { useLazyGetHabitsQuery } from "../features/habits/habitsApi";
+import { ReactNode, useRef } from "react";
+import {
+	useGetHabitsQuery,
+	useLazyGetHabitsQuery,
+} from "../features/habits/habitsApi";
 import {
 	useCreateDailyTasksMutation,
 	useGetDailyTasksQuery,
@@ -22,6 +25,7 @@ interface Props {
 
 const DataLoader = ({ children }: Props) => {
 	const dispatch = useDispatch();
+	const createRef = useRef(false);
 
 	const {
 		data: metaData,
@@ -35,8 +39,14 @@ const DataLoader = ({ children }: Props) => {
 		error: errorTasks,
 	} = useGetDailyTasksQuery();
 
-	const [fetchHabits, { isFetching: loadingHabits, error: errorHabits }] =
-		useLazyGetHabitsQuery();
+	// const [fetchHabits, { isFetching: loadingHabits, error: errorHabits }] =
+	// 	useLazyGetHabitsQuery();
+
+	const {
+		data: habits,
+		isLoading: loadingHabits,
+		error: errorHabits,
+	} = useGetHabitsQuery();
 
 	const [
 		createDailyTasks,
@@ -63,9 +73,10 @@ const DataLoader = ({ children }: Props) => {
 
 	useEffect(() => {
 		const createTasks = async () => {
+			if (createRef.current) return;
+			createRef.current = true;
 			console.log("creating daily tasks.");
 			try {
-				const habits = await fetchHabits().unwrap();
 				if (habits && habits.length) {
 					await createDailyTasks(habits);
 				}
@@ -74,13 +85,20 @@ const DataLoader = ({ children }: Props) => {
 				handleError(
 					`DataLoader failed to create tasks and update meta data. ${e} `
 				);
+			} finally {
+				createRef.current = false;
 			}
 		};
-		if (metaData?.userId && metaData.lastCreatedDate !== startOfDay()) {
+		if (
+			metaData?.userId &&
+			metaData.lastCreatedDate !== startOfDay() &&
+			habits &&
+			!createRef.current
+		) {
 			console.log("Tasks not created for today. ");
 			createTasks();
 		}
-	}, [metaData, createDailyTasks, setLastCreatedDate, fetchHabits]);
+	}, [metaData, createDailyTasks, setLastCreatedDate, habits]);
 
 	const isLoading =
 		loadingHabits ||

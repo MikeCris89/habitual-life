@@ -1,5 +1,5 @@
 import { ArrowBack } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 interface PageProps {
@@ -12,13 +12,16 @@ const navStyle = {
 	gridTemplateColumns: "1fr 2fr 1fr",
 	alignItems: "center",
 	justifyItems: "center",
+	width: "100%",
+	marginBottom: "5px",
+	overflow: "hidden",
 };
 
 const PageNav = ({ back = false, title = "" }: PageProps) => {
 	const navigate = useNavigate();
 
 	return (
-		<Box sx={navStyle}>
+		<Paper sx={navStyle}>
 			<Box sx={{ justifySelf: "left" }}>
 				{back && (
 					<Button onClick={() => navigate(-1)} size="small">
@@ -28,7 +31,7 @@ const PageNav = ({ back = false, title = "" }: PageProps) => {
 			</Box>
 			<Typography variant="body2">{title}</Typography>
 			<Box></Box>
-		</Box>
+		</Paper>
 	);
 };
 

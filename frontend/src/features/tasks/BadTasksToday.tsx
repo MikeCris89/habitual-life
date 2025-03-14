@@ -79,9 +79,9 @@ const BadTasksToday = () => {
 	const { data: tasks } = useGetDailyTasksQuery(undefined, {
 		selectFromResult: ({ data = [] }) => ({ data: data.filter(isBadTask) }),
 	});
-	const { data: { dataByHabitId: pastTasks = {} } = {} } =
-		useGetTasksByRangeQuery();
-	const goal = useSelector((state: RootState) => selectCurrentGoal(state));
+	const { dataByHabitId: pastTasks = {} } =
+		useGetTasksByRangeQuery()?.data ?? {};
+
 	console.log("BadTasksToday Rendering: ", tasks);
 
 	return (
@@ -92,7 +92,6 @@ const BadTasksToday = () => {
 						<Box key={`${task.id}-${i}`} sx={{ width: "100%" }}>
 							<TaskCard
 								task={task}
-								goal={goal}
 								pastTasks={pastTasks[task.habitId] ?? []}
 								circleIcon={true}
 							/>

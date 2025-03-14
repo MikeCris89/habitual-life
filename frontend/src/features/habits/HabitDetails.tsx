@@ -6,12 +6,17 @@ import { isGoodHabit } from "../../utils/types";
 import { useDeleteHabitMutation, useGetHabitsQuery } from "./habitsApi";
 import { useDeleteAllTasksMutation } from "../tasks/tasksApi";
 import dayjs from "dayjs";
+import Loading from "../../components/Loading";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 
-	const { data: habits, isLoading, error } = useGetHabitsQuery();
+	const {
+		data: habits,
+		isLoading: loadingHabits,
+		error: errorHabits,
+	} = useGetHabitsQuery();
 	const [
 		deleteHabit,
 		{
@@ -31,9 +36,11 @@ const HabitDetails: React.FC = () => {
 	] = useDeleteAllTasksMutation();
 
 	if (!id) return <div>No Habit Selected.</div>;
-	if (!habits || error) throw new Error();
+	if (loadingHabits) return <Loading />;
+	if ((!loadingHabits && !habits) || errorHabits)
+		throw new Error(`Error fetching habits ${errorHabits ?? ""}`);
 
-	const habit = habits.find((habit) => habit.id === id);
+	const habit = habits?.find((habit) => habit.id === id);
 
 	if (!habit) return <div>Habit not found.</div>;
 
