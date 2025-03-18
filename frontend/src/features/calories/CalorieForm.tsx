@@ -7,6 +7,12 @@ import {
 	MenuItem,
 	Paper,
 	Select,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
 	TextField,
 	Typography,
 } from "@mui/material";
@@ -78,6 +84,7 @@ const CalorieForm = () => {
 	const [createDailyTasks] = useCreateDailyTasksMutation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const focusRef = useRef<Record<string, HTMLInputElement | null>>({});
 
 	const { data: habit, isLoading } = useGetHabitsQuery(undefined, {
 		selectFromResult: ({ data = [], isLoading }) => {
@@ -96,6 +103,8 @@ const CalorieForm = () => {
 	const [form, setForm] = useState<CounterType>({
 		...initForm,
 	});
+
+	const [incomplete, setIncomplete] = useState(false);
 
 	if (habit && !isCounterHabit(habit))
 		handleError("Error. Non counter habit in calorie form.");
@@ -129,14 +138,16 @@ const CalorieForm = () => {
 	};
 
 	const handleAddMacro = () => {
+		const newId = nanoid();
 		setForm((prev) => {
 			if (prev.macros)
 				return {
 					...prev,
-					macros: [...prev.macros, { ...initMacros, id: nanoid() }],
+					macros: [...prev.macros, { ...initMacros, id: newId }],
 				};
 			return prev;
 		});
+		setTimeout(() => focusRef.current?.[newId]?.focus(), 0);
 	};
 
 	const handleRemoveMacro = (id: string) => {
@@ -154,8 +165,7 @@ const CalorieForm = () => {
 				!form.total ||
 				form.macros?.some((m) => !m.title.trim() || !m.total)
 			) {
-				console.log("entry not valid");
-				dispatch(setError("Please fill out all fields correctly."));
+				setIncomplete(true);
 				return;
 			}
 
@@ -217,13 +227,15 @@ const CalorieForm = () => {
 							label="Calories /day"
 							value={form.total}
 							maxLength={4}
-							onChange={(value) =>
+							onChange={(value) => {
 								setForm((prev) => ({
 									...prev,
 									total: value,
-								}))
-							}
+								}));
+							}}
 							fullWidth={false}
+							error={incomplete && form.total === 0}
+							sx={{ fontSize: "30px" }}
 						/>
 					</Paper>
 
@@ -231,58 +243,89 @@ const CalorieForm = () => {
 						<Typography variant="body1" alignSelf="start">
 							Macros
 						</Typography>
-						{form.macros?.map((macro, i) => (
-							<Box key={`${macro.id}-${i}`} className="flex-around">
-								<TextField
-									label="Title"
-									name="title"
-									value={macro.title}
-									slotProps={{ input: { inputProps: { maxLength: 20 } } }}
-									onChange={(e) =>
-										handleChangeMacros(e.target.name, e.target.value, macro.id)
-									}
-									//fullWidth
-									size="small"
-									required
-									sx={{ minWidth: "150px" }}
-								/>
-
-								<NumberInput
-									label={"Total"}
-									value={macro.total}
-									maxLength={4}
-									size={"small"}
-									onChange={(value) =>
-										handleChangeMacros("total", value, macro.id)
-									}
-								/>
-
-								<FormControl fullWidth required>
-									<InputLabel id={`units-${macro.id}`}>Units</InputLabel>
-									<Select
-										labelId={`units-${macro.id}`}
-										id={`${macro.id}`}
-										value={macro.units}
-										label="Units"
-										name="units"
-										onChange={(e) =>
-											handleChangeMacros(
-												e.target.name,
-												e.target.value,
-												macro.id
-											)
-										}
-										size="small"
-									>
-										<MenuItem value={"g"}>g</MenuItem>
-										<MenuItem value={"mg"}>mg</MenuItem>
-									</Select>
-								</FormControl>
-								<IconButton onClick={() => handleRemoveMacro(macro.id)}>
-									<Remove />
-								</IconButton>
-							</Box>
-						))}
+						<TableContainer sx={{ overflow: "hidden" }}>
+							<Table size="small">
+								<TableHead>
+									<TableRow sx={{ "& >*": { p: 1 } }}>
+										<TableCell>Title</TableCell>
+										<TableCell align="right">Total</TableCell>
+										<TableCell align="right">Units</TableCell>
+										<TableCell></TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{form.macros?.map((macro, i, arr) => (
+										<TableRow key={macro.id} sx={{ "& >*": { p: 1 } }}>
+											<TableCell>
+												<TextField
+													name="title"
+													variant="filled"
+													value={macro.title}
+													hiddenLabel
+													slotProps={{
+														input: { inputProps: { maxLength: 20 } },
+													}}
+													onChange={(e) =>
+														handleChangeMacros(
+															e.target.name,
+															e.target.value,
+															macro.id
+														)
+													}
+													size="small"
+													required
+													sx={{ minWidth: "100px" }}
+													inputRef={(el) => {
+														return i === arr.length - 1
+															? (focusRef.current[macro.id] = el)
+															: null;
+													}}
+												/>
+											</TableCell>
+											<TableCell align="right">
+												<NumberInput
+													value={macro.total}
+													maxLength={4}
+													size={"small"}
+													onChange={(value) =>
+														handleChangeMacros("total", value, macro.id)
+													}
+													error={incomplete && macro.total === 0}
+													sx={{ minWidth: "75px" }}
+												/>
+											</TableCell>
+											<TableCell align="right">
+												<FormControl fullWidth required>
+													<Select
+														id={`${macro.id}`}
+														value={macro.units}
+														name="units"
+														onChange={(e) =>
+															handleChangeMacros(
+																e.target.name,
+																e.target.value,
+																macro.id
+															)
+														}
+														size="small"
+														variant="standard"
+													>
+														<MenuItem value={"g"}>g</MenuItem>
+														<MenuItem value={"mg"}>mg</MenuItem>
+													</Select>
+												</FormControl>
+											</TableCell>
+											<TableCell>
+												<Remove
+													onClick={() => handleRemoveMacro(macro.id)}
+													fontSize="small"
+												/>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</TableContainer>
 						<IconButton onClick={handleAddMacro}>
 							<Add />
 						</IconButton>

@@ -8,7 +8,7 @@ import {
 	isCounterHabit,
 	isCounterTask,
 	isGoodHabit,
-	isGoodTask,
+	PresetId,
 	Task,
 	TaskBase,
 } from "../../utils/types";
@@ -31,13 +31,20 @@ const createTask = (habit: Habit, date: string): Task => {
 	};
 
 	if (isCounterHabit(habit)) {
-		return {
+		const counter = {
 			...baseTask,
 			type: HabitTypes.COUNTER,
 			isMax: habit.isMax,
 			total: habit.total,
 			count: 0,
 		};
+		if (habit.id === PresetId.calorieCounter && habit.macros) {
+			return {
+				...counter,
+				macros: habit.macros.map((el) => ({ ...el, count: 0 })),
+			};
+		}
+		return counter;
 	}
 
 	if (isGoodHabit(habit)) {
@@ -309,7 +316,7 @@ export const tasksApi = createApi({
 		deleteAllTasks: builder.mutation<void, Habit>({
 			queryFn: async (habit) => {
 				try {
-					const data = await dbActions.batchDeleteAllTasks(habit);
+					const data = await dbActions.batchDeleteAllTasksByHabit(habit);
 					return { data };
 				} catch (e) {
 					return {

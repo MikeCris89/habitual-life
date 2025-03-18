@@ -24,6 +24,25 @@ export interface RoundTimer {
 export type Timer = SingleTimer | RoundTimer | NoneTimer;
 
 // Habits
+export interface Day {
+	isTrue: boolean;
+	label: string;
+}
+
+export const DayKeys = [
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+] as const;
+
+export type DayKey = (typeof DayKeys)[number];
+
+export type DaysOfWeek = Record<DayKey, Day>;
+
 export const HabitTypes = {
 	GOOD: "good",
 	BAD: "bad",
@@ -112,6 +131,40 @@ export interface CounterTask extends TaskBase {
 
 export type Task = GoodTask | BadTask | CounterTask;
 
+// Calories - Ingrdients - Meals
+export const Units = [
+	"unit", // Generic unit (e.g., 1 slice, 1 piece, 1 stick, etc.)
+	"g", // Grams
+	"mg", // Milligrams
+	"tbsp", // Tablespoons
+	"tsp", // Teaspoons
+	"cup", // Cups
+	"kg", // Kilograms
+	"lb", // Pounds
+	"oz", // Ounces
+	"L", // Liters
+	"ml", // Milliliters
+	"fl oz", // Fluid Ounces
+] as const;
+
+export type UnitTypes = (typeof Units)[number];
+
+export interface Food {
+	title: string;
+	description: string;
+	id: string;
+}
+
+export interface Ingredients extends Food {
+	calories: number;
+	macros: MacrosType[];
+	servingSize: { serving: string; units: UnitTypes };
+}
+
+export interface Meals extends Food {
+	ingredients: string[];
+}
+
 // Stats
 export type Stats = Record<HabitType, HabitStats[]>;
 
@@ -139,24 +192,14 @@ export interface MonthlyStats {
 	id: string;
 }
 
-export interface Day {
-	isTrue: boolean;
-	label: string;
-}
+/** BRANDED TYPES */
 
-export const DayKeys = [
-	"Sunday",
-	"Monday",
-	"Tuesday",
-	"Wednesday",
-	"Thursday",
-	"Friday",
-	"Saturday",
-] as const;
+export type NonNegativeNum = {
+	readonly __nonNegative?: unique symbol;
+};
 
-export type DayKey = (typeof DayKeys)[number];
-
-export type DaysOfWeek = Record<DayKey, Day>;
+export const ensureNonNegative = (num: number): NonNegativeNum =>
+	Math.min(num, 0) as NonNegativeNum;
 
 /** TYPEGUARD FUNCTIONS */
 

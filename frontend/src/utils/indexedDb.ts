@@ -7,11 +7,11 @@ import {
 	startOfWeek,
 	statsStartDate,
 } from "./timeUtils";
-import { Habit, Task } from "./types";
+import { Habit, Ingredients, Task } from "./types";
 import { handleError } from "./errors";
 import { MetaData } from "../features/meta/metaApi";
 
-const dbPromise = openDB("habitsDB", 2, {
+const dbPromise = openDB("habitsDB", 3, {
 	upgrade(db) {
 		if (!db.objectStoreNames.contains("habits")) {
 			db.createObjectStore("habits", { keyPath: "id" });
@@ -29,6 +29,9 @@ const dbPromise = openDB("habitsDB", 2, {
 		}
 		if (!db.objectStoreNames.contains("errorLogs")) {
 			db.createObjectStore("errorLogs", { keyPath: "id", autoIncrement: true });
+		}
+		if (!db.objectStoreNames.contains("calories")) {
+			db.createObjectStore("calories", { keyPath: "id" });
 		}
 	},
 });
@@ -165,7 +168,7 @@ export const dbActions = {
 		await Promise.all(tasks.map((task) => store.delete(task.id)));
 		await tx.done;
 	},
-	async batchDeleteAllTasks(habit: Habit) {
+	async batchDeleteAllTasksByHabit(habit: Habit) {
 		const db = await dbPromise;
 		const tx = db.transaction("tasks", "readwrite");
 		const store = tx.objectStore("tasks");
@@ -180,6 +183,15 @@ export const dbActions = {
 			cursor = await cursor.continue();
 		}
 		await tx.done;
+	},
+	async batchDeleteAllTasks(storeName: string) {
+		const db = await dbPromise;
+		await db.clear(storeName);
+		const res = await this.getAll("meta");
+		const oldMeta = res[0];
+		const newMeta = { ...oldMeta, lastCreatedDate: dayBefore() };
+		await this.put("meta", newMeta);
+		console.log(`All data cleared from store: ${storeName}`);
 	},
 	async logError(error: unknown) {
 		try {

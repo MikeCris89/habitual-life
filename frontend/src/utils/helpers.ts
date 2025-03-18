@@ -4,7 +4,7 @@ import { Task } from "./types";
 export const stringToNum = (value: string): number => {
 	const num = value.replace(/[^0-9.]/g, "");
 	const cleaned = num.split(".").length > 2 ? num.replace(/\.+$/, "") : num;
-
+	console.log(cleaned);
 	return cleaned === "" ? 0 : Number(cleaned);
 };
 

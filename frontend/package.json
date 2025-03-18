@@ -29,6 +29,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
+    "react-semicircle-progressbar": "^1.1.0",
     "reselect": "^5.1.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
