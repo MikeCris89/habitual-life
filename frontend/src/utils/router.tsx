@@ -2,23 +2,36 @@ import {
 	createBrowserRouter,
 	createRoutesFromElements,
 	Route,
+	useNavigate,
 } from "react-router-dom";
-// import Habits from "../pages/Habits";
 import Root from "../pages/Root";
 import { lazy } from "react";
 import Home from "../pages/Home";
 import CalorieForm from "../features/calories/CalorieForm";
 import CalorieLog from "../features/calories/CalorieLog";
-// import HabitForm from "../features/habits/HabitForm";
-// import HabitDetails from "../features/habits/HabitDetails";
-// import Calendar from "../pages/Calendar";
-// import Account from "../pages/Account";
+import NutritionDisplay from "../features/calories/NutritionDisplay";
+import MealLog from "../features/calories/MealLog";
+import IngredientLog from "../features/calories/IngredientLog";
+import FoodModal from "../features/calories/food/FoodModal";
+import { Box, Button } from "@mui/material";
 
 const Habits = lazy(() => import("../pages/Habits"));
 const HabitForm = lazy(() => import("../features/habits/HabitForm"));
 const HabitDetails = lazy(() => import("../features/habits/HabitDetails"));
 const Calendar = lazy(() => import("../pages/Calendar"));
 const Account = lazy(() => import("../pages/Account"));
+
+const IngredientForm = () => {
+	const navigate = useNavigate();
+	return (
+		<Box className="flex-center col gap2 full-w full-h">
+			<Box className="flex full-w" sx={{ justifyContent: "flex-end" }}>
+				<Button onClick={() => navigate(-1)}>close</Button>
+			</Box>
+			<IngredientLog onSubmit={() => navigate(-1)} />
+		</Box>
+	);
+};
 
 const routes = createRoutesFromElements(
 	<Route path="/" element={<Root />}>
@@ -27,7 +40,31 @@ const routes = createRoutesFromElements(
 
 		<Route path="add/preset_calories" element={<CalorieForm />} />
 		<Route path="preset_calories/edit" element={<CalorieForm />} />
-		<Route path="preset_calories/log" element={<CalorieLog />} />
+		<Route
+			path="preset_calories/log"
+			element={
+				<CalorieLog>
+					<NutritionDisplay />
+				</CalorieLog>
+			}
+		>
+			<Route
+				path="new_meals"
+				element={
+					<FoodModal>
+						<MealLog />
+					</FoodModal>
+				}
+			/>
+			<Route
+				path="new_ingredients"
+				element={
+					<FoodModal>
+						<IngredientForm />
+					</FoodModal>
+				}
+			/>
+		</Route>
 
 		<Route path="add/:type" element={<HabitForm />} />
 

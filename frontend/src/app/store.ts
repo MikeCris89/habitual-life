@@ -7,7 +7,6 @@ import loadingReducer from "../features/loading/loadingSlice";
 import statsReducer from "../features/stats/statsSlice";
 import modalReducer from "../features/modal/modalSlice";
 import timerReducer from "../features/timer/timerSlice";
-import calorieReducer from "../features/calories/CaloriesSlice";
 import { foodApi } from "../features/calories/food/foodApi";
 
 export const store = configureStore({
@@ -20,7 +19,6 @@ export const store = configureStore({
 		modal: modalReducer,
 		stats: statsReducer,
 		timer: timerReducer,
-		calories: calorieReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(

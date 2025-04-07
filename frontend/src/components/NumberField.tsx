@@ -1,12 +1,14 @@
 import { RemoveOutlined } from "@mui/icons-material";
 import { Button, ButtonGroup, lighten, useTheme } from "@mui/material";
 import { useState } from "react";
+import NumberInput from "./NumberInput";
 
 interface Props {
 	max?: number;
 	min?: number;
 	step?: number;
 	value?: number;
+	acceptDecimals?: boolean;
 	handleChange: (num: number) => void;
 }
 
@@ -15,6 +17,7 @@ const NumberField = ({
 	min = 0,
 	step = 1,
 	value = 0,
+	acceptDecimals = false,
 	handleChange,
 }: Props) => {
 	const [focused, setFocused] = useState<boolean>(false);
@@ -40,6 +43,7 @@ const NumberField = ({
 				justifyContent: "end",
 				maxWidth: "140px",
 				color: `${lightBorder}`,
+				maxHeight: "32px",
 			}}
 			onFocus={() => setFocused(true)}
 			onBlur={() => setFocused(false)}
@@ -59,13 +63,13 @@ const NumberField = ({
 			</Button>
 
 			{/* Number Input */}
-			<input
+			{/* <input
 				type="text"
 				inputMode="numeric"
 				value={value.toString()}
 				onChange={(e) => handleInputChange(e.target.value)}
 				style={{
-					//width: "5ch",
+					width: "6ch",
 					height: "32px",
 					//minHeight: "32px",
 					textAlign: "center",
@@ -78,8 +82,28 @@ const NumberField = ({
 					fontWeight: "bold",
 					borderRadius: 0,
 				}}
+			/> */}
+			<NumberInput
+				value={value}
+				onChange={(value) => handleChange(value)}
+				variant="standard"
+				min={min}
+				max={max}
+				//maxLength={5}
+				textAlign="center"
+				acceptDecimals={acceptDecimals}
+				sx={{
+					//border: focused ? `3px solid ${focusColor}` : "none",
+					fontSize: "1rem",
+					background: "transparent",
+					//fontWeight: "bold",
+					borderRadius: 0,
+					// outline: "none",
+					//minHeight: "32px",
+					//textAlign: "center",
+					//margin: "0 5px",
+				}}
 			/>
-
 			{/* Plus Button */}
 			<Button
 				sx={{

@@ -6,11 +6,15 @@ import { CloseOutlined } from "@mui/icons-material";
 import SingleTimer from "../timer/SingleTimer";
 import RoundTimer from "../timer/RoundTimer";
 import AddMenu from "../../components/AddMenu";
+import IngredientLog from "../calories/IngredientLog";
+import MealLog from "../calories/MealLog";
 
 const MODAL_COMPONENTS: Record<string, React.FC<any>> = {
 	singleTimer: SingleTimer,
 	roundTimer: RoundTimer,
 	addMenu: AddMenu,
+	ingredientLog: IngredientLog,
+	mealLog: MealLog,
 };
 
 const GlobalModal = () => {

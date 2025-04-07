@@ -1,0 +1,152 @@
+import {
+	Box,
+	Button,
+	FormControl,
+	FormLabel,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+	Typography,
+} from "@mui/material";
+import {
+	FOOD_CATEGORIES,
+	FoodCategory,
+	IngredientForm,
+	Units,
+	UnitTypes,
+} from "../../utils/types";
+import { useState } from "react";
+import LogForm from "./LogForm";
+import { useAddEditIngredientMutation } from "./food/foodApi";
+import NumberField from "../../components/NumberField";
+import { nanoid } from "nanoid";
+import { formatLabel } from "../../utils/helpers";
+
+interface Props {
+	source?: Exclude<FoodCategory, "custom">;
+	onSubmit?: (ingId: string) => void;
+}
+
+export const initIngredient: IngredientForm = {
+	title: "",
+	description: "",
+	servingSize: { serving: 1, units: "unit" },
+	source: FOOD_CATEGORIES.INGREDIENTS,
+	calories: 0,
+	macros: {},
+	id: "",
+};
+
+const IngredientLog = ({
+	source = FOOD_CATEGORIES.INGREDIENTS,
+	onSubmit,
+}: Props) => {
+	const [form, setForm] = useState({ ...initIngredient, source });
+	const [addEditIng] = useAddEditIngredientMutation();
+
+	const handleChange = (key: string, value: any) => {
+		setForm((prev) => ({
+			...prev,
+			[key]: value,
+		}));
+	};
+
+	const handleChangeMacros = (id: string, value: number) => {
+		setForm((prev) => ({
+			...prev,
+			macros: { ...prev.macros, [id]: value },
+		}));
+	};
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const ingId = nanoid();
+		addEditIng({ ...form, id: ingId });
+		setForm({ ...initIngredient, source });
+		if (onSubmit) onSubmit(ingId);
+	};
+
+	return (
+		<Box
+			className="flex-center col gap3 full-w full-h"
+			sx={{
+				overflow: "hidden",
+			}}
+		>
+			<Typography>New {formatLabel(source, true)}</Typography>
+			<form id="ing-form" onSubmit={handleSubmit}>
+				<TextField
+					label="Title"
+					size="small"
+					value={form.title}
+					onChange={(e) => handleChange("title", e.target.value)}
+					sx={{ marginTop: "5px" }}
+					fullWidth
+					required
+				/>
+				<TextField
+					multiline
+					label="Description"
+					size="small"
+					value={form.description}
+					onChange={(e) => handleChange("description", e.target.value)}
+					fullWidth
+				/>
+			</form>
+			<FormLabel>Serving</FormLabel>
+			<Box className="flex-around" sx={{ width: "100%" }}>
+				<NumberField
+					handleChange={(value) =>
+						setForm((prev) => ({
+							...prev,
+							servingSize: { ...prev.servingSize, serving: value },
+						}))
+					}
+					value={form.servingSize.serving}
+					min={0}
+					max={9999}
+					acceptDecimals={true}
+				/>
+
+				<FormControl>
+					<InputLabel id="select-units-label">Units</InputLabel>
+					<Select
+						labelId="select-units-label"
+						id="select-units"
+						value={form.servingSize.units}
+						label="Units"
+						onChange={(e) =>
+							setForm((prev) => ({
+								...prev,
+								servingSize: {
+									...prev.servingSize,
+									units: e.target.value as UnitTypes,
+								},
+							}))
+						}
+						size="small"
+					>
+						{Units.map((unit, i) => (
+							<MenuItem value={unit} key={`${unit}-${i}`}>
+								{unit}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			</Box>
+			<LogForm
+				handleChangeCalories={handleChange}
+				handleChangeMacros={handleChangeMacros}
+				//handleSubmit={handleSubmit}
+				calories={form.calories}
+				macros={form.macros}
+			/>
+			<Button variant="contained" type="submit" form="ing-form" fullWidth>
+				Submit
+			</Button>
+		</Box>
+	);
+};
+
+export default IngredientLog;

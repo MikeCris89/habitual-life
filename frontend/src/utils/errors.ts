@@ -6,11 +6,21 @@ const MAX_ERROR_LOGS = 500;
 const ERROR_THROTTLE_TIME = 5000;
 
 export const getErrorHash = (error: unknown) => {
-	const errorString = JSON.stringify(error, Object.getOwnPropertyNames(error));
-	return btoa(errorString).slice(0, 20);
+	try {
+		const errorString = JSON.stringify(
+			error,
+			Object.getOwnPropertyNames(error)
+		);
+		return btoa(errorString).slice(0, 20);
+	} catch {
+		return "UNKNOWN_ERROR_HASH";
+	}
 };
 
-export const logError = async (error: unknown) => {
+export const logError = async (
+	message: string,
+	error: ErrorType
+): Promise<void> => {
 	const now = Date.now();
 	const errorHash = getErrorHash(error);
 
@@ -29,17 +39,32 @@ export const logError = async (error: unknown) => {
 
 	if (pastErrors.length >= MAX_ERROR_LOGS) pastErrors.shift(); // Remove oldest entry
 
-	pastErrors.push(error);
-	await dbActions.logError(error).catch((e) => console.error(e));
-	console.error(error);
+	const err =
+		error instanceof Error
+			? {
+					...error,
+					message: `${message} | ${error.message}`,
+					stack: error.stack,
+					name: error.name,
+			  }
+			: { message, error };
+
+	const errString = JSON.stringify(err, null, 2);
+	pastErrors.push(errString);
+	await dbActions.logError(errString).catch(console.error);
+	console.error(`LOGGED ERROR: ${message}`, err);
 };
 
-type ErrorType = (error: unknown) => never;
+type ErrorType = Error | unknown;
 
-export const handleError: ErrorType = (error) => {
+type ErrorHandler = (message: string, error?: ErrorType) => never;
+
+export const handleError: ErrorHandler = (
+	message = "Generic Error.",
+	error
+): never => {
 	// log error
-
-	logError(error);
+	void logError(message, error ?? undefined);
 
 	// throw generic error to user
 	throw new Error("handleErrorThrow");

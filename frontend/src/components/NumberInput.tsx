@@ -9,6 +9,8 @@ interface Props {
 	min?: number;
 	max?: number;
 	maxLength?: number;
+	acceptDecimals?: boolean;
+	textAlign?: "left" | "center" | "right";
 	disabled?: boolean;
 	fullWidth?: boolean;
 	sx?: SxProps<Theme>;
@@ -28,6 +30,8 @@ const NumberInput = ({
 	min = 0,
 	max,
 	maxLength = 10,
+	acceptDecimals = false,
+	textAlign = "left",
 	disabled = false,
 	fullWidth = true,
 	sx = {},
@@ -44,7 +48,8 @@ const NumberInput = ({
 
 	useEffect(() => {
 		if (strValue !== value.toString()) {
-			setStrValue(value.toString());
+			const endsInDecimal = strValue.endsWith(".");
+			setStrValue(endsInDecimal ? value.toString() + "." : value.toString());
 		}
 	}, [value]);
 
@@ -57,14 +62,32 @@ const NumberInput = ({
 	const getNum = (value: string) => {
 		const num = stringToNum(value);
 		if (num < min) return;
-		if (max && num > max) return max;
+		if (max && num > max) return;
 		return num;
 	};
 
-	const handleInput = (value: string, skipDelay = false) => {
-		const num = getNum(value);
-		if (num != null) {
-			setStrValue(num.toString());
+	const handleInput = (inputValue: string, skipDelay = false) => {
+		let endsInDecimal = false;
+		if (acceptDecimals) {
+			endsInDecimal =
+				inputValue.endsWith(".") && inputValue.split(".").length < 3;
+			const hasDecimal = inputValue.includes(".");
+			if (hasDecimal && inputValue.split(".")[1].length > 2) return;
+			if (inputValue === ".") inputValue = "0.";
+		}
+		const num = getNum(inputValue);
+		if (num != null && !isNaN(num)) {
+			let numString = num.toString();
+
+			if (acceptDecimals) {
+				numString = endsInDecimal
+					? numString + "."
+					: inputValue.endsWith(".0")
+					? numString + ".0"
+					: numString;
+			}
+
+			setStrValue(numString);
 			if (delayChange) {
 				if (!skipDelay) {
 					if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -94,12 +117,21 @@ const NumberInput = ({
 			onChange={(e) => handleInput(e.target.value)}
 			slotProps={{
 				input: {
-					inputProps: { maxLength, inputMode: "numeric" },
+					inputProps: {
+						//maxLength: strValue.includes(".") ? maxLength + 2 : maxLength + 1,
+						inputMode: "numeric",
+					},
 				},
 			}}
 			disabled={disabled}
 			fullWidth={fullWidth}
-			sx={sx}
+			sx={{
+				...sx,
+				"& .MuiInputBase-input": {
+					textAlign: textAlign,
+				},
+				p: 0,
+			}}
 			autoComplete={autoComplete ? "" : "off"}
 			required={required}
 			size={size}
@@ -108,8 +140,12 @@ const NumberInput = ({
 			}}
 			onBlur={(e) => {
 				if (e.target.value === "") setStrValue("0");
-				handleInput(e.target.value, true);
-
+				if (delayChange) handleInput(e.target.value, true);
+				if (strValue.endsWith(".")) setStrValue((prev) => prev.slice(0, -1));
+				if (strValue.endsWith(".0") || strValue.endsWith(".00"))
+					setStrValue((prev) => prev.split(".")[0]);
+				// if (strValue.includes(".") && strValue.split(".")[1].length < 2)
+				// 	setStrValue((prev) => prev + "0");
 				//if (onBlur) onBlur(e.target.value);
 			}}
 		/>

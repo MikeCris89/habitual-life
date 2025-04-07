@@ -143,7 +143,8 @@ const HabitForm = () => {
 		if (habitToEdit) return habitToEdit.type;
 		if (type && isValidHabitType(type)) return type;
 		handleError(
-			`Habit Form: Habit type not found. Type: ${type}, habitToEdit: ${habitToEdit}`
+			`Habit Form: Habit type not found. Type: ${type}, habitToEdit: ${habitToEdit}`,
+			{}
 		);
 	}, [type, habitToEdit]);
 
@@ -329,7 +330,7 @@ const HabitForm = () => {
 			setTimeout(() => navigate(-1), 750);
 		} catch (e) {
 			dispatch(setError("Something went wrong."));
-			handleError(e);
+			handleError("Error submitting habit form.", e);
 		}
 	};
 

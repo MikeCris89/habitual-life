@@ -3,7 +3,6 @@ import {
 	Button,
 	FormControl,
 	IconButton,
-	InputLabel,
 	MenuItem,
 	Paper,
 	Select,
@@ -193,7 +192,7 @@ const CalorieForm = () => {
 			setTimeout(() => navigate(-1), 750);
 		} catch (e) {
 			dispatch(setError("Something went wrong."));
-			handleError(`Error adding calorie counter: ${e}`);
+			handleError(`Error adding calorie counter`, e);
 		}
 	};
 

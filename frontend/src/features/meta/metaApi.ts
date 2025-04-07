@@ -32,7 +32,6 @@ export const metaApi = createApi({
 					}
 					if (data.length > 1) {
 						handleError("Multiple entries for meta data.");
-						return { data: undefined };
 					}
 					return { data: data[0] };
 				} catch (e) {
@@ -44,9 +43,9 @@ export const metaApi = createApi({
 			providesTags: ["MetaData"],
 		}),
 		setLastCreatedDate: builder.mutation({
-			queryFn: async (userId) => {
+			queryFn: async ({ userId, date = startOfDay() }) => {
 				try {
-					const data = await dbActions.setLastCreatedDate(userId);
+					const data = await dbActions.setLastCreatedDate(userId, date);
 					return { data };
 				} catch (e) {
 					return {

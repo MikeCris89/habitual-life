@@ -7,11 +7,11 @@ import {
 	startOfWeek,
 	statsStartDate,
 } from "./timeUtils";
-import { Habit, Ingredients, Task } from "./types";
+import { Habit, Task } from "./types";
 import { handleError } from "./errors";
 import { MetaData } from "../features/meta/metaApi";
 
-const dbPromise = openDB("habitsDB", 3, {
+export const dbPromise = openDB("habitsDB", 5, {
 	upgrade(db) {
 		if (!db.objectStoreNames.contains("habits")) {
 			db.createObjectStore("habits", { keyPath: "id" });
@@ -30,8 +30,14 @@ const dbPromise = openDB("habitsDB", 3, {
 		if (!db.objectStoreNames.contains("errorLogs")) {
 			db.createObjectStore("errorLogs", { keyPath: "id", autoIncrement: true });
 		}
-		if (!db.objectStoreNames.contains("calories")) {
-			db.createObjectStore("calories", { keyPath: "id" });
+		if (!db.objectStoreNames.contains("baskets")) {
+			db.createObjectStore("baskets", { keyPath: "id" });
+		}
+		if (!db.objectStoreNames.contains("ingredients")) {
+			db.createObjectStore("ingredients", { keyPath: "id" });
+		}
+		if (!db.objectStoreNames.contains("meals")) {
+			db.createObjectStore("meals", { keyPath: "id" });
 		}
 	},
 });
@@ -41,7 +47,7 @@ export const dbActions = {
 		const db = await dbPromise;
 		await db.put("meta", data);
 	},
-	async setLastCreatedDate(userId: string) {
+	async setLastCreatedDate(userId: string, date: string = startOfDay()) {
 		const db = await dbPromise;
 		const existingMeta = await db.get("meta", userId);
 		if (!existingMeta) {
@@ -49,7 +55,7 @@ export const dbActions = {
 		}
 		const newData: MetaData = {
 			...existingMeta,
-			lastCreatedDate: startOfDay(),
+			lastCreatedDate: date,
 		};
 		await db.put("meta", newData);
 		return newData;
@@ -153,6 +159,11 @@ export const dbActions = {
 		await Promise.all(tasks.map((task) => store.put(task)));
 		await tx.done;
 		return tasks;
+	},
+	async clearBaskets() {
+		const db = await dbPromise;
+		await db.clear("baskets");
+		return true;
 	},
 	async delete(storeName: string, id: string) {
 		const db = await dbPromise;

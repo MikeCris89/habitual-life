@@ -172,7 +172,7 @@ export const tasksApi = createApi({
 					};
 				}
 			},
-			keepUnusedDataFor: 12 * 60 * 60,
+			keepUnusedDataFor: 12 * 60 * 60, // 12 hours
 			providesTags: ["Tasks", "TasksByRange"],
 		}),
 		getDailyTasks: builder.query<Task[], void>({
@@ -222,16 +222,17 @@ export const tasksApi = createApi({
 					};
 				}
 			},
-			async onQueryStarted(habits, { dispatch, queryFulfilled }) {
-				const { data: tasks } = await queryFulfilled;
-				dispatch(
-					tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
-						tasks?.forEach((task) => {
-							draft.push(task);
-						});
-					})
-				);
-			},
+			invalidatesTags: ["Tasks"],
+			// async onQueryStarted(habits, { dispatch, queryFulfilled }) {
+			// 	const { data: tasks } = await queryFulfilled;
+			// 	dispatch(
+			// 		tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
+			// 			tasks?.forEach((task) => {
+			// 				draft.push(task);
+			// 			});
+			// 		})
+			// 	);
+			// },
 		}),
 		editTask: builder.mutation<Task, Task>({
 			queryFn: async (task) => {

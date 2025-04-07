@@ -1,47 +1,81 @@
-import { Box, Button, Paper, Tab, Tabs, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import PageNav from "../../components/PageNav";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { useEditTaskMutation, useGetDailyTasksQuery } from "../tasks/tasksApi";
 import { isCounterTask, MacrosTask, PresetId } from "../../utils/types";
 import { handleError } from "../../utils/errors";
-import Loading from "../../components/Loading";
-import SemiCircleBar from "../../components/SemiCircleBar";
-import CustomLog from "./CustomLog";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCalories } from "./caloriesSelectors";
-import { setCalories, setInitValues, submitBasket } from "./CaloriesSlice";
-import { ShoppingBasket } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { selectBasketTotals } from "./basketsSelectors";
+import { nanoid } from "nanoid";
+import useDisplay from "../../hooks/useDisplay";
+import { Outlet } from "react-router-dom";
+import NutritionInput from "./NutritionInput";
 
-const a11yProps = (index: number) => ({
-	id: `simple-tab-${index}`,
-	"aria-controls": `simple-tabpanel-${index}`,
-});
+export const CurrBasketIdContext = createContext<string | undefined>(undefined);
 
-interface TabProps {
-	children: React.ReactNode;
-	value: number;
-	index: number;
-}
-
-const CustomTabPanel = ({ children, value, index }: TabProps) => {
-	return (
-		<div
-			role="tabpanel"
-			hidden={value !== index}
-			style={{ height: "100%", minHeight: 0, overflow: "hidden" }}
-		>
-			{value === index && <Box sx={{ p: 1, height: "100%" }}>{children}</Box>}
-		</div>
-	);
+export const useCurrBasketId = () => {
+	const value = useContext(CurrBasketIdContext);
+	if (value == null) {
+		handleError(
+			"Current Basket ID is null. useCurrBasketId hook must be used within Calorie Log component."
+		);
+	}
+	return value;
 };
 
-const CalorieLog = () => {
-	const dispatch = useDispatch();
-	const { calories, macros } = useSelector(selectCalories);
+// const a11yProps = (index: number) => ({
+// 	id: `simple-tab-${index}`,
+// 	"aria-controls": `simple-tabpanel-${index}`,
+// });
+
+// interface TabProps {
+// 	children: React.ReactNode;
+// 	value: number;
+// 	index: number;
+// }
+
+// const CustomTabPanel = ({ children, value, index }: TabProps) => {
+// 	return (
+// 		<Box role="tabpanel" hidden={value !== index} className="full-w full-h">
+// 			{value === index && (
+// 				<Box className="full-w full-h" sx={{ overflow: "hidden" }}>
+// 					{children}
+// 				</Box>
+// 			)}
+// 		</Box>
+// 	);
+// };
+
+interface CalorieProps {
+	children: React.ReactNode;
+}
+
+const CalorieLog = ({ children }: CalorieProps) => {
+	const currentBasketId = useMemo(() => nanoid(), []);
+	//	const navigate = useNavigate();
+
+	//subscribe to queries
+	// const {
+	// 	data: allBaskets,
+	// 	isLoading: loadingBaskets,
+	// 	error: errorBaskets,
+	// } = useGetBasketsQuery();
+	// const {
+	// 	data: foodData,
+	// 	isLoading: loadingFood,
+	// 	error: errorFood,
+	// } = useGetFoodQuery();
+	// const { ingredients = [], meals = [] } = foodData ?? {};
+
+	const { allBasketsTotal } = useSelector(selectBasketTotals);
+	// const currBasket = useSelector((state) =>
+	// 	selectCurrentBasket(state, currentBasketId)
+	// );
 
 	const [editTask] = useEditTaskMutation();
+	//const [addBasket] = useAddBasketMutation();
 
-	const { data: task, isLoading } = useGetDailyTasksQuery(undefined, {
+	const { data: task } = useGetDailyTasksQuery(undefined, {
 		selectFromResult: ({ data = [], isLoading }) => {
 			const result = data.find((el) => el.habitId === PresetId.calorieCounter);
 			if (result && !isCounterTask(result)) {
@@ -51,251 +85,215 @@ const CalorieLog = () => {
 		},
 	});
 
-	// const [calories, setCalories] = useState({
-	// 	...initCal,
-	// 	display: task?.count ?? 0,
-	// });
-	// const [macros, setMacros] = useState<any[]>(
-	// 	task?.macros
-	// 		? task.macros.map((el) => ({ ...el, amount: 0, display: 0 }))
-	// 		: []
-	// );
+	const { isMobile } = useDisplay();
 
-	const [value, setValue] = useState(0);
+	//const [tabValue, setTabValue] = useState(0);
 
 	useEffect(() => {
-		if (task) {
-			dispatch(setInitValues(task));
-			//setCalories((prev) => ({ ...prev, display: task.count }));
-			//setDisplayCal(task.count);
-			//setDisplayMac(task.macros?.map((el) => ({ id: el.id })));
-			//dispatch(setCalories(task.count));
-		}
-	}, [task, dispatch]);
+		if (!task || !task.macros || !allBasketsTotal) return;
 
-	if (isLoading) {
-		return <Loading />;
-	} else if (!task) return <Typography>Calorie Task not found.</Typography>;
+		const caloriesChanged = task.count !== allBasketsTotal.calories;
+		const macrosChanged = task.macros.some(
+			(mac) => mac.count !== allBasketsTotal.macros[mac.id]
+		);
 
-	const handleChangeTabs = (_e: SyntheticEvent, newValue: number) => {
-		setValue(newValue);
-	};
-
-	// const handleChangeCalories = (value: number) => {
-	// 	//setCalories((prev) => ({ ...prev, value: value }));
-	// 	dispatch(setCalories(value));
-	// };
-
-	// const handleCalorieDisplay = () => {
-	// 	setCalories((prev) => ({
-	// 		...prev,
-	// 		display: prev.value + (task?.count ?? 0),
-	// 	}));
-	// };
-
-	// const handleChangeMacros = (value: number, id: string) => {
-	// 	setMacros((prev) =>
-	// 		prev.map((m) => (m.id === id ? { ...m, amount: value } : m))
-	// 	);
-	// };
-
-	// const handleMacroDisplay = (id: string) => {
-	// 	setMacros((prev) =>
-	// 		prev.map((mac) =>
-	// 			mac.id === id && mac.display !== mac.amount
-	// 				? { ...mac, display: mac.amount ?? 0 }
-	// 				: mac
-	// 		)
-	// 	);
-	// };
-
-	const handleSubmit = () => {
-		if (task && (calories.amount || macros.some((el) => el.amount))) {
+		if (caloriesChanged || macrosChanged) {
+			console.log(allBasketsTotal);
 			editTask({
 				...task,
-				count: task.count + calories.amount,
+				count: allBasketsTotal.calories,
 				macros: task.macros?.map((mac: MacrosTask) => {
-					const macAddAmount = macros.find((el) => el.id === mac.id)?.amount;
-					if (macAddAmount == null)
+					const newMacAmount = allBasketsTotal.macros[mac.id];
+					if (newMacAmount == null)
 						handleError(`Cannot find macro element in macros state. ${mac.id}`);
 
 					return {
 						...mac,
-						count: mac.count + macAddAmount,
+						count: newMacAmount,
 					};
 				}),
+				complete: allBasketsTotal.calories > task.total ? false : true,
 			});
-			dispatch(submitBasket(task));
-			// setCalories((prev) => ({
-			// 	...prev,
-			// 	value: 0,
-			// }));
-			// setMacros(
-			// 	task?.macros
-			// 		? task.macros.map((el) => ({
-			// 				...el,
-			// 				amount: 0,
-			// 				display: 0,
-			// 		  }))
-			// 		: []
-			// );
 		}
-	};
+	}, [allBasketsTotal, task, editTask]);
+
+	// if (loadingFood || loadingBaskets || loadingTask) return <Loading />;
+	// if (errorFood || errorBaskets) {
+	// 	console.log(errorFood);
+	// 	handleError(`Error loading food.`, errorFood);
+	// }
+
+	// const handleChangeTabs = (_e: SyntheticEvent, newValue: number) => {
+	// 	setTabValue(newValue);
+	// };
+
+	// const handleEditBasketItem = (
+	// 	basketId: string,
+	// 	foodCat: Exclude<FoodCategory, "custom">,
+	// 	itemId: string,
+	// 	qty: number
+	// ) => {
+	// 	const thisBasket =
+	// 		basketId === currentBasketId
+	// 			? currBasket
+	// 			: allBaskets?.find((bask) => bask.id === basketId);
+
+	// 	if (!thisBasket) handleError("Basket not found");
+
+	// 	const itemExists = thisBasket[foodCat].find((el) => el.id === itemId);
+	// 	let newBasket: Baskets;
+	// 	if (itemExists) {
+	// 		newBasket = {
+	// 			...thisBasket,
+	// 			[foodCat]:
+	// 				qty > 0
+	// 					? currBasket[foodCat].map((item) =>
+	// 							item.id === itemId ? { ...item, qty } : item
+	// 					  )
+	// 					: currBasket[foodCat].filter((item) => item.id !== itemId),
+	// 		};
+	// 	} else {
+	// 		newBasket = {
+	// 			...thisBasket,
+	// 			[foodCat]: [...thisBasket[foodCat], { id: itemId, qty: 1 }],
+	// 		};
+	// 	}
+	// 	addBasket(newBasket);
+	// };
+
+	// const basketBadge =
+	// 	currBasket.custom.length +
+	// 	currBasket.ingredients.length +
+	// 	currBasket.meals.length;
 
 	return (
 		<Box
-			className="flex-between col gap2"
+			className="flex-between col gap2 full-w full-h"
 			sx={{
 				p: 1,
 				overflow: "hidden",
-				minHeight: 0,
-				height: "100%",
+
 				"& >*": { width: "100%" },
 			}}
 		>
-			<PageNav back={true} title="Log Calories" />
+			<CurrBasketIdContext.Provider value={currentBasketId}>
+				<PageNav back={true} title="Calorie Counter" />
 
-			{/* Current Calorie/Macros Count */}
-			<Paper
-				className="flex-center col gap2"
-				sx={{ p: 2, minHeight: 0, flex: 1, maxHeight: "40%" }}
-			>
+				<Outlet />
+
 				<Box
+					className="flex-center gap2 full-h full-w"
 					sx={{
-						display: "grid",
-						gridTemplateColumns: "2fr 1fr 2fr",
-						alignItems: "end",
-						width: "100%",
+						flexDirection: isMobile ? "column" : "row",
 					}}
 				>
-					<Typography
-						variant="h6"
+					{/* Current Calorie/Macros Count - NutritionDisplay.tsx */}
+					{children}
+
+					{/* Calorie Input */}
+					{/* <Box
+						className="flex-center col full-w"
 						sx={{
-							alignSelf: "center",
-							textAlign: "center",
-							color: "green",
+							flex: 1,
+							overflow: "hidden",
+							height: isMobile ? "60%" : "100%",
+							alignSelf: "flex-start",
 						}}
 					>
-						{calories.amount > 0 && `+${calories.amount}`}
-					</Typography>
-					<Typography
-						variant="h3"
-						sx={{
-							textAlign: "center",
-							color:
-								calories.amount + task.count > task.total
-									? "red"
-									: calories.amount === 0
-									? "black"
-									: "green",
-						}}
-					>
-						{calories.amount + task.count}
-					</Typography>
-					<Typography variant="h5" sx={{ textAlign: "left" }}>
-						/{task.total}
-					</Typography>
+						<Box
+							sx={{
+								width: "100%",
+								borderBottom: 1,
+								borderColor: "divider",
+								justifyContent: "center",
+							}}
+						>
+							<Tabs
+								value={tabValue}
+								onChange={handleChangeTabs}
+								aria-label="basic tabs example"
+								centered
+							>
+								<Tab
+									label="Meals"
+									{...a11yProps(0)}
+									sx={{ fontSize: "12px" }}
+								/>
+								<Tab
+									label="Ingredients"
+									{...a11yProps(1)}
+									sx={{ fontSize: "12px" }}
+								/>
+								<Tab
+									label="Custom"
+									{...a11yProps(2)}
+									sx={{ fontSize: "12px" }}
+								/>
+								<Tab
+									label={
+										<Badge badgeContent={basketBadge} color="success">
+											<ShoppingBasket />
+										</Badge>
+									}
+									{...a11yProps(3)}
+									sx={{ minWidth: "50px", width: "50px", padding: "0" }}
+								/>
+							</Tabs>
+						</Box>
+						<Paper
+							sx={{ flex: 1, height: "100%", minHeight: 0, width: "100%" }}
+						>
+							<CustomTabPanel value={tabValue} index={0}>
+							
+								<FoodList
+									items={meals}
+									qtyMap={Object.fromEntries(
+										currBasket.meals.map((el) => [el.id, el.qty])
+									)}
+									onAddItem={(itemId, qty) =>
+										handleEditBasketItem(
+											currentBasketId,
+											FOOD_CATEGORIES.MEALS,
+											itemId,
+											qty
+										)
+									}
+									newButton={() => navigate("new_meals")}
+								/>
+							</CustomTabPanel>
+							<CustomTabPanel value={tabValue} index={1}>
+							
+								<FoodList
+									items={ingredients.filter(
+										(el) => el.source !== FOOD_CATEGORIES.MEALS
+									)}
+									qtyMap={Object.fromEntries(
+										currBasket.ingredients.map((el) => [el.id, el.qty])
+									)}
+									onAddItem={(itemId, qty) =>
+										handleEditBasketItem(
+											currentBasketId,
+											FOOD_CATEGORIES.INGREDIENTS,
+											itemId,
+											qty
+										)
+									}
+									newButton={() => navigate("new_ingredients")}
+								/>
+							</CustomTabPanel>
+							<CustomTabPanel value={tabValue} index={2}>
+							
+								<CustomLog currentBasketId={currentBasketId} />
+							</CustomTabPanel>
+							<CustomTabPanel value={tabValue} index={3}>
+							
+								<Basket currentBasketId={currentBasketId} />
+							</CustomTabPanel>
+						</Paper>
+					</Box> */}
+					<NutritionInput />
 				</Box>
-				<Box
-					sx={{
-						display: "grid",
-						gridTemplateColumns: "repeat(auto-fit, minmax(75px, 1fr))",
-						rowGap: 1,
-						textAlign: "center",
-						width: "100%",
-						overflowY: "auto",
-						flex: 1,
-						minHeight: 0,
-					}}
-				>
-					{task?.macros &&
-						task.macros.map((macro) => {
-							const amount =
-								macros.find((el) => el.id === macro.id)?.amount ?? 0;
-
-							return (
-								<Box key={macro.id} sx={{ p: 0, m: 0 }}>
-									<Typography
-										variant="body2"
-										sx={{
-											whiteSpace: "nowrap",
-											overflow: "hidden",
-											textOverflow: "ellipsis",
-											borderBottom: "1px solid #00000080",
-											//fontWeight: "1.5",
-										}}
-									>
-										{macro.title}
-									</Typography>
-									<SemiCircleBar
-										count={macro.count}
-										total={macro.total}
-										units={macro.units}
-										addAmount={amount}
-									/>
-								</Box>
-							);
-						})}
-				</Box>
-			</Paper>
-
-			{/* Calorie Input */}
-			<Box
-				className="flex-center col"
-				sx={{ width: "100%", flex: 1, overflow: "hidden", maxHeight: "50%" }}
-			>
-				<Box
-					sx={{
-						width: "100%",
-						borderBottom: 1,
-						borderColor: "divider",
-						justifyContent: "center",
-					}}
-				>
-					<Tabs
-						value={value}
-						onChange={handleChangeTabs}
-						aria-label="basic tabs example"
-						centered
-					>
-						<Tab label="Custom" {...a11yProps(0)} />
-						<Tab label="Ingredients" {...a11yProps(1)} />
-						<Tab label="Meals" {...a11yProps(2)} />
-						<Tab
-							label={<ShoppingBasket />}
-							{...a11yProps(3)}
-							sx={{ minWidth: "50px", width: "50px", padding: "0" }}
-						/>
-					</Tabs>
-				</Box>
-				<Box sx={{ flex: 1, height: "100%", minHeight: 0 }}>
-					<CustomTabPanel value={value} index={0}>
-						{/* Custom Logging */}
-						<CustomLog
-							calories={calories.amount}
-							macros={macros}
-							//delayChange={true}
-							//handleChangeCalories={handleChangeCalories}
-							// handleChangeMacros={handleChangeMacros}
-							// handleCalorieDisplay={handleCalorieDisplay}
-							// handleMacroDisplay={handleMacroDisplay}
-						/>
-					</CustomTabPanel>
-					<CustomTabPanel value={value} index={1}>
-						Item Two Content
-					</CustomTabPanel>
-					<CustomTabPanel value={value} index={2}>
-						Item Three Content
-					</CustomTabPanel>
-					<CustomTabPanel value={value} index={3}>
-						Item Three Content
-					</CustomTabPanel>
-				</Box>
-			</Box>
-
-			<Button variant="contained" onClick={handleSubmit}>
-				Submit
-			</Button>
+			</CurrBasketIdContext.Provider>
 		</Box>
 	);
 };

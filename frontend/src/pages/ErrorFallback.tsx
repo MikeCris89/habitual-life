@@ -23,7 +23,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: ErrorProps) => {
 				error.message === "handleErrorThrow"
 			) {
 			} else {
-				logError(error);
+				logError("React Error.", error);
 				setLogged(true);
 			}
 		}

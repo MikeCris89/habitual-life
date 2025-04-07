@@ -149,24 +149,92 @@ export const Units = [
 
 export type UnitTypes = (typeof Units)[number];
 
-export interface Food {
+export const FOOD_CATEGORIES = {
+	INGREDIENTS: "ingredients",
+	MEALS: "meals",
+	CUSTOM: "custom",
+} as const;
+
+export type FoodCategory =
+	(typeof FOOD_CATEGORIES)[keyof typeof FOOD_CATEGORIES];
+
+export interface FoodBase {
 	title: string;
 	description: string;
 	id: string;
 }
 
-export interface Ingredients extends Food {
+export interface NutritionalInfo {
 	calories: number;
-	macros: MacrosType[];
-	servingSize: { serving: string; units: UnitTypes };
+	macros: Record<string, number>;
 }
 
-export interface Meals extends Food {
-	ingredients: string[];
+export interface CustomForm extends NutritionalInfo {
+	qty: number;
+	id: string;
 }
+
+export interface IngredientForm extends FoodBase, NutritionalInfo {
+	source: Exclude<FoodCategory, "custom">;
+	servingSize: { serving: number; units: UnitTypes };
+}
+
+export interface MealForm extends FoodBase {
+	ingredients: BasketItems[];
+}
+
+export type FoodFormTypes = CustomForm | IngredientForm | MealForm;
+
+export type FoodFormKeys = keyof (CustomForm & IngredientForm & MealForm);
+
+export interface BasketItems {
+	id: string;
+	qty: number;
+}
+
+export interface Baskets {
+	time: string;
+	ingredients: BasketItems[];
+	meals: BasketItems[];
+	custom: CustomForm[];
+	id: string;
+}
+
+export const getFoodCategory = (log: FoodFormTypes): FoodCategory => {
+	if ("source" in log && "servingSize" in log)
+		return FOOD_CATEGORIES.INGREDIENTS;
+	if ("ingredients" in log) return FOOD_CATEGORIES.MEALS;
+	return FOOD_CATEGORIES.CUSTOM;
+};
+
+export const isIngOrCustom = (
+	log: FoodFormTypes | null
+): log is CustomForm | IngredientForm => {
+	return log != null && "calories" in log;
+};
+
+export const isValidKey = <T extends object>(
+	obj: T,
+	key: PropertyKey
+): key is keyof T => key in obj;
+
+export const isIngredientLog = (log: unknown): log is IngredientForm =>
+	typeof log === "object" &&
+	log !== null &&
+	"servingSize" in log &&
+	"source" in log;
+
+export const isMealLog = (log: unknown): log is MealForm =>
+	typeof log === "object" && log !== null && "ingredients" in log;
+
+export const isCustomLog = (log: unknown): log is CustomForm =>
+	!isIngredientLog(log) && !isMealLog(log);
+
+export const isMealSource = (item: IngredientForm) =>
+	item.source === FOOD_CATEGORIES.MEALS;
 
 // Stats
-export type Stats = Record<HabitType, HabitStats[]>;
+type Stats = Record<HabitType, HabitStats[]>;
 
 export interface HabitStats {
 	title: string; // to have quick access to title of habit

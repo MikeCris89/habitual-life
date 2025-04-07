@@ -9,13 +9,17 @@ import {
 	useLazyGetHabitsQuery,
 } from "../features/habits/habitsApi";
 import { handleError } from "../utils/errors";
-import { startOfDay, statsStartDate } from "../utils/timeUtils";
+import { dayBefore, startOfDay, statsStartDate } from "../utils/timeUtils";
 import Loading from "../components/Loading";
 import { dbActions } from "../utils/indexedDb";
 import { Task } from "../utils/types";
 import { useDispatch } from "react-redux";
 import { resetPastStats } from "../features/stats/statsSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+	useGetMetaQuery,
+	useSetLastCreatedDateMutation,
+} from "../features/meta/metaApi";
 
 const Account: React.FC = () => {
 	const dispatch = useDispatch();
@@ -28,6 +32,8 @@ const Account: React.FC = () => {
 	const { data: habits } = useGetHabitsQuery();
 	const { data: pastTasks, isLoading: loadingPastTasks } =
 		useGetTasksByRangeQuery();
+	const { data: metaData } = useGetMetaQuery();
+	const [setLastCreatedDate] = useSetLastCreatedDateMutation();
 
 	const handleTestData = async () => {
 		try {
@@ -74,6 +80,13 @@ const Account: React.FC = () => {
 			>
 				Delete All Tasks
 			</Button>
+			{/* <Button
+				onClick={() =>
+					setLastCreatedDate({ userId: metaData.userId, date: dayBefore() })
+				}
+			>
+				Set Last Created Date to Yesterday
+			</Button> */}
 		</Box>
 	);
 };

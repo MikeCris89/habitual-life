@@ -1,13 +1,20 @@
+import {
+	BasketItems,
+	FoodCategory,
+	Baskets,
+	IngredientForm,
+	MealForm,
+} from "./../../../utils/types";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../../utils/indexedDb";
-import { Ingredients, Meals } from "../../../utils/types";
 
 export const foodApi = createApi({
 	reducerPath: "food",
 	baseQuery: fakeBaseQuery(),
+	tagTypes: ["baskets"],
 	endpoints: (builder) => ({
 		getFood: builder.query<
-			{ ingredients: Ingredients[]; meals: Meals[] },
+			{ ingredients: IngredientForm[]; meals: MealForm[] },
 			void
 		>({
 			queryFn: async () => {
@@ -20,8 +27,19 @@ export const foodApi = createApi({
 				}
 			},
 		}),
+		getBaskets: builder.query<Baskets[], void>({
+			queryFn: async () => {
+				try {
+					const data = (await dbActions.getAll("baskets")) ?? [];
+					return { data };
+				} catch (e) {
+					return { error: { message: "Error getting baskets from DB." } };
+				}
+			},
+			providesTags: ["baskets"],
+		}),
 		addEditIngredient: builder.mutation({
-			queryFn: async (ing: Ingredients) => {
+			queryFn: async (ing: IngredientForm) => {
 				try {
 					const data = await dbActions.put("ingredients", ing);
 					return { data };
@@ -45,7 +63,7 @@ export const foodApi = createApi({
 			},
 		}),
 		addEditMeal: builder.mutation({
-			queryFn: async (meal: Meals) => {
+			queryFn: async (meal: MealForm) => {
 				try {
 					const data = await dbActions.put("meals", meal);
 					return { data };
@@ -68,8 +86,59 @@ export const foodApi = createApi({
 				);
 			},
 		}),
+		addBasket: builder.mutation({
+			queryFn: async (basket: Baskets) => {
+				try {
+					const data = await dbActions.put("baskets", basket);
+					return { data };
+				} catch (e) {
+					return { error: { message: "Error saving basket to DB." } };
+				}
+			},
+			onQueryStarted: (basket, { dispatch }) => {
+				dispatch(
+					foodApi.util.updateQueryData("getBaskets", undefined, (draft) => {
+						const existing = draft.findIndex((el) => el.id === basket.id);
+						if (existing !== -1) {
+							draft[existing] = basket;
+						} else {
+							draft.push(basket);
+						}
+					})
+				);
+			},
+		}),
+		deleteBasket: builder.mutation({
+			queryFn: async (basketId: string) => {
+				try {
+					const data = await dbActions.delete("baskets", basketId);
+					return { data };
+				} catch (e) {
+					return { error: { message: `Error deleting basket. ${e}` } };
+				}
+			},
+			onQueryStarted: (basketId, { dispatch }) => {
+				dispatch(
+					foodApi.util.updateQueryData("getBaskets", undefined, (draft) => {
+						const index = draft.findIndex((basket) => basket.id === basketId);
+						if (index !== -1) draft.splice(index, 1);
+					})
+				);
+			},
+		}),
+		clearDailyBaskets: builder.mutation({
+			queryFn: async (_arg) => {
+				try {
+					const data = await dbActions.clearBaskets();
+					return { data };
+				} catch (e) {
+					return { error: { message: "Error clearing daily baskets." } };
+				}
+			},
+			invalidatesTags: ["baskets"],
+		}),
 		deleteIngredient: builder.mutation({
-			queryFn: async (ing: Ingredients) => {
+			queryFn: async (ing: IngredientForm) => {
 				try {
 					const data = await dbActions.delete("ingredients", ing.id);
 					return { data };
@@ -81,7 +150,7 @@ export const foodApi = createApi({
 			},
 		}),
 		deleteMeal: builder.mutation({
-			queryFn: async (meal: Meals) => {
+			queryFn: async (meal: MealForm) => {
 				try {
 					const data = await dbActions.delete("meals", meal.id);
 					return { data };
@@ -97,8 +166,12 @@ export const foodApi = createApi({
 
 export const {
 	useGetFoodQuery,
+	useGetBasketsQuery,
 	useAddEditIngredientMutation,
 	useAddEditMealMutation,
+	useAddBasketMutation,
+	useDeleteBasketMutation,
+	useClearDailyBasketsMutation,
 	useDeleteIngredientMutation,
 	useDeleteMealMutation,
 } = foodApi;

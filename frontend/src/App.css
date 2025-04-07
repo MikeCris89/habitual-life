@@ -7,6 +7,15 @@ body,
 	width: 100%;
 }
 
+.full-w {
+	width: 100%;
+}
+
+.full-h {
+	height: 100%;
+	min-height: 0;
+}
+
 .flex {
 	display: flex;
 	align-items: center;

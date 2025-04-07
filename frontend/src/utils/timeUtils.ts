@@ -46,3 +46,11 @@ export const formatSecondsTime = (sec: number): string => {
 		.toString()
 		.padStart(2, "0")}`;
 };
+
+export const formatDateToTime = (
+	dateStr: string,
+	twelveHour: boolean = true
+): string => {
+	if (twelveHour) return dayjs(dateStr).format("hh:mm A");
+	else return dayjs(dateStr).format("HH:mm");
+};

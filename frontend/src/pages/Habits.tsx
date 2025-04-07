@@ -7,6 +7,7 @@ import { Close, Search } from "@mui/icons-material";
 import { memo, useState } from "react";
 import { useGetHabitsQuery } from "../features/habits/habitsApi";
 import AddButton from "../components/AddButton";
+import SearchBar from "../components/SearchBar";
 
 interface ListProps {
 	habits?: Habit[];
@@ -50,7 +51,8 @@ const HabitBar = memo(({ search, setSearch }: BarProps) => (
 			marginBottom: "10px",
 		}}
 	>
-		<Box className="flex-center gap2">
+		<SearchBar onChange={(value) => setSearch(value)} value={search} />
+		{/* <Box className="flex-center gap2">
 			<Search />
 			<TextField
 				type="text"
@@ -70,7 +72,7 @@ const HabitBar = memo(({ search, setSearch }: BarProps) => (
 				}}
 			/>
 			{search && <Close fontSize="small" onClick={() => setSearch("")} />}
-		</Box>
+		</Box> */}
 		<AddButton />
 	</Paper>
 ));

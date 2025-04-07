@@ -4,7 +4,6 @@ import { Task } from "./types";
 export const stringToNum = (value: string): number => {
 	const num = value.replace(/[^0-9.]/g, "");
 	const cleaned = num.split(".").length > 2 ? num.replace(/\.+$/, "") : num;
-	console.log(cleaned);
 	return cleaned === "" ? 0 : Number(cleaned);
 };
 
@@ -34,4 +33,13 @@ export const getMaxNumFromObjArr = <T extends Record<string, any>>(
 		const value = Number(entry[field]);
 		return isNaN(value) ? acc : Math.max(acc, value);
 	}, initValue);
+};
+
+export const formatLabel = (
+	label: string,
+	dropLastChar: boolean = false
+): string => {
+	if (!label) return "";
+	const formatted = label[0].toUpperCase() + label.slice(1);
+	return dropLastChar ? formatted.slice(0, -1) : formatted;
 };

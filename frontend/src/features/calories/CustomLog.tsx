@@ -1,150 +1,70 @@
-import {
-	Paper,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-} from "@mui/material";
-import NumberInput from "../../components/NumberInput";
-import { useEffect, useRef, useState } from "react";
-import { MacroState, setCalories, setMacros } from "./CaloriesSlice";
-import { MacrosType } from "../../utils/types";
-import { useDispatch } from "react-redux";
+import { nanoid } from "nanoid";
+import { Baskets, CustomForm, FOOD_CATEGORIES } from "../../utils/types";
+import LogForm from "./LogForm";
+import { useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { useAddBasketMutation } from "./food/foodApi";
+import { useSelector } from "react-redux";
+import { selectCurrentBasket } from "./basketsSelectors";
+import { useCurrBasketId } from "./CalorieLog";
 
-interface Props {
-	calories: number;
-	macros: MacroState[];
-	// delayChange?: boolean;
-	// handleChangeCalories: (value: number) => void;
-	// handleCalorieDisplay: () => void;
-	// handleChangeMacros: (value: number, id: string) => void;
-	// handleMacroDisplay: (id: string) => void;
-}
+const initCustom: CustomForm = {
+	calories: 0,
+	macros: {},
+	qty: 1,
+	id: "",
+};
 
-const CustomLog = ({
-	calories,
-	macros,
-}: //delayChange = false,
-// handleChangeCalories,
-// handleChangeMacros,
-// handleCalorieDisplay,
-// handleMacroDisplay,
-Props) => {
-	const dispatch = useDispatch();
-	const [cal, setCal] = useState(calories ?? 0);
-	const [mac, setMac] = useState<MacroState[]>([
-		...macros.map((el) => ({ ...el })),
-	]);
+const CustomLog = () => {
+	const [addBasket] = useAddBasketMutation();
+	const currentBasketId = useCurrBasketId();
+	const currBasket = useSelector((state) =>
+		selectCurrentBasket(state, currentBasketId)
+	);
+	const [form, setForm] = useState({ ...initCustom });
 
-	// const calTimerRef = useRef<NodeJS.Timeout | null>(null);
-	// const macTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-	useEffect(() => {
-		console.log("custom log useEffect");
-		setCal(calories);
-		setMac((prev) => {
-			return [
-				...macros.map((el) => {
-					const prevAmount = prev.find((p) => p.id === el.id)?.amount;
-					return { ...el, amount: prevAmount || 0 };
-				}),
-			];
-		});
-	}, [calories, macros]);
-
-	// useEffect(() => {
-	// 	return () => {
-	// 		if (calTimerRef.current) clearTimeout(calTimerRef.current);
-	// 	};
-	// }, []);
-
-	const handleChangeCal = (value: number, skipDelay = false) => {
-		setCal(value);
-		dispatch(setCalories(value));
-
-		// if (calTimerRef.current) clearTimeout(calTimerRef.current);
-		// if (calories !== value) {
-		// 	if (delayChange && !skipDelay) {
-		// 		const newTimer = setTimeout(() => {
-		// 			dispatch(setCalories(value));
-		// 			calTimerRef.current = null;
-		// 		}, 800);
-		// 		calTimerRef.current = newTimer;
-		// 	} else {
-		// dispatch(setCalories(value));
-		// 	}
-		// }
+	const handleChange = (key: string, value: any) => {
+		setForm((prev) => ({
+			...prev,
+			[key]: value,
+		}));
 	};
 
-	const handleChangeMac = (value: number, id: string, skipDelay = false) => {
-		setMac((prev) =>
-			prev.map((el) => (el.id === id ? { ...el, amount: value } : el))
-		);
+	const handleChangeMacros = (id: string, value: number) => {
+		setForm((prev) => ({
+			...prev,
+			macros: { ...prev.macros, [id]: value },
+		}));
+	};
 
-		dispatch(setMacros({ value, id }));
-
-		// if (macTimerRef.current) clearTimeout(macTimerRef.current);
-
-		// if (delayChange && !skipDelay) {
-		// 	const timer = setTimeout(() => dispatch(setMacros({ value, id })), 800);
-		// 	macTimerRef.current = timer;
-		// } else {
-		// 	dispatch(setMacros({ value, id }));
-		// }
+	const handleSubmit = () => {
+		console.log(currBasket);
+		if (currBasket) {
+			const newBasket: Baskets = {
+				...currBasket,
+				custom: [...currBasket.custom, { ...form, id: nanoid() }],
+			};
+			addBasket(newBasket);
+			setForm({ ...initCustom });
+		}
 	};
 
 	return (
-		<Paper sx={{ p: 1, height: "100%", minHeight: 0, overflow: "auto" }}>
-			<NumberInput
-				label="Calories"
-				value={calories}
-				onChange={(value) => handleChangeCal(value)}
-				fullWidth={false}
-				sx={{ float: "right" }}
-				maxLength={4}
-				size="small"
-				required={false}
-				delayChange={true}
-				// onBlur={(value) => {
-				// 	// if (calTimerRef.current) clearTimeout(calTimerRef.current);
-				// 	handleChangeCal(value, true);
-				// }}
+		<Box
+			className="flex-between col gap2 full-h wull-w"
+			sx={{ overflow: "hidden" }}
+		>
+			<Typography variant="body1">Quick Add</Typography>
+			<LogForm
+				calories={form.calories}
+				macros={form.macros}
+				handleChangeCalories={handleChange}
+				handleChangeMacros={handleChangeMacros}
 			/>
-			<TableContainer>
-				<Table size="small">
-					<TableHead>
-						<TableRow>
-							<TableCell sx={{ fontWeight: "bold" }}>Macros</TableCell>
-							<TableCell align="right"></TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{macros.map((macro) => (
-							<TableRow key={macro.id}>
-								<TableCell component="th" scope="row">
-									{macro.title} {`(${macro.units})`}
-								</TableCell>
-								<TableCell align="right">
-									<NumberInput
-										value={macro.amount}
-										onChange={(value) => handleChangeMac(value, macro.id)}
-										size="small"
-										fullWidth={false}
-										maxLength={4}
-										sx={{ width: "75px" }}
-										required={false}
-										delayChange={true}
-										//onBlur={(value) => handleChangeMac(value, macro.id, true)}
-									/>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</Paper>
+			<Button variant="contained" onClick={handleSubmit} fullWidth>
+				Add To basket
+			</Button>
+		</Box>
 	);
 };
 

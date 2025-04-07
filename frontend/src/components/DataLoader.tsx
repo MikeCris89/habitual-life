@@ -1,8 +1,5 @@
-import { ReactNode, useRef } from "react";
-import {
-	useGetHabitsQuery,
-	useLazyGetHabitsQuery,
-} from "../features/habits/habitsApi";
+import { ReactNode, useCallback, useRef } from "react";
+import { useGetHabitsQuery } from "../features/habits/habitsApi";
 import {
 	useCreateDailyTasksMutation,
 	useGetDailyTasksQuery,
@@ -18,6 +15,12 @@ import {
 import { startOfDay } from "../utils/timeUtils";
 import { useDispatch } from "react-redux";
 import { setPastStats } from "../features/stats/statsSlice";
+import {
+	useClearDailyBasketsMutation,
+	useGetBasketsQuery,
+} from "../features/calories/food/foodApi";
+import useVisibilityEffect from "../hooks/useVisibilityEffect";
+import { dbPromise } from "../utils/indexedDb";
 
 interface Props {
 	children: ReactNode;
@@ -53,6 +56,14 @@ const DataLoader = ({ children }: Props) => {
 		{ isLoading: loadingCreateTasks, error: errorCreateTasks },
 	] = useCreateDailyTasksMutation();
 
+	const {
+		data: baskets,
+		isLoading: loadingBaskets,
+		error: errorBaskets,
+	} = useGetBasketsQuery();
+
+	const [clearDailyBaskets] = useClearDailyBasketsMutation();
+
 	const [
 		setLastCreatedDate,
 		{ isLoading: loadingSetMeta, error: errorSetMeta },
@@ -71,8 +82,16 @@ const DataLoader = ({ children }: Props) => {
 		}
 	}, [pastTasks, dispatch]);
 
-	useEffect(() => {
-		const createTasks = async () => {
+	const createTasks = useCallback(async () => {
+		console.log("createTasks trigger", metaData?.lastCreatedDate);
+		if (
+			metaData?.userId &&
+			metaData.lastCreatedDate !== startOfDay() &&
+			habits &&
+			baskets &&
+			!createRef.current
+		) {
+			console.log("Tasks not created for today. ");
 			if (createRef.current) return;
 			createRef.current = true;
 			console.log("creating daily tasks.");
@@ -80,7 +99,13 @@ const DataLoader = ({ children }: Props) => {
 				if (habits && habits.length) {
 					await createDailyTasks(habits);
 				}
-				await setLastCreatedDate(metaData.userId);
+				if (baskets && baskets.length) {
+					await clearDailyBaskets(undefined);
+				}
+				await setLastCreatedDate({
+					userId: metaData.userId,
+					date: startOfDay(),
+				});
 			} catch (e) {
 				handleError(
 					`DataLoader failed to create tasks and update meta data. ${e} `
@@ -88,17 +113,21 @@ const DataLoader = ({ children }: Props) => {
 			} finally {
 				createRef.current = false;
 			}
-		};
-		if (
-			metaData?.userId &&
-			metaData.lastCreatedDate !== startOfDay() &&
-			habits &&
-			!createRef.current
-		) {
-			console.log("Tasks not created for today. ");
-			createTasks();
 		}
-	}, [metaData, createDailyTasks, setLastCreatedDate, habits]);
+	}, [
+		baskets,
+		habits,
+		clearDailyBaskets,
+		setLastCreatedDate,
+		createDailyTasks,
+		metaData,
+	]);
+
+	useVisibilityEffect(createTasks);
+
+	useEffect(() => {
+		createTasks();
+	}, [createTasks]);
 
 	const isLoading =
 		loadingHabits ||
@@ -106,7 +135,8 @@ const DataLoader = ({ children }: Props) => {
 		loadingCreateTasks ||
 		loadingMeta ||
 		loadingSetMeta ||
-		loadingPastTasks;
+		loadingPastTasks ||
+		loadingBaskets;
 
 	const error =
 		errorHabits ||
@@ -114,15 +144,21 @@ const DataLoader = ({ children }: Props) => {
 		errorCreateTasks ||
 		errorMeta ||
 		errorSetMeta ||
-		errorPastTasks;
+		errorPastTasks ||
+		errorBaskets;
 
 	useEffect(() => {
 		if (error) {
-			handleError(error);
+			handleError("Error in DataLoader", error);
 		}
 	}, [error]);
 
 	console.log("DataLoader Rendering");
+
+	if (process.env.NODE_ENV === "development") {
+		//@ts-ignore
+		window.dbPromise = dbPromise;
+	}
 
 	if (isLoading) return <Loading />;
 	//console.log("habits", habits);
