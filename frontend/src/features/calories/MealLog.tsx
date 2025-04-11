@@ -16,7 +16,7 @@ import {
 	Typography,
 } from "@mui/material";
 import { FOOD_CATEGORIES, MealForm } from "../../utils/types";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import {
 	useAddEditIngredientMutation,
@@ -32,10 +32,10 @@ import {
 	calcMealTotals,
 	selectCalorieHabit,
 	selectIngredients,
-	selectMeals,
 } from "./food/foodSelectors";
 import { DinnerDiningOutlined } from "@mui/icons-material";
 import Loading from "../../components/Loading";
+import { AnimatePresence, motion } from "framer-motion";
 
 const initMeal: MealForm = {
 	title: "",
@@ -103,6 +103,50 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 	);
 };
 
+const variants = {
+	initial: (direction: number) => ({
+		x: direction > 0 ? 200 : -200,
+		opacity: 0,
+	}),
+	animate: {
+		x: 0,
+		opacity: 1,
+		transition: { duration: 0.25, ease: "easeInOut" },
+	},
+	exit: (direction: number) => ({
+		x: direction < 0 ? 200 : -200,
+		opacity: 0,
+		transition: { duration: 0.25, ease: "easeInOut" },
+	}),
+};
+
+interface TabProps {
+	children: React.ReactNode;
+	value: number;
+	index: number;
+	direction: number;
+}
+
+const MotionTabPanel = ({ children, value, index, direction }: TabProps) => {
+	if (index !== value) return null;
+	return (
+		<AnimatePresence mode="wait" custom={direction} initial={!!direction}>
+			<motion.div
+				key={index}
+				variants={variants}
+				initial="initial"
+				animate="animate"
+				exit="exit"
+				custom={direction}
+				className="full-w full-h"
+				style={{ overflow: "hidden" }}
+			>
+				{children}
+			</motion.div>
+		</AnimatePresence>
+	);
+};
+
 const MealLog = () => {
 	const { id } = useParams();
 	const isEditing = !!id;
@@ -115,6 +159,7 @@ const MealLog = () => {
 	const [newIng, setNewIng] = useState(false);
 	const [customForm, setCustomForm] = useState({ ...initCustomMeal });
 	const [tab, setTab] = useState(0);
+	const [direction, setDirection] = useState(0);
 
 	useEffect(() => {
 		if (isEditing) {
@@ -183,9 +228,9 @@ const MealLog = () => {
 		const ingId = nanoid();
 		addEditIng({ ...customForm, id: ingId });
 		addIngToMeal(ingId, 1);
-
 		setCustomForm({ ...initCustomMeal });
 		setTab(2);
+		setDirection(1);
 	};
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -264,7 +309,10 @@ const MealLog = () => {
 						</form>
 						<Tabs
 							value={tab}
-							onChange={(_, val) => setTab(val)}
+							onChange={(_, val) => {
+								setDirection(val > tab ? 1 : -1);
+								setTab(val);
+							}}
 							centered
 							sx={{
 								width: "100%",
@@ -302,50 +350,51 @@ const MealLog = () => {
 								}}
 							/>
 						</Tabs>
-						{/* Ingredients Tab */}
-						{tab === 0 && (
-							<Box
-								className="flex-center col gap2 full-w full-h"
-								sx={{ minHeight: 0 }}
-							>
-								<FoodList
-									items={ingList}
-									qtyMap={ingQtyMap}
-									onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
-									newButton={() => setNewIng(true)}
-								/>
-							</Box>
-						)}
-						{/* Quick Add Tab */}
-						{tab === 1 && (
-							<Box className="flex-between col gap2 full-w full-h">
-								<LogForm
-									calories={customForm.calories}
-									macros={customForm.macros}
-									handleChangeCalories={(_, value) =>
-										setCustomForm((prev) => ({ ...prev, calories: value }))
-									}
-									handleChangeMacros={(macId, value) =>
-										setCustomForm((prev) => ({
-											...prev,
-											macros: { ...prev.macros, [macId]: value },
-										}))
-									}
-								/>
-								<Button variant="contained" onClick={handleSubmitCustom}>
-									Add to Meal
-								</Button>
-							</Box>
-						)}
-						{/* Meal Tab */}
-						{tab === 2 && (
-							<FoodList
-								items={mealIngList}
-								qtyMap={ingQtyMap}
-								onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
-								searchBar={false}
-							/>
-						)}
+						<Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+							<MotionTabPanel value={tab} index={0} direction={direction}>
+								<Box className="flex-center col gap2 full-w full-h">
+									<FoodList
+										items={ingList}
+										qtyMap={ingQtyMap}
+										onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
+										newButton={() => setNewIng(true)}
+									/>
+								</Box>
+							</MotionTabPanel>
+							<MotionTabPanel value={tab} index={1} direction={direction}>
+								<Box className="flex-between col gap2 full-w full-h">
+									<LogForm
+										calories={customForm.calories}
+										macros={customForm.macros}
+										handleChangeCalories={(_, value) =>
+											setCustomForm((prev) => ({
+												...prev,
+												calories: value,
+											}))
+										}
+										handleChangeMacros={(macId, value) =>
+											setCustomForm((prev) => ({
+												...prev,
+												macros: { ...prev.macros, [macId]: value },
+											}))
+										}
+									/>
+									<Button variant="contained" onClick={handleSubmitCustom}>
+										Add to Meal
+									</Button>
+								</Box>
+							</MotionTabPanel>
+							<MotionTabPanel value={tab} index={2} direction={direction}>
+								<Box className="flex-center col gap2 full-w full-h">
+									<FoodList
+										items={mealIngList}
+										qtyMap={ingQtyMap}
+										onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
+										searchBar={false}
+									/>
+								</Box>
+							</MotionTabPanel>
+						</Box>
 					</Box>
 
 					{tab !== 1 && (

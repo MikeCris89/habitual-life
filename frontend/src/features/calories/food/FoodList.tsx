@@ -81,6 +81,9 @@ const FoodList = <T extends IngredientForm | MealForm>({
 				className="flex-center col gap3 full-w full-h"
 				sx={{ overflowY: "auto", justifyContent: "flex-start" }}
 			>
+				{sortedItems && !sortedItems.length && (
+					<Typography variant="h6">No items..</Typography>
+				)}
 				{sortedItems &&
 					sortedItems.map((item) => {
 						return (

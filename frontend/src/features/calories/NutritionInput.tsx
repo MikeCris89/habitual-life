@@ -14,34 +14,59 @@ import Basket from "./food/Basket";
 import { handleError } from "../../utils/errors";
 import Loading from "../../components/Loading";
 import useBasketUpdater from "../../hooks/useBasketUpdater";
+import { motion, AnimatePresence } from "framer-motion";
 
-const a11yProps = (index: number) => ({
-	id: `simple-tab-${index}`,
-	"aria-controls": `simple-tabpanel-${index}`,
-});
+const variants = {
+	initial: (direction: number) => ({
+		x: direction > 0 ? 200 : -200,
+		opacity: 0,
+	}),
+	animate: {
+		x: 0,
+		opacity: 1,
+		transition: { duration: 0.25, ease: "easeInOut" },
+	},
+	exit: (direction: number) => ({
+		x: direction < 0 ? 200 : -200,
+		opacity: 0,
+		transition: { duration: 0.25, ease: "easeInOut" },
+	}),
+};
 
 interface TabProps {
 	children: React.ReactNode;
 	value: number;
 	index: number;
+	direction: number;
 }
 
-const CustomTabPanel = ({ children, value, index }: TabProps) => {
+const MotionTabPanel = ({ children, value, index, direction }: TabProps) => {
+	if (index !== value) return null;
 	return (
-		<Box role="tabpanel" hidden={value !== index} className="full-w full-h">
-			{value === index && (
-				<Box className="full-w full-h" sx={{ overflow: "hidden" }}>
-					{children}
-				</Box>
-			)}
-		</Box>
+		<AnimatePresence mode="wait" custom={direction} initial={!!direction}>
+			<motion.div
+				key={index}
+				variants={variants}
+				initial="initial"
+				animate="animate"
+				exit="exit"
+				custom={direction}
+				className="full-w full-h"
+				style={{ overflow: "hidden" }}
+			>
+				{children}
+			</motion.div>
+		</AnimatePresence>
 	);
 };
 
 const NutritionInput = () => {
 	const navigate = useNavigate();
 	const { isMobile } = useDisplay();
+
 	const [tabValue, setTabValue] = useState(0);
+	const [direction, setDirection] = useState(0);
+
 	const currentBasketId = useCurrBasketId();
 	const currBasket = useSelector((state) =>
 		selectCurrentBasket(state, currentBasketId)
@@ -71,6 +96,7 @@ const NutritionInput = () => {
 	}, [currBasket.ingredients]);
 
 	const handleChangeTabs = (_e: SyntheticEvent, newValue: number) => {
+		setDirection(newValue > tabValue ? 1 : -1);
 		setTabValue(newValue);
 	};
 
@@ -109,26 +135,21 @@ const NutritionInput = () => {
 					aria-label="basic tabs example"
 					centered
 				>
-					<Tab label="Meals" {...a11yProps(0)} sx={{ fontSize: "12px" }} />
-					<Tab
-						label="Ingredients"
-						{...a11yProps(1)}
-						sx={{ fontSize: "12px" }}
-					/>
-					<Tab label="Custom" {...a11yProps(2)} sx={{ fontSize: "12px" }} />
+					<Tab label="Meals" sx={{ fontSize: "12px" }} />
+					<Tab label="Ingredients" sx={{ fontSize: "12px" }} />
+					<Tab label="Custom" sx={{ fontSize: "12px" }} />
 					<Tab
 						label={
 							<Badge badgeContent={basketBadge} color="success">
 								<ShoppingBasket />
 							</Badge>
 						}
-						{...a11yProps(3)}
 						sx={{ minWidth: "50px", width: "50px", padding: "0" }}
 					/>
 				</Tabs>
 			</Box>
 			<Paper sx={{ flex: 1, height: "100%", minHeight: 0, width: "100%" }}>
-				<CustomTabPanel value={tabValue} index={0}>
+				<MotionTabPanel value={tabValue} index={0} direction={direction}>
 					{/* Meals */}
 					<FoodList
 						items={meals}
@@ -144,8 +165,8 @@ const NutritionInput = () => {
 						newButton={() => navigate("meals")}
 						onItemClick={(id) => navigate(`meals/${id}`)}
 					/>
-				</CustomTabPanel>
-				<CustomTabPanel value={tabValue} index={1}>
+				</MotionTabPanel>
+				<MotionTabPanel value={tabValue} index={1} direction={direction}>
 					{/* Ingredients */}
 					<FoodList
 						items={filteredIng}
@@ -161,15 +182,15 @@ const NutritionInput = () => {
 						newButton={() => navigate("ingredients")}
 						onItemClick={(id) => navigate(`ingredients/${id}`)}
 					/>
-				</CustomTabPanel>
-				<CustomTabPanel value={tabValue} index={2}>
+				</MotionTabPanel>
+				<MotionTabPanel value={tabValue} index={2} direction={direction}>
 					{/* Custom Logging */}
 					<CustomLog />
-				</CustomTabPanel>
-				<CustomTabPanel value={tabValue} index={3}>
+				</MotionTabPanel>
+				<MotionTabPanel value={tabValue} index={3} direction={direction}>
 					{/* Basket */}
 					<Basket />
-				</CustomTabPanel>
+				</MotionTabPanel>
 			</Paper>
 		</Box>
 	);
