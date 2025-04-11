@@ -1,9 +1,7 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
-
+import { Box, Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectMeals } from "./foodSelectors";
 import {
-	FOOD_CATEGORIES,
 	IngredientForm,
 	isIngredientLog,
 	isMealLog,
@@ -13,15 +11,10 @@ import {
 import { useMemo, useState } from "react";
 import SearchBar from "../../../components/SearchBar";
 import {
-	AddCircle,
 	BuildCircleOutlined,
-	CheckCircle,
-	Delete,
 	DinnerDiningOutlined,
 	EggAltOutlined,
-	RemoveCircle,
 } from "@mui/icons-material";
-import NumberInput from "../../../components/NumberInput";
 import QtyField from "../../../components/QtyField";
 
 interface Props<T extends IngredientForm | MealForm> {
@@ -29,6 +22,7 @@ interface Props<T extends IngredientForm | MealForm> {
 	qtyMap: Record<string, number>;
 	onAddItem: (itemId: string, qty: number) => void;
 	newButton?: () => void;
+	onItemClick?: (id: string) => void;
 	searchBar?: boolean;
 }
 
@@ -37,6 +31,7 @@ const FoodList = <T extends IngredientForm | MealForm>({
 	qtyMap = {},
 	onAddItem,
 	newButton,
+	onItemClick,
 	searchBar = true,
 }: Props<T>) => {
 	const [search, setSearch] = useState("");
@@ -58,29 +53,6 @@ const FoodList = <T extends IngredientForm | MealForm>({
 	const getCalories = (item: IngredientForm | MealForm) => {
 		if (isMealLog(item)) return mealTotals[item.id].calories;
 		if (isIngredientLog(item)) return item.calories;
-	};
-
-	const addButton = (itemId: string, qty: number) => {
-		//if (showQty) {
-		return (
-			<IconButton onClick={() => onAddItem(itemId, qty)}>
-				<AddCircle fontSize="small" />
-			</IconButton>
-		);
-		//}
-		// if (!showQty) {
-		// 	return (
-		// 		<IconButton
-		// 			onClick={qtyMap[itemId] ? () => {} : () => onAddItem(itemId, qty)}
-		// 		>
-		// 			{qtyMap[itemId] ? (
-		// 				<CheckCircle fontSize="small" color="success" />
-		// 			) : (
-		// 				<AddCircle fontSize="small" />
-		// 			)}
-		// 		</IconButton>
-		// 	);
-		// }
 	};
 
 	return (
@@ -106,60 +78,46 @@ const FoodList = <T extends IngredientForm | MealForm>({
 			</Box>
 
 			<Box
-				className="flex-center col  full-w full-h"
+				className="flex-center col gap3 full-w full-h"
 				sx={{ overflowY: "auto", justifyContent: "flex-start" }}
 			>
 				{sortedItems &&
 					sortedItems.map((item) => {
 						return (
-							<Box key={item.id} className="flex-between full-w">
-								<Box className="flex gap2">
-									<IconButton size="small">
-										{isIngredientLog(item) ? (
-											isMealSource(item) ? (
-												<BuildCircleOutlined fontSize="small" color="info" />
-											) : (
-												<EggAltOutlined fontSize="small" color="secondary" />
-											)
+							<Box key={item.id} className="flex-between gap1 full-w">
+								<Box
+									className="flex gap2 full-w"
+									sx={{
+										px: 1,
+										py: 0.5,
+										...(onItemClick && {
+											borderBottom: "1px solid",
+											borderColor: "divider",
+											"&:hover": {
+												backgroundColor: "action.hover",
+												cursor: "pointer",
+											},
+										}),
+									}}
+									onClick={onItemClick ? () => onItemClick(item.id) : undefined}
+								>
+									{isIngredientLog(item) ? (
+										isMealSource(item) ? (
+											<BuildCircleOutlined fontSize="small" color="info" />
 										) : (
-											<DinnerDiningOutlined fontSize="small" color="primary" />
-										)}
-									</IconButton>
-									<Typography variant="body1">
-										{item.title} - {getCalories(item)}Cal
-									</Typography>
-								</Box>
-								{/* {isIngredientLog(item) && isMealSource(item) ? (
-									<IconButton
-										onClick={() => onAddItem(item.id, qtyMap[item.id] - 1)}
-									>
-										<Delete fontSize="small" color="error" />
-									</IconButton>
-								) : (
-									<Box className="flex-center gap2">
-										{qtyMap[item.id] > 0 && (
-											<>
-												<IconButton
-													onClick={() =>
-														onAddItem(item.id, qtyMap[item.id] - 1)
-													}
-												>
-													{qtyMap[item.id] === 1 ? (
-														<Delete fontSize="small" color="error" />
-													) : (
-														<RemoveCircle fontSize="small" />
-													)}
-												</IconButton>
-												<NumberInput
-													value={qtyMap[item.id]}
-													onChange={(value) => onAddItem(item.id, value)}
-													sx={{ maxWidth: "40px", fontSize: "10px" }}
-												/>
-											</>
-										)}
-										{addButton(item.id, qtyMap[item.id] + 1)}
+											<EggAltOutlined fontSize="small" color="secondary" />
+										)
+									) : (
+										<DinnerDiningOutlined fontSize="small" color="primary" />
+									)}
+
+									<Box className="flex-between gap2 full-w">
+										<Typography variant="body1">{item.title}</Typography>
+										<Typography variant="body2">
+											{getCalories(item)}Cal
+										</Typography>
 									</Box>
-								)} */}
+								</Box>
 								<QtyField
 									value={qtyMap[item.id] ?? 0}
 									onChange={(value) => onAddItem(item.id, value)}

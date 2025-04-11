@@ -1,6 +1,6 @@
 import { Badge, Box, Paper, Tab, Tabs } from "@mui/material";
 import useDisplay from "../../hooks/useDisplay";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useMemo, useState } from "react";
 import { ShoppingBasket } from "@mui/icons-material";
 import FoodList from "./food/FoodList";
 import { useCurrBasketId } from "./CalorieLog";
@@ -55,6 +55,20 @@ const NutritionInput = () => {
 		error: errorFood,
 	} = useGetFoodQuery();
 	const { ingredients = [], meals = [] } = foodData ?? {};
+
+	const filteredIng = useMemo(() => {
+		return ingredients.filter((el) => el.source !== FOOD_CATEGORIES.MEALS);
+	}, [ingredients]);
+
+	const mealQtyMap = useMemo(() => {
+		return Object.fromEntries(currBasket.meals.map((el) => [el.id, el.qty]));
+	}, [currBasket.meals]);
+
+	const ingQtyMap = useMemo(() => {
+		return Object.fromEntries(
+			currBasket.ingredients.map((el) => [el.id, el.qty])
+		);
+	}, [currBasket.ingredients]);
 
 	const handleChangeTabs = (_e: SyntheticEvent, newValue: number) => {
 		setTabValue(newValue);
@@ -118,9 +132,7 @@ const NutritionInput = () => {
 					{/* Meals */}
 					<FoodList
 						items={meals}
-						qtyMap={Object.fromEntries(
-							currBasket.meals.map((el) => [el.id, el.qty])
-						)}
+						qtyMap={mealQtyMap}
 						onAddItem={(itemId, qty) =>
 							handleEditBasketItem(
 								currentBasketId,
@@ -129,18 +141,15 @@ const NutritionInput = () => {
 								qty
 							)
 						}
-						newButton={() => navigate("new_meals")}
+						newButton={() => navigate("meals")}
+						onItemClick={(id) => navigate(`meals/${id}`)}
 					/>
 				</CustomTabPanel>
 				<CustomTabPanel value={tabValue} index={1}>
 					{/* Ingredients */}
 					<FoodList
-						items={ingredients.filter(
-							(el) => el.source !== FOOD_CATEGORIES.MEALS
-						)}
-						qtyMap={Object.fromEntries(
-							currBasket.ingredients.map((el) => [el.id, el.qty])
-						)}
+						items={filteredIng}
+						qtyMap={ingQtyMap}
 						onAddItem={(itemId, qty) =>
 							handleEditBasketItem(
 								currentBasketId,
@@ -149,7 +158,8 @@ const NutritionInput = () => {
 								qty
 							)
 						}
-						newButton={() => navigate("new_ingredients")}
+						newButton={() => navigate("ingredients")}
+						onItemClick={(id) => navigate(`ingredients/${id}`)}
 					/>
 				</CustomTabPanel>
 				<CustomTabPanel value={tabValue} index={2}>

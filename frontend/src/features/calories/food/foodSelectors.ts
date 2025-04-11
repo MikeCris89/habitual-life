@@ -20,6 +20,7 @@ export type FormattedMeals = Record<
 		calories: number;
 		macros: Record<string, number>;
 		ingredients: Record<string, number>;
+		id: string;
 	}
 >;
 
@@ -68,16 +69,6 @@ export const selectMeals = createSelector(
 
 		for (const meal of meals) {
 			const { calories, macros } = calcMealTotals(meal, ingredients);
-			// let calories = 0;
-			// const macros: Record<string, number> = {};
-			// for (const { id: ingId, qty } of meal.ingredients) {
-			// 	const ing = ingredients[ingId];
-			// 	if (!ing) continue;
-			// 	calories += ing.calories * qty;
-			// 	for (const [macId, macTotal] of Object.entries(ing.macros)) {
-			// 		macros[macId] = (macros[macId] || 0) + macTotal * qty;
-			// 	}
-			// }
 			formattedMeals[meal.id] = {
 				title: meal.title,
 				description: meal.description,
@@ -86,6 +77,7 @@ export const selectMeals = createSelector(
 				ingredients: Object.fromEntries(
 					meal.ingredients.map((el) => [el.id, el.qty])
 				),
+				id: meal.id,
 			};
 		}
 		console.log("selectMeals Calculating", formattedMeals);

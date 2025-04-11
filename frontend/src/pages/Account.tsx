@@ -80,13 +80,6 @@ const Account: React.FC = () => {
 			>
 				Delete All Tasks
 			</Button>
-			{/* <Button
-				onClick={() =>
-					setLastCreatedDate({ userId: metaData.userId, date: dayBefore() })
-				}
-			>
-				Set Last Created Date to Yesterday
-			</Button> */}
 		</Box>
 	);
 };

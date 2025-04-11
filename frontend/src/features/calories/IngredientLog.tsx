@@ -16,12 +16,16 @@ import {
 	Units,
 	UnitTypes,
 } from "../../utils/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LogForm from "./LogForm";
-import { useAddEditIngredientMutation } from "./food/foodApi";
+import { useAddEditIngredientMutation, useGetFoodQuery } from "./food/foodApi";
 import NumberField from "../../components/NumberField";
 import { nanoid } from "nanoid";
 import { formatLabel } from "../../utils/helpers";
+import { useLocation, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIngredients } from "./food/foodSelectors";
+import Loading from "../../components/Loading";
 
 interface Props {
 	source?: Exclude<FoodCategory, "custom">;
@@ -42,8 +46,23 @@ const IngredientLog = ({
 	source = FOOD_CATEGORIES.INGREDIENTS,
 	onSubmit,
 }: Props) => {
-	const [form, setForm] = useState({ ...initIngredient, source });
+	const { id } = useParams();
+	const isEditing = !!id;
+	const ingredients = useSelector(selectIngredients);
+
+	const [form, setForm] = useState<IngredientForm>({
+		...initIngredient,
+		source,
+	});
 	const [addEditIng] = useAddEditIngredientMutation();
+
+	useEffect(() => {
+		if (isEditing && ingredients[id]) {
+			setForm({ ...ingredients[id] });
+		}
+	}, [id, isEditing, ingredients]);
+
+	if (isEditing && !ingredients[id]) return <Loading />;
 
 	const handleChange = (key: string, value: any) => {
 		setForm((prev) => ({
@@ -61,7 +80,7 @@ const IngredientLog = ({
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const ingId = nanoid();
+		const ingId = isEditing ? id : nanoid();
 		addEditIng({ ...form, id: ingId });
 		setForm({ ...initIngredient, source });
 		if (onSubmit) onSubmit(ingId);

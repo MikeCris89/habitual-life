@@ -49,7 +49,7 @@ const routes = createRoutesFromElements(
 			}
 		>
 			<Route
-				path="new_meals"
+				path="meals/:id?"
 				element={
 					<FoodModal>
 						<MealLog />
@@ -57,7 +57,7 @@ const routes = createRoutesFromElements(
 				}
 			/>
 			<Route
-				path="new_ingredients"
+				path="ingredients/:id?"
 				element={
 					<FoodModal>
 						<IngredientForm />

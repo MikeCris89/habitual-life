@@ -16,7 +16,7 @@ import {
 	Typography,
 } from "@mui/material";
 import { FOOD_CATEGORIES, MealForm } from "../../utils/types";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 import {
 	useAddEditIngredientMutation,
@@ -25,15 +25,17 @@ import {
 } from "./food/foodApi";
 import FoodList from "./food/FoodList";
 import IngredientLog, { initIngredient } from "./IngredientLog";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LogForm from "./LogForm";
 import { useSelector } from "react-redux";
 import {
 	calcMealTotals,
 	selectCalorieHabit,
 	selectIngredients,
+	selectMeals,
 } from "./food/foodSelectors";
 import { DinnerDiningOutlined } from "@mui/icons-material";
+import Loading from "../../components/Loading";
 
 const initMeal: MealForm = {
 	title: "",
@@ -102,23 +104,48 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 };
 
 const MealLog = () => {
+	const { id } = useParams();
+	const isEditing = !!id;
 	const { data: foodData } = useGetFoodQuery();
 	const [addEditMeal] = useAddEditMealMutation();
 	const [addEditIng] = useAddEditIngredientMutation();
+	const formattedIng = useSelector(selectIngredients);
 
 	const [form, setForm] = useState({ ...initMeal });
 	const [newIng, setNewIng] = useState(false);
-	// const [customMeal, setCustomMeal] = useState(false);
 	const [customForm, setCustomForm] = useState({ ...initCustomMeal });
 	const [tab, setTab] = useState(0);
 
+	useEffect(() => {
+		if (isEditing) {
+			const thisMeal = foodData?.meals.find((el) => el.id === id);
+			if (thisMeal) {
+				setForm({ ...thisMeal });
+			}
+		}
+	}, [isEditing, foodData, id]);
+
 	const navigate = useNavigate();
 
-	const formattedIng = useSelector(selectIngredients);
-
-	const ingQtyMap = Object.fromEntries(
-		form.ingredients.map((el) => [el.id, el.qty])
+	const ingQtyMap = useMemo(
+		() => Object.fromEntries(form.ingredients.map((el) => [el.id, el.qty])),
+		[form.ingredients]
 	);
+
+	const ingList = useMemo(
+		() =>
+			foodData?.ingredients.filter(
+				(ing) => ing.source !== FOOD_CATEGORIES.MEALS
+			) ?? [],
+		[foodData]
+	);
+
+	const mealIngList = useMemo(
+		() => form.ingredients.map((ing) => formattedIng[ing.id]),
+		[form.ingredients, formattedIng]
+	);
+
+	if (isEditing && foodData == null) return <Loading />;
 
 	const handleCancelClose = () => {
 		if (newIng) setNewIng(false);
@@ -163,7 +190,8 @@ const MealLog = () => {
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		addEditMeal({ ...form, id: nanoid() });
+		const mealId = isEditing ? id : nanoid();
+		addEditMeal({ ...form, id: mealId });
 		navigate(-1);
 	};
 
@@ -201,7 +229,7 @@ const MealLog = () => {
 						variant="subtitle1"
 						sx={{ textAlign: "center", width: "100%" }}
 					>
-						New Meal
+						{isEditing ? "Edit Meal" : "New Meal"}
 					</Typography>
 					<Box
 						className="flex-center col gap3 full-w full-h"
@@ -237,17 +265,12 @@ const MealLog = () => {
 						<Tabs
 							value={tab}
 							onChange={(_, val) => setTab(val)}
-							// variant="scrollable"
-							// scrollButtons
-							// allowScrollButtonsMobile
 							centered
 							sx={{
 								width: "100%",
 							}}
 						>
 							<Tab
-								//icon={<EggAltOutlined fontSize="small" color="secondary" />}
-								iconPosition="start"
 								label="Ingredients"
 								sx={{
 									fontSize: "12px",
@@ -257,8 +280,6 @@ const MealLog = () => {
 								}}
 							/>
 							<Tab
-								//icon={<AddCircleOutline fontSize="small" />}
-								iconPosition="start"
 								label="Quick Add"
 								sx={{
 									fontSize: "12px",
@@ -274,11 +295,7 @@ const MealLog = () => {
 									</Badge>
 								}
 								iconPosition="start"
-								//label="Meal"
 								sx={{
-									// minWidth: "50px",
-									// width: "50px",
-									// padding: "0",
 									"&:hover": {
 										backgroundColor: "action.hover",
 									},
@@ -292,11 +309,7 @@ const MealLog = () => {
 								sx={{ minHeight: 0 }}
 							>
 								<FoodList
-									items={
-										foodData?.ingredients.filter(
-											(ing) => ing.source !== FOOD_CATEGORIES.MEALS
-										) ?? []
-									}
+									items={ingList}
 									qtyMap={ingQtyMap}
 									onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
 									newButton={() => setNewIng(true)}
@@ -327,10 +340,8 @@ const MealLog = () => {
 						{/* Meal Tab */}
 						{tab === 2 && (
 							<FoodList
-								items={form.ingredients.map((ing) => formattedIng[ing.id])}
-								qtyMap={Object.fromEntries(
-									form.ingredients.map((ing) => [ing.id, ing.qty])
-								)}
+								items={mealIngList}
+								qtyMap={ingQtyMap}
 								onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
 								searchBar={false}
 							/>
