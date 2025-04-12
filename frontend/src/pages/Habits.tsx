@@ -47,7 +47,7 @@ const HabitBar = memo(({ search, setSearch }: BarProps) => (
 			top: 0,
 			zIndex: 1,
 			p: 1,
-			backgroundColor: "#e7e7e7",
+			//bgcolor: "background.default",
 			marginBottom: "10px",
 		}}
 	>

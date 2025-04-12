@@ -41,6 +41,7 @@ const QtyField = ({
 				overflow: "hidden",
 				flexShrink: 0,
 				position: "relative",
+				background: "#fff",
 			}}
 		>
 			<Box

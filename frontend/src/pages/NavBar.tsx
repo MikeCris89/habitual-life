@@ -12,7 +12,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const navStyle = {
 	color: "primary.contrastText",
-	backgroundColor: "primary.main",
+	bgColor: "primary.main",
 	width: "100%",
 };
 

@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, Paper, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Card,
+	IconButton,
+	Paper,
+	Typography,
+} from "@mui/material";
 import { isCounterTask, PresetId } from "../../utils/types";
 import {
 	useGetDailyTasksQuery,
@@ -29,7 +36,7 @@ const CounterTasksToday = () => {
 						// Calorie Counter
 						if (task.habitId === PresetId.calorieCounter) {
 							return (
-								<Paper
+								<Card
 									key={task.id}
 									className="flex-center col gap1"
 									sx={{ padding: "3px 6px" }}
@@ -56,7 +63,7 @@ const CounterTasksToday = () => {
 											task
 										)}
 									/>
-								</Paper>
+								</Card>
 							);
 						}
 						return (

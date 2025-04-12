@@ -1,11 +1,18 @@
-import { Box, Button, IconButton, Paper, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Card,
+	IconButton,
+	Paper,
+	Typography,
+} from "@mui/material";
 import {
 	isGoodTask,
 	isNoneTimer,
 	isRoundTimer,
 	isSingleTimer,
 	Task,
-} from "../utils/types";
+} from "../../utils/types";
 import {
 	AvTimerTwoTone,
 	Check,
@@ -13,14 +20,14 @@ import {
 	PinOutlined,
 	TimerOutlined,
 } from "@mui/icons-material";
-import { useCheckOffTaskMutation } from "../features/tasks/tasksApi";
+import { useCheckOffTaskMutation } from "./tasksApi";
 import { useDispatch } from "react-redux";
-import { openModal } from "../features/modal/modalSlice";
-import { formatMsTime } from "../utils/timeUtils";
-import { setTimer } from "../features/timer/timerSlice";
+import { openModal } from "../modal/modalSlice";
+import { formatMsTime } from "../../utils/timeUtils";
+import { setTimer } from "../timer/timerSlice";
 import { useNavigate } from "react-router-dom";
-import ProgressBar from "./ProgressBar";
-import { getCompletionRate } from "../utils/helpers";
+import ProgressBar from "../../components/ProgressBar";
+import { getCompletionRate } from "../../utils/helpers";
 
 interface CardProps {
 	task: Task;
@@ -36,7 +43,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 	const completionRate = getCompletionRate(pastTasks, task);
 
 	return (
-		<Paper className="flex-center col gap2" sx={{ p: 2, overflowX: "hidden" }}>
+		<Card className="flex-center col gap2" sx={{ p: 2, overflowX: "hidden" }}>
 			<Box
 				className="flex-between"
 				sx={{ width: "100%", alignItems: "center" }}
@@ -119,7 +126,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 				)}
 			</Box>
 			<ProgressBar completionRate={completionRate} />
-		</Paper>
+		</Card>
 	);
 };
 

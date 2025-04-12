@@ -1,4 +1,11 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	FormControl,
+	FormControlLabel,
+	Switch,
+	Typography,
+} from "@mui/material";
 import {
 	useCreateTestTaskDataMutation,
 	useDeleteTasksMutation,
@@ -20,10 +27,12 @@ import {
 	useGetMetaQuery,
 	useSetLastCreatedDateMutation,
 } from "../features/meta/metaApi";
+import { useThemeMode } from "../hooks/ThemeProvider";
 
 const Account: React.FC = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const { mode, toggleTheme } = useThemeMode();
 
 	const [createTestData, { isLoading }] = useCreateTestTaskDataMutation();
 	//const [fetchHabits, { isFetching: loadingHabits }] = useLazyGetHabitsQuery();
@@ -80,6 +89,11 @@ const Account: React.FC = () => {
 			>
 				Delete All Tasks
 			</Button>
+			<FormControlLabel
+				control={<Switch value={mode === "light"} />}
+				label={"Toggle Theme"}
+				onClick={(e) => toggleTheme()}
+			/>
 		</Box>
 	);
 };

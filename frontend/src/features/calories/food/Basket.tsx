@@ -137,7 +137,7 @@ const BasketItem = ({
 			//elevation={2}
 			variant="outlined"
 			className="flex col gap2"
-			sx={{ p: 1 }}
+			sx={{ p: 1, backgroundColor: "primary.contrastText" }}
 		>
 			<Box className="flex-between full-w">
 				{foodCat === FOOD_CATEGORIES.MEALS
@@ -196,7 +196,12 @@ const Basket = () => {
 	return (
 		<Box
 			className="flex-center col gap2 full-w full-h"
-			sx={{ justifyContent: "flex-start", overflow: "auto", p: 1 }}
+			sx={{
+				justifyContent: "flex-start",
+				overflow: "auto",
+				p: 1,
+				backgroundColor: "#f7f7f7",
+			}}
 		>
 			{sortedBaskets &&
 				sortedBaskets.map((basket, i) => {
@@ -205,12 +210,25 @@ const Basket = () => {
 					);
 					const isCurrBasket = basket.id === currentBasketId;
 					return (
+						// <Box
+						// 	key={basket.id}
+						// 	className="full-w full-h"
+						// 	sx={{
+						// 		p: 1,
+						// 		backgroundColor: "primary.light",
+						// 		overflow: "hidden",
+						// 	}}
+						// >
 						<Accordion
 							key={basket.id}
 							expanded={expanded === basket.id}
 							onChange={handleChange(basket.id)}
 							className="full-w"
-							sx={{ p: 0 }}
+							sx={{
+								p: 0,
+								//backgroundColor: "primary.light",
+								//color: "primary.contrastText",
+							}}
 							elevation={2}
 						>
 							<AccordionSummary

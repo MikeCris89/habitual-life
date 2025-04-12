@@ -1,8 +1,8 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { isGoodTask, Task } from "../../utils/types";
 import { useGetDailyTasksQuery, useGetTasksByRangeQuery } from "./tasksApi";
 import dayjs from "dayjs";
-import TaskCard from "../../components/TaskCard";
+import TaskCard from "./TaskCard";
 
 const GoodTasksToday = () => {
 	const { tasksAllDay, tasksByTime, allTasks } = useGetDailyTasksQuery(
@@ -36,7 +36,7 @@ const GoodTasksToday = () => {
 	console.log("GoodTasksToday Rendering", allTasks);
 
 	return (
-		<Box className="flex-center col" sx={{ p: 1, gap: "10px" }}>
+		<Paper className="flex-center col" sx={{ p: 1, gap: "10px" }}>
 			{!sortedTasksAllDay.length && !sortedTasksByTime.length && (
 				<Typography variant="h6">No Tasks for today.</Typography>
 			)}
@@ -52,7 +52,7 @@ const GoodTasksToday = () => {
 						borderBottom: "1px solid grey",
 						paddingBottom: "15px",
 						marginBottom: "5px",
-						bgcolor: "primary.light",
+						bgcolor: "primary.main",
 					}}
 				>
 					<Box>
@@ -105,7 +105,7 @@ const GoodTasksToday = () => {
 												width: "6px",
 												height: "6px",
 												borderRadius: "50%",
-												bgcolor: "text.secondary",
+												//bgcolor: "text.secondary",
 											}}
 										/>
 										<Typography
@@ -124,7 +124,7 @@ const GoodTasksToday = () => {
 						</Box>
 					);
 				})}
-		</Box>
+		</Paper>
 	);
 };
 

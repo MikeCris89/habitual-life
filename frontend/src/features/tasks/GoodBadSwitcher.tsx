@@ -43,7 +43,7 @@ const GoodBadSwitcher = () => {
 					minHeight: 0,
 					overflowY: "auto",
 					height: "100%",
-					bgcolor: "grey.200",
+					//bgcolor: "grey.200",
 					borderRadius: "12px",
 					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
 				}}

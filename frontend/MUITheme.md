@@ -53,22 +53,22 @@ Example of Using Colors
 Here’s how you can use these colors in your components:
 
 ```js
-import { Box } from "@mui/material";
+// import { Box } from "@mui/material";
 
-export default function Example() {
-	return (
-		<Box
-			sx={{
-				backgroundColor: "primary.main",
-				color: "primary.contrastText",
-				padding: 2,
-				textAlign: "center",
-			}}
-		>
-			This is a box with the primary color!
-		</Box>
-	);
-}
+// export default function Example() {
+// 	return (
+// 		<Box
+// 			sx={{
+// 				backgroundColor: "primary.main",
+// 				color: "primary.contrastText",
+// 				padding: 2,
+// 				textAlign: "center",
+// 			}}
+// 		>
+// 			This is a box with the primary color!
+// 		</Box>
+// 	);
+// }
 ```
 
 How to View or Customize Colors
@@ -83,21 +83,21 @@ console.log(theme.palette);
 To customize the colors, use createTheme:
 
 ```js
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+// import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const theme = createTheme({
-	palette: {
-		primary: {
-			main: "#1976d2", // Custom primary color
-			light: "#63a4ff",
-			dark: "#004ba0",
-			contrastText: "#fff",
-		},
-		secondary: {
-			main: "#9c27b0",
-		},
-	},
-});
+// const theme = createTheme({
+// 	palette: {
+// 		primary: {
+// 			main: "#1976d2", // Custom primary color
+// 			light: "#63a4ff",
+// 			dark: "#004ba0",
+// 			contrastText: "#fff",
+// 		},
+// 		secondary: {
+// 			main: "#9c27b0",
+// 		},
+// 	},
+// });
 ```
 
 This flexibility lets you tailor your app’s design to match your branding needs! 😊

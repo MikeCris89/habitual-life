@@ -8,6 +8,7 @@ import ErrorFallback from "./ErrorFallback";
 import { Suspense } from "react";
 import Loading from "../components/Loading";
 import GlobalModal from "../features/modal/GlobalModal";
+import PageWrapper from "../components/PageWrapper";
 
 const Root = () => {
 	const { isMobile } = useDisplay();
@@ -37,7 +38,9 @@ const Root = () => {
 				<ErrorBoundary FallbackComponent={ErrorFallback}>
 					<DataLoader>
 						<Suspense fallback={<Loading />}>
-							<Outlet />
+							<PageWrapper>
+								<Outlet />
+							</PageWrapper>
 						</Suspense>
 					</DataLoader>
 				</ErrorBoundary>

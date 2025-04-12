@@ -4,7 +4,7 @@ import { useGetDailyTasksQuery, useGetTasksByRangeQuery } from "./tasksApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { selectCurrentGoal } from "../stats/statsSelectors";
-import TaskCard from "../../components/TaskCard";
+import TaskCard from "./TaskCard";
 
 // type TaskProps = {
 // 	task: Task;
