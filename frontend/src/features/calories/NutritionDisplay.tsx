@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Card, Paper, Typography } from "@mui/material";
 import { isCounterTask, PresetId } from "../../utils/types";
 import { useGetDailyTasksQuery } from "../tasks/tasksApi";
 import { handleError } from "../../utils/errors";
@@ -29,7 +29,7 @@ const NutritionDisplay = () => {
 	} else if (!task) return <Typography>Calorie Task not found.</Typography>;
 
 	return (
-		<Paper
+		<Card
 			className="flex-center col gap2"
 			sx={{
 				p: 2,
@@ -67,7 +67,7 @@ const NutritionDisplay = () => {
 							allBasketsTotal.calories > task.total
 								? "red"
 								: !currentTotals || currentTotals.calories === 0
-								? "black"
+								? "text.primary"
 								: "green",
 					}}
 				>
@@ -94,7 +94,7 @@ const NutritionDisplay = () => {
 						const amount = currentTotals?.macros[macro.id] ?? 0;
 
 						return (
-							<Box key={macro.id} sx={{ p: 0, m: 0 }}>
+							<Paper key={macro.id} sx={{ p: "5px 0 0", m: 0 }}>
 								<Typography
 									variant="body2"
 									sx={{
@@ -112,11 +112,11 @@ const NutritionDisplay = () => {
 									units={macro.units}
 									addAmount={amount}
 								/>
-							</Box>
+							</Paper>
 						);
 					})}
 			</Box>
-		</Paper>
+		</Card>
 	);
 };
 

@@ -71,7 +71,7 @@ const SemiCircleBar = ({ count, total, units, addAmount = 0 }: Props) => {
 			>
 				<Typography
 					variant="body2"
-					sx={{ fontSize: "12px", color: addAmount ? "green" : "black" }}
+					sx={{ fontSize: "12px", color: addAmount ? "green" : "text.primary" }}
 				>
 					{addCounter}
 				</Typography>

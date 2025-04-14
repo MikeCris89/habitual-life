@@ -1,9 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { DayKeys, GoodTask } from "../../utils/types";
 import dayjs from "dayjs";
 import { startOfWeek } from "../../utils/timeUtils";
 import { CalendarIcon } from "@mui/x-date-pickers";
 import "./calendarStyles.css";
+import { useThemeMode } from "../../hooks/ThemeProvider";
 
 interface Props {
 	tasks: GoodTask[];
@@ -11,6 +12,7 @@ interface Props {
 
 const GoodCalendar = ({ tasks }: Props) => {
 	const weekStart = startOfWeek();
+	const { isLight, theme } = useThemeMode();
 	const columns = [
 		{ label: "", date: "" },
 		...DayKeys.map((day, i) => ({
@@ -208,7 +210,15 @@ const GoodCalendar = ({ tasks }: Props) => {
 										overflow: "hidden",
 										borderRight: "1px solid rgba(0, 0, 0, 0.1)",
 										borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
-										background: taskExists ? "white" : "rgba(0, 0, 0, 0.05)",
+										//background: taskExists ? "white" : "rgba(0, 0, 0, 0.05)",
+										bgcolor: taskExists
+											? isLight
+												? theme.palette.background.paper
+												: theme.palette.grey[400]
+											: isLight
+											? theme.palette.grey[300]
+											: theme.palette.background.paper,
+
 										transition: "background 0.2s ease-in-out",
 										"&:hover": {
 											background: taskExists ? "" : "rgba(0, 0, 0, 0.1)",
@@ -224,8 +234,8 @@ const GoodCalendar = ({ tasks }: Props) => {
 										return (
 											<Box
 												key={task.id}
-												className="flex-center col "
-												sx={{ height: "100%", width: "100%" }}
+												className="flex-center col full-w full-h"
+												sx={{}}
 											>
 												{new Date(task.dateTime).getMinutes() !== 0 &&
 													new Date(
@@ -251,7 +261,9 @@ const GoodCalendar = ({ tasks }: Props) => {
 														textAlign: "center",
 														display: "block",
 														width: "95%",
-														backgroundColor: "rgba(0, 123, 255, 0.1)",
+														bgcolor: isLight
+															? theme.palette.grey[200]
+															: theme.palette.background.default,
 														border: "1px solid rgba(0, 123, 255, 0.3)",
 														borderRadius: "6px",
 														padding: "1px 2px",
@@ -262,6 +274,8 @@ const GoodCalendar = ({ tasks }: Props) => {
 															transform: "scale(1.05)",
 														},
 														height: "21px",
+														color: "primary.main",
+														fontWeight: "bold",
 													}}
 												>
 													{task.title}

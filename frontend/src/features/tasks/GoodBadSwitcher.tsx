@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
 import { useState } from "react";
 import GoodTasksToday from "./GoodTasksToday";
 import BadTasksToday from "./BadTasksToday";
@@ -37,19 +37,21 @@ const GoodBadSwitcher = () => {
 				</Box>
 				<AddButton />
 			</Box>
-			<Box
+			<Paper
+				elevation={3}
 				sx={{
 					width: "100%",
 					minHeight: 0,
-					overflowY: "auto",
+					overflowY: "hidden",
 					height: "100%",
+					p: 1,
 					//bgcolor: "grey.200",
 					borderRadius: "12px",
 					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
 				}}
 			>
 				{!tab ? <GoodTasksToday /> : <BadTasksToday />}
-			</Box>
+			</Paper>
 		</>
 	);
 };

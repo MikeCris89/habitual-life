@@ -2,11 +2,13 @@ import { AddCircle, Delete, RemoveCircle } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import { CSSProperties } from "react";
 import { FoodCategory } from "../utils/types";
+import { useThemeMode } from "../hooks/ThemeProvider";
 
 const inputStyle: CSSProperties = {
 	border: "none",
 	textAlign: "center",
 	width: "30px",
+	background: "transparent",
 };
 
 interface Props {
@@ -27,6 +29,7 @@ const QtyField = ({
 	min = 0,
 }: Props) => {
 	const isCollapsed = collapse && value === 0;
+	const { isLight, theme } = useThemeMode();
 
 	return (
 		<Box
@@ -41,7 +44,7 @@ const QtyField = ({
 				overflow: "hidden",
 				flexShrink: 0,
 				position: "relative",
-				background: "#fff",
+				background: "transparent",
 			}}
 		>
 			<Box
@@ -71,7 +74,7 @@ const QtyField = ({
 					onChange={(e) => onChange(+e.target.value)}
 					min={min}
 					max={max}
-					style={inputStyle}
+					style={{ ...inputStyle, color: theme.palette.text.primary }}
 				/>
 			</Box>
 			<IconButton size="small" onClick={() => onChange(value + 1)}>

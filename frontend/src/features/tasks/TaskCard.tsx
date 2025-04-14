@@ -43,23 +43,31 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 	const completionRate = getCompletionRate(pastTasks, task);
 
 	return (
-		<Card className="flex-center col gap2" sx={{ p: 2, overflowX: "hidden" }}>
+		<Card
+			elevation={3}
+			className="flex-center col gap2"
+			sx={{ p: 2, overflowX: "hidden" }}
+		>
 			<Box
 				className="flex-between"
 				sx={{ width: "100%", alignItems: "center" }}
 			>
-				<Box
+				<Typography
+					variant="body1"
 					sx={{
 						flex: "1 1 auto",
 						flexWrap: "wrap",
 						height: "100%",
 						overflowWrap: "break-word",
 						overflow: "hidden",
+						alignSelf: "center",
 					}}
 					onClick={() => navigate(`/${task.habitId}`)}
 				>
-					<Typography variant="body1">{task.title}</Typography>
-				</Box>
+					{/* <Typography variant="body1" sx={{ height: "100%" }}> */}
+					{task.title}
+					{/* </Typography> */}
+				</Typography>
 				{isGoodTask(task) && !isNoneTimer(task.timer) && (
 					<Box className="flex-center col">
 						{isSingleTimer(task.timer) && (

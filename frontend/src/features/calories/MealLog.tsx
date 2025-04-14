@@ -2,6 +2,7 @@ import {
 	Badge,
 	Box,
 	Button,
+	Card,
 	Divider,
 	Paper,
 	Tab,
@@ -36,6 +37,7 @@ import {
 import { DinnerDiningOutlined } from "@mui/icons-material";
 import Loading from "../../components/Loading";
 import { AnimatePresence, motion } from "framer-motion";
+import { SectionContainer } from "../habits/HabitForm";
 
 const initMeal: MealForm = {
 	title: "",
@@ -60,10 +62,11 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 	const mealTotals = calcMealTotals(form, ingredients);
 
 	return (
-		<Paper elevation={2} sx={{ p: 1, width: "100%" }}>
-			<Typography variant="subtitle2" sx={{ mb: 1 }}>
-				Meal Nutrition Summary
-			</Typography>
+		// <Card elevation={2} sx={{ p: 1, width: "100%" }}>
+		<SectionContainer title="Meal Nutrition Summary">
+			{/* <Typography variant="subtitle2" sx={{ mb: 1 }}>
+					Meal Nutrition Summary
+				</Typography> */}
 			<TableContainer className="full-w" sx={{ maxHeight: "150px" }}>
 				<Table size="small" stickyHeader>
 					<TableHead>
@@ -99,7 +102,8 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 					</TableBody>
 				</Table>
 			</TableContainer>
-		</Paper>
+		</SectionContainer>
+		// </Card>
 	);
 };
 
@@ -158,7 +162,7 @@ const MealLog = () => {
 	const [form, setForm] = useState({ ...initMeal });
 	const [newIng, setNewIng] = useState(false);
 	const [customForm, setCustomForm] = useState({ ...initCustomMeal });
-	const [tab, setTab] = useState(0);
+	const [tab, setTab] = useState(isEditing ? 2 : 0);
 	const [direction, setDirection] = useState(0);
 
 	useEffect(() => {
@@ -253,6 +257,7 @@ const MealLog = () => {
 					{newIng ? "cancel" : "close"}
 				</Button>
 			</Box>
+			{/* New Ingredient Form */}
 			{newIng && (
 				<IngredientLog
 					onSubmit={(ingId) => {
@@ -270,12 +275,12 @@ const MealLog = () => {
 					<MealNutrition form={form} qtyMap={ingQtyMap} />
 					{/* Meal List */}
 					<Divider />
-					<Typography
-						variant="subtitle1"
+					{/* <Typography
+						variant="subtitle2"
 						sx={{ textAlign: "center", width: "100%" }}
 					>
 						{isEditing ? "Edit Meal" : "New Meal"}
-					</Typography>
+					</Typography> */}
 					<Box
 						className="flex-center col gap3 full-w full-h"
 						sx={{
@@ -286,27 +291,29 @@ const MealLog = () => {
 							flex: 1,
 						}}
 					>
-						<form id="meal-form" onSubmit={handleSubmit}>
-							<TextField
-								label="Title"
-								size="small"
-								value={form.title}
-								onChange={(e) => handleChange("title", e.target.value)}
-								sx={{ marginTop: "5px" }}
-								fullWidth
-								required
-							/>
+						<SectionContainer title={isEditing ? "Edit Meal" : "New Meal"}>
+							<form id="meal-form" onSubmit={handleSubmit}>
+								<TextField
+									label="Title"
+									size="small"
+									value={form.title}
+									onChange={(e) => handleChange("title", e.target.value)}
+									sx={{ marginTop: "5px" }}
+									fullWidth
+									required
+								/>
 
-							<TextField
-								multiline
-								label="Description"
-								size="small"
-								value={form.description}
-								onChange={(e) => handleChange("description", e.target.value)}
-								fullWidth
-								sx={{ marginTop: "8px" }}
-							/>
-						</form>
+								<TextField
+									multiline
+									label="Description"
+									size="small"
+									value={form.description}
+									onChange={(e) => handleChange("description", e.target.value)}
+									fullWidth
+									sx={{ marginTop: "8px" }}
+								/>
+							</form>
+						</SectionContainer>
 						<Tabs
 							value={tab}
 							onChange={(_, val) => {
@@ -351,49 +358,51 @@ const MealLog = () => {
 							/>
 						</Tabs>
 						<Box sx={{ position: "relative", height: "100%", width: "100%" }}>
-							<MotionTabPanel value={tab} index={0} direction={direction}>
-								<Box className="flex-center col gap2 full-w full-h">
-									<FoodList
-										items={ingList}
-										qtyMap={ingQtyMap}
-										onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
-										newButton={() => setNewIng(true)}
-									/>
-								</Box>
-							</MotionTabPanel>
-							<MotionTabPanel value={tab} index={1} direction={direction}>
-								<Box className="flex-between col gap2 full-w full-h">
-									<LogForm
-										calories={customForm.calories}
-										macros={customForm.macros}
-										handleChangeCalories={(_, value) =>
-											setCustomForm((prev) => ({
-												...prev,
-												calories: value,
-											}))
-										}
-										handleChangeMacros={(macId, value) =>
-											setCustomForm((prev) => ({
-												...prev,
-												macros: { ...prev.macros, [macId]: value },
-											}))
-										}
-									/>
-									<Button variant="contained" onClick={handleSubmitCustom}>
-										Add to Meal
-									</Button>
-								</Box>
-							</MotionTabPanel>
-							<MotionTabPanel value={tab} index={2} direction={direction}>
-								<Box className="flex-center col gap2 full-w full-h">
-									<FoodList
-										items={mealIngList}
-										qtyMap={ingQtyMap}
-										onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
-										searchBar={false}
-									/>
-								</Box>
-							</MotionTabPanel>
+							<SectionContainer fullWidth fullHeight>
+								<MotionTabPanel value={tab} index={0} direction={direction}>
+									<Box className="flex-center col gap2 full-w full-h">
+										<FoodList
+											items={ingList}
+											qtyMap={ingQtyMap}
+											onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
+											newButton={() => setNewIng(true)}
+										/>
+									</Box>
+								</MotionTabPanel>
+								<MotionTabPanel value={tab} index={1} direction={direction}>
+									<Box className="flex-between col gap2 full-w full-h">
+										<LogForm
+											calories={customForm.calories}
+											macros={customForm.macros}
+											handleChangeCalories={(_, value) =>
+												setCustomForm((prev) => ({
+													...prev,
+													calories: value,
+												}))
+											}
+											handleChangeMacros={(macId, value) =>
+												setCustomForm((prev) => ({
+													...prev,
+													macros: { ...prev.macros, [macId]: value },
+												}))
+											}
+										/>
+										<Button variant="contained" onClick={handleSubmitCustom}>
+											Add to Meal
+										</Button>
+									</Box>
+								</MotionTabPanel>
+								<MotionTabPanel value={tab} index={2} direction={direction}>
+									<Box className="flex-center col gap2 full-w full-h">
+										<FoodList
+											items={mealIngList}
+											qtyMap={ingQtyMap}
+											onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
+											searchBar={false}
+										/>
+									</Box>
+								</MotionTabPanel>
+							</SectionContainer>
 						</Box>
 					</Box>
 

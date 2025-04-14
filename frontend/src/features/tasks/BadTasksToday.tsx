@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { isBadTask } from "../../utils/types";
 import { useGetDailyTasksQuery, useGetTasksByRangeQuery } from "./tasksApi";
 import { useSelector } from "react-redux";
@@ -85,7 +85,10 @@ const BadTasksToday = () => {
 	console.log("BadTasksToday Rendering: ", tasks);
 
 	return (
-		<Box className="flex-center col" sx={{ p: 1, gap: "10px" }}>
+		<Box
+			className="flex-center col full-h"
+			sx={{ p: 1, gap: "10px", justifyContent: "flex-start" }}
+		>
 			{tasks && tasks.length > 0 ? (
 				<>
 					{tasks.map((task, i) => (

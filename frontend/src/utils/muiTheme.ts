@@ -5,7 +5,6 @@ export const lightTheme = createTheme({
 		mode: "light",
 		background: {
 			default: "#f5f5f5",
-			paper: "#ffffff",
 		},
 	},
 	components: {
@@ -19,7 +18,7 @@ export const lightTheme = createTheme({
 		MuiPaper: {
 			styleOverrides: {
 				root: {
-					backgroundColor: "#fefefe",
+					backgroundColor: "#fafafa",
 				},
 			},
 		},

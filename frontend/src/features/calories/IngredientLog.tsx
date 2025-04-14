@@ -26,6 +26,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectIngredients } from "./food/foodSelectors";
 import Loading from "../../components/Loading";
+import { SectionContainer } from "../habits/HabitForm";
 
 interface Props {
 	source?: Exclude<FoodCategory, "custom">;
@@ -88,79 +89,92 @@ const IngredientLog = ({
 
 	return (
 		<Box
-			className="flex-center col gap3 full-w full-h"
+			className="flex-between col gap3 full-w full-h"
 			sx={{
 				overflow: "hidden",
+				//justifyContent: "flex-start",
 			}}
 		>
-			<Typography>New {formatLabel(source, true)}</Typography>
-			<form id="ing-form" onSubmit={handleSubmit}>
-				<TextField
-					label="Title"
-					size="small"
-					value={form.title}
-					onChange={(e) => handleChange("title", e.target.value)}
-					sx={{ marginTop: "5px" }}
-					fullWidth
-					required
-				/>
-				<TextField
-					multiline
-					label="Description"
-					size="small"
-					value={form.description}
-					onChange={(e) => handleChange("description", e.target.value)}
-					fullWidth
-				/>
-			</form>
-			<FormLabel>Serving</FormLabel>
-			<Box className="flex-around" sx={{ width: "100%" }}>
-				<NumberField
-					handleChange={(value) =>
-						setForm((prev) => ({
-							...prev,
-							servingSize: { ...prev.servingSize, serving: value },
-						}))
-					}
-					value={form.servingSize.serving}
-					min={0}
-					max={9999}
-					acceptDecimals={true}
-				/>
-
-				<FormControl>
-					<InputLabel id="select-units-label">Units</InputLabel>
-					<Select
-						labelId="select-units-label"
-						id="select-units"
-						value={form.servingSize.units}
-						label="Units"
-						onChange={(e) =>
-							setForm((prev) => ({
-								...prev,
-								servingSize: {
-									...prev.servingSize,
-									units: e.target.value as UnitTypes,
-								},
-							}))
-						}
-						size="small"
+			{/* <Typography>New {formatLabel(source, true)}</Typography> */}
+			<Box>
+				<SectionContainer title="New Ingredient" fullWidth>
+					<form
+						className="flex-center col full-w gap3"
+						id="ing-form"
+						onSubmit={handleSubmit}
 					>
-						{Units.map((unit, i) => (
-							<MenuItem value={unit} key={`${unit}-${i}`}>
-								{unit}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
+						<TextField
+							label="Title"
+							size="small"
+							value={form.title}
+							onChange={(e) => handleChange("title", e.target.value)}
+							sx={{ marginTop: "5px" }}
+							fullWidth
+							required
+						/>
+						<TextField
+							multiline
+							label="Description"
+							size="small"
+							value={form.description}
+							onChange={(e) => handleChange("description", e.target.value)}
+							fullWidth
+						/>
+					</form>
+				</SectionContainer>
+				{/* <FormLabel>Serving</FormLabel> */}
+				<SectionContainer title="Serving" fullWidth>
+					<Box className="flex-around" sx={{ width: "100%" }}>
+						<NumberField
+							handleChange={(value) =>
+								setForm((prev) => ({
+									...prev,
+									servingSize: { ...prev.servingSize, serving: value },
+								}))
+							}
+							value={form.servingSize.serving}
+							min={0}
+							max={9999}
+							acceptDecimals={true}
+						/>
+
+						<FormControl>
+							<InputLabel id="select-units-label">Units</InputLabel>
+							<Select
+								labelId="select-units-label"
+								id="select-units"
+								value={form.servingSize.units}
+								label="Units"
+								onChange={(e) =>
+									setForm((prev) => ({
+										...prev,
+										servingSize: {
+											...prev.servingSize,
+											units: e.target.value as UnitTypes,
+										},
+									}))
+								}
+								size="small"
+							>
+								{Units.map((unit, i) => (
+									<MenuItem value={unit} key={`${unit}-${i}`}>
+										{unit}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Box>
+				</SectionContainer>
+				<SectionContainer title="Nutrition">
+					<LogForm
+						handleChangeCalories={handleChange}
+						handleChangeMacros={handleChangeMacros}
+						//handleSubmit={handleSubmit}
+						calories={form.calories}
+						macros={form.macros}
+					/>
+				</SectionContainer>
 			</Box>
-			<LogForm
-				handleChangeCalories={handleChange}
-				handleChangeMacros={handleChangeMacros}
-				//handleSubmit={handleSubmit}
-				calories={form.calories}
-				macros={form.macros}
-			/>
 			<Button variant="contained" type="submit" form="ing-form" fullWidth>
 				Submit
 			</Button>

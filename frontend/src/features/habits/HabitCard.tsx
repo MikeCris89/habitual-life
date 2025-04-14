@@ -1,7 +1,10 @@
-import { Box, Card, Typography } from "@mui/material";
-import { DaysOfWeek, Habit } from "../../utils/types";
+import { Box, Card, Chip, Typography } from "@mui/material";
+import { DaysOfWeek, Habit, HabitType, HabitTypes } from "../../utils/types";
 import { useNavigate } from "react-router-dom";
 import { dayStyle, dayActive } from "../../utils/styles";
+import { BorderColor } from "@mui/icons-material";
+import { useThemeMode } from "../../hooks/ThemeProvider";
+import { formatLabel } from "../../utils/helpers";
 
 interface CardProps {
 	habit: Habit;
@@ -12,8 +15,9 @@ interface DaysProps {
 }
 
 export const Days = ({ days }: DaysProps) => {
+	const { theme } = useThemeMode();
 	return (
-		<Box className="flex gap1" style={{ float: "right" }}>
+		<Box className="flex gap1" sx={{ float: "right" }}>
 			{days &&
 				Object.values(days).map((day, i) => {
 					return (
@@ -22,17 +26,41 @@ export const Days = ({ days }: DaysProps) => {
 							sx={{
 								...dayStyle,
 								...(day.isTrue ? dayActive : {}),
-								height: "20px",
-								width: "20px",
+								height: "10px",
+								width: "10px",
 								fontSize: "9px",
+								border: `1px solid ${theme.palette.primary.main}`,
 							}}
 							key={`${day.label}${i}`}
 						>
-							{day.label}
+							{/* {day.label} */}
 						</Typography>
 					);
 				})}
 		</Box>
+	);
+};
+
+export const HabitChip = ({ type }: { type: HabitType }) => {
+	const color = () => {
+		if (type === HabitTypes.GOOD) {
+			return "success";
+		}
+		if (type === HabitTypes.BAD) {
+			return "error";
+		}
+		if (type === HabitTypes.COUNTER) {
+			return "warning";
+		}
+		return "default";
+	};
+	return (
+		<Chip
+			label={`${formatLabel(type)} Habit`}
+			size="small"
+			variant="outlined"
+			color={color()}
+		/>
 	);
 };
 
@@ -45,6 +73,7 @@ const HabitCard = ({ habit }: CardProps) => {
 
 	return (
 		<Card
+			elevation={3}
 			sx={{
 				padding: 1,
 				width: "100%",
@@ -55,7 +84,10 @@ const HabitCard = ({ habit }: CardProps) => {
 		>
 			<Typography variant="h6">{habit.title}</Typography>
 
-			<Days days={habit.daysOfWeek} />
+			<Box className="flex-between full-w">
+				<HabitChip type={habit.type} />
+				<Days days={habit.daysOfWeek} />
+			</Box>
 		</Card>
 	);
 };

@@ -12,7 +12,7 @@ import CalorieLog from "../features/calories/CalorieLog";
 import NutritionDisplay from "../features/calories/NutritionDisplay";
 import MealLog from "../features/calories/MealLog";
 import IngredientLog from "../features/calories/IngredientLog";
-import FoodModal from "../features/calories/food/FoodModal";
+import FoodModal from "../features/modal/FoodModal";
 import { Box, Button } from "@mui/material";
 
 const Habits = lazy(() => import("../pages/Habits"));

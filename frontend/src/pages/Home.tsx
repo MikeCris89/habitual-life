@@ -8,7 +8,13 @@ const Home = () => {
 
 	return (
 		<Box
-			sx={{ overflow: "hidden", flex: 1, height: "100%", minHeight: 0 }}
+			sx={{
+				overflow: "hidden",
+				flex: 1,
+				height: "100%",
+				minHeight: 0,
+				p: "5px 5px",
+			}}
 			className="flex-center col"
 		>
 			<StatsSummary />

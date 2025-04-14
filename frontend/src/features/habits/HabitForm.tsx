@@ -1,10 +1,12 @@
 import {
 	Box,
 	Button,
+	Card,
 	Checkbox,
 	FormControlLabel,
 	FormGroup,
 	FormLabel,
+	IconButton,
 	Paper,
 	Switch,
 	TextField,
@@ -41,7 +43,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import PageNav from "../../components/PageNav";
-import { Add, RemoveCircleOutline } from "@mui/icons-material";
+import { Add, AddCircle, RemoveCircleOutline } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import {
 	useAddHabitMutation,
@@ -116,6 +118,50 @@ const initTypes: Record<HabitType, Habit> = {
 		isMax: false,
 		total: 0,
 	},
+};
+
+export const SectionContainer = ({
+	children,
+	title,
+	fullWidth,
+	fullHeight,
+}: {
+	children: React.ReactNode;
+	title?: string;
+	fullWidth?: boolean;
+	fullHeight?: boolean;
+}) => {
+	return (
+		<Box
+			className={`${fullWidth ? "full-w" : ""} ${fullHeight ? "full-h" : ""}`}
+			p={"2px 4px"}
+		>
+			{title && (
+				<Typography
+					variant="subtitle2"
+					sx={{
+						float: "left",
+						width: "100%",
+						padding: "2px 15px 0",
+						color: "primary.main",
+					}}
+				>
+					{title}
+				</Typography>
+			)}
+			<Paper
+				elevation={3}
+				className="flex col gap2 full-w "
+				sx={{
+					minHeight: fullHeight ? "100%" : "fit-content",
+					p: 1,
+					"& > *": { width: "100%" },
+				}}
+			>
+				{children}
+			</Paper>
+		</Box>
+	);
 };
 
 const HabitForm = () => {
@@ -335,181 +381,201 @@ const HabitForm = () => {
 	};
 
 	return (
-		<Paper sx={{ p: 1, maxWidth: "600px" }}>
+		<Box className="flex col gap2 full-h" sx={{ p: 1, maxWidth: "600px" }}>
 			<PageNav back={true} title={id ? "Edit Habit" : "Add Habit"} />
 
 			<Box
+				className="flex col gap4 full-h full-w"
+				id="habitForm"
 				component="form"
 				onSubmit={handleSubmit}
 				autoComplete="off"
 				sx={{
 					padding: "10px 5px",
-					display: "flex",
-					flexDirection: "column",
-					gap: "10px",
+					flex: 1,
+					overflowY: "auto",
+					"& >*": { width: "100%" },
 				}}
 			>
-				<TextField
-					label="Title"
-					name="title"
-					value={habit.title}
-					onChange={handleChange}
-					fullWidth
-					slotProps={{ input: { inputProps: { maxLength: 50 } } }}
-					required
-				/>
-
-				{/* Title and Days Of Week */}
-				<FormGroup
-					sx={{ display: "flex", flexDirection: "column", width: "100%" }}
-				>
-					<FormControlLabel
-						control={
-							<Checkbox
-								onChange={handleSelectAll}
-								checked={Object.values(habit.daysOfWeek).every(
-									(el) => el.isTrue
-								)}
-								sx={{ margin: 0 }}
-							/>
-						}
-						label="Select All"
-						sx={{ margin: 0 }}
+				<SectionContainer title="Details">
+					{/* Title */}
+					<TextField
+						label="Title"
+						name="title"
+						value={habit.title}
+						onChange={handleChange}
+						fullWidth
+						slotProps={{ input: { inputProps: { maxLength: 50 } } }}
+						required
 					/>
-					<Box sx={{ width: "100%" }} className="flex flex-around">
-						{DayKeys.map((day, i) => {
-							const week = { ...habit.daysOfWeek };
-							const data = week[day];
-							const name: DayKey = day;
 
-							return (
-								<FormControlLabel
-									key={`${data.label}-${i}`}
-									control={
-										<Checkbox
-											name={name}
-											checked={data.isTrue}
-											onChange={handleChange}
-											sx={{ display: "none" }}
-										/>
-									}
-									label={
-										<Box
-											sx={{ ...dayStyle, ...(data.isTrue ? dayActive : {}) }}
-										>
-											{data.label}
-										</Box>
-									}
+					{/*Days Of Week */}
+					<FormGroup
+						className="flex col gap2 full-w"
+						sx={{ "& >*": { width: "100%" } }}
+					>
+						<FormControlLabel
+							control={
+								<Checkbox
+									onChange={handleSelectAll}
+									checked={Object.values(habit.daysOfWeek).every(
+										(el) => el.isTrue
+									)}
 									sx={{ margin: 0 }}
 								/>
-							);
-						})}
-					</Box>
-				</FormGroup>
+							}
+							label="Select All"
+							sx={{ justifySelf: "flex-start" }}
+						/>
+						{/* Days of the Week */}
+						<Box className="flex flex-around">
+							{DayKeys.map((day, i) => {
+								const week = { ...habit.daysOfWeek };
+								const data = week[day];
+								const name: DayKey = day;
+
+								return (
+									<FormControlLabel
+										key={`${data.label}-${i}`}
+										control={
+											<Checkbox
+												name={name}
+												checked={data.isTrue}
+												onChange={handleChange}
+												sx={{ display: "none" }}
+											/>
+										}
+										label={
+											<Box
+												sx={{ ...dayStyle, ...(data.isTrue ? dayActive : {}) }}
+											>
+												{data.label}
+											</Box>
+										}
+										sx={{ margin: 0 }}
+									/>
+								);
+							})}
+						</Box>
+					</FormGroup>
+				</SectionContainer>
 
 				{/**GoodHabit */}
+
 				{isGoodHabit(habit) && (
 					<Box
 						className="flex-center col gap2"
 						sx={{ "& > *": { width: "100%" } }}
 					>
 						{/* All Day checkbox */}
-						<FormControlLabel
-							control={
-								<Checkbox
-									onChange={({ target: { checked } }) => {
-										setSelectingTime(!checked);
-										setHabit((prev) => {
-											if (isGoodHabit(prev)) {
-												return { ...prev, allDay: !prev.allDay, timeOfDay: [] };
-											}
-											return prev;
-										});
-									}}
-									checked={habit.allDay}
-									sx={{ margin: 0 }}
-								/>
-							}
-							label="All Day"
-							sx={{ margin: 0 }}
-						/>
-						{!habit.allDay &&
-							habit.timeOfDay
-								.slice()
-								.sort((a, b) => {
-									return (
-										new Date(a.time).getTime() - new Date(b.time).getTime()
-									);
-								})
-								.map((entry) => (
-									<Box key={entry.id} className="flex-between gap1">
-										<LocalizationProvider dateAdapter={AdapterDayjs}>
-											<TimePicker
-												name="timeOfDay"
-												label="Time of Day"
-												value={dayjs(entry.time)}
-												onChange={(e) => {
-													handleChangeTime(e, entry);
-												}}
-												disabled={habit.allDay}
-											/>
-										</LocalizationProvider>
 
-										<Button
-											sx={{ color: "red" }}
-											onClick={() =>
-												setHabit((prev) => {
-													if (isGoodHabit(prev))
-														return {
-															...prev,
-															timeOfDay: prev.timeOfDay.filter(
-																(el) => el.id !== entry.id
-															),
-															allDay: prev.timeOfDay.length === 1,
-														};
-													return prev;
-												})
-											}
-										>
-											<RemoveCircleOutline />
-										</Button>
-									</Box>
-								))}
-						{selectingTime && (
-							<LocalizationProvider dateAdapter={AdapterDayjs}>
-								<TimePicker
-									name="timeOfDay"
-									label="Time of Day"
-									value={null}
-									onAccept={(e) => {
-										handleAddTime(e);
-										onAcceptRef.current = true;
-										setSelectingTime(false);
-									}}
-									open
-									onClose={() => {
-										if (!onAcceptRef.current) handleAddTime(null);
-										onAcceptRef.current = false;
-										setSelectingTime(false);
-									}}
-								/>
-							</LocalizationProvider>
-						)}
-						{!habit.allDay && (
-							<Button
-								variant="outlined"
-								onClick={() => setSelectingTime(true)}
-								disabled={habit.timeOfDay.length >= 6 || selectingTime}
-								sx={{ width: "fit-content", alignSelf: "start" }}
-							>
-								<Add />
-							</Button>
-						)}
+						<SectionContainer title="Days of Week">
+							<FormControlLabel
+								control={
+									<Checkbox
+										onChange={({ target: { checked } }) => {
+											setSelectingTime(!checked);
+											setHabit((prev) => {
+												if (isGoodHabit(prev)) {
+													return {
+														...prev,
+														allDay: !prev.allDay,
+														timeOfDay: [],
+													};
+												}
+												return prev;
+											});
+										}}
+										checked={habit.allDay}
+										sx={{ margin: 0 }}
+									/>
+								}
+								label="All Day"
+								sx={{ margin: 0 }}
+							/>
+							{!habit.allDay &&
+								habit.timeOfDay
+									.slice()
+									.sort((a, b) => {
+										return (
+											new Date(a.time).getTime() - new Date(b.time).getTime()
+										);
+									})
+									.map((entry) => (
+										<Box key={entry.id} className="flex-between gap1">
+											<LocalizationProvider dateAdapter={AdapterDayjs}>
+												<TimePicker
+													name="timeOfDay"
+													label="Time of Day"
+													value={dayjs(entry.time)}
+													onChange={(e) => {
+														handleChangeTime(e, entry);
+													}}
+													disabled={habit.allDay}
+												/>
+											</LocalizationProvider>
+
+											<Button
+												sx={{ color: "red" }}
+												onClick={() =>
+													setHabit((prev) => {
+														if (isGoodHabit(prev))
+															return {
+																...prev,
+																timeOfDay: prev.timeOfDay.filter(
+																	(el) => el.id !== entry.id
+																),
+																allDay: prev.timeOfDay.length === 1,
+															};
+														return prev;
+													})
+												}
+											>
+												<RemoveCircleOutline />
+											</Button>
+										</Box>
+									))}
+							{selectingTime && (
+								<LocalizationProvider dateAdapter={AdapterDayjs}>
+									<TimePicker
+										name="timeOfDay"
+										label="Time of Day"
+										value={null}
+										onAccept={(e) => {
+											handleAddTime(e);
+											onAcceptRef.current = true;
+											setSelectingTime(false);
+										}}
+										open
+										onClose={() => {
+											if (!onAcceptRef.current) handleAddTime(null);
+											onAcceptRef.current = false;
+											setSelectingTime(false);
+										}}
+									/>
+								</LocalizationProvider>
+							)}
+							{/* Add Timeslot Button */}
+							{!habit.allDay && (
+								<Box className="flex-center full-w">
+									<IconButton
+										onClick={() => setSelectingTime(true)}
+										disabled={habit.timeOfDay.length >= 6 || selectingTime}
+										sx={{ width: "fit-content", alignSelf: "start" }}
+										size="large"
+									>
+										<AddCircle fontSize="large" />
+									</IconButton>
+								</Box>
+							)}
+						</SectionContainer>
+
 						{/* Timers */}
-						<Box sx={{ borderRadius: "12px", padding: "5px 10px" }}>
+						<SectionContainer title="Timers">
 							<FormControlLabel
 								control={
 									<Switch
+										checked={habit.timer.type !== TimerTypes.NONE}
 										onChange={({ target }) => {
 											setHabit((prev) => {
 												if (isGoodHabit(prev))
@@ -627,7 +693,7 @@ const HabitForm = () => {
 									</Box>
 								</Box>
 							)}
-						</Box>
+						</SectionContainer>
 					</Box>
 				)}
 
@@ -677,11 +743,13 @@ const HabitForm = () => {
 						</Box>
 					</Box>
 				)}
-				<Button variant="contained" type="submit">
+			</Box>
+			<Box className="full-w">
+				<Button variant="contained" type="submit" fullWidth form="habitForm">
 					Submit
 				</Button>
 			</Box>
-		</Paper>
+		</Box>
 	);
 };
 

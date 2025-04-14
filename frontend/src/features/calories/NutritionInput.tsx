@@ -1,4 +1,4 @@
-import { Badge, Box, Paper, Tab, Tabs } from "@mui/material";
+import { Badge, Box, Card, Paper, Tab, Tabs } from "@mui/material";
 import useDisplay from "../../hooks/useDisplay";
 import { SyntheticEvent, useMemo, useState } from "react";
 import { ShoppingBasket } from "@mui/icons-material";
@@ -15,6 +15,7 @@ import { handleError } from "../../utils/errors";
 import Loading from "../../components/Loading";
 import useBasketUpdater from "../../hooks/useBasketUpdater";
 import { motion, AnimatePresence } from "framer-motion";
+import { SectionContainer } from "../habits/HabitForm";
 
 const variants = {
 	initial: (direction: number) => ({
@@ -148,7 +149,8 @@ const NutritionInput = () => {
 					/>
 				</Tabs>
 			</Box>
-			<Paper sx={{ flex: 1, height: "100%", minHeight: 0, width: "100%" }}>
+			{/* <Card sx={{ flex: 1, height: "100%", minHeight: 0, width: "100%" }}> */}
+			<SectionContainer fullWidth fullHeight>
 				<MotionTabPanel value={tabValue} index={0} direction={direction}>
 					{/* Meals */}
 					<FoodList
@@ -191,7 +193,8 @@ const NutritionInput = () => {
 					{/* Basket */}
 					<Basket />
 				</MotionTabPanel>
-			</Paper>
+			</SectionContainer>
+			{/* </Card> */}
 		</Box>
 	);
 };

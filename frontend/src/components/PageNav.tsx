@@ -15,6 +15,7 @@ const navStyle = {
 	width: "100%",
 	marginBottom: "5px",
 	overflow: "hidden",
+	bgcolor: "background.default",
 };
 
 const PageNav = ({ back = false, title = "" }: PageProps) => {

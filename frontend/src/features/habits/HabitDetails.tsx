@@ -1,6 +1,13 @@
-import { Box, Button, Paper, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Divider,
+	Paper,
+	Typography,
+	useTheme,
+} from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import { Days } from "./HabitCard";
+import { Days, HabitChip } from "./HabitCard";
 import PageNav from "../../components/PageNav";
 import { isGoodHabit } from "../../utils/types";
 import { useDeleteHabitMutation, useGetHabitsQuery } from "./habitsApi";
@@ -15,17 +22,22 @@ import {
 	Line,
 	XAxis,
 	YAxis,
-	Tooltip,
 	CartesianGrid,
 	ResponsiveContainer,
 	Label,
 } from "recharts";
 import { useMemo } from "react";
 import { Delete, Edit } from "@mui/icons-material";
+import { useThemeMode } from "../../hooks/ThemeProvider";
+import { formatLabel } from "../../utils/helpers";
+import { useDialogModal } from "../modal/DialogModal";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const { openDialog } = useDialogModal();
+	//const theme = useTheme();
+	const { isLight, theme } = useThemeMode();
 
 	const { data: pastTasks } = useGetTasksByRangeQuery();
 
@@ -86,71 +98,107 @@ const HabitDetails: React.FC = () => {
 		navigate(-1);
 	};
 
+	const handleClickDelete = () => {
+		openDialog({
+			title: "Delete Habit",
+			onConfirm: handleDelete,
+			// content: (
+			// 	<>
+			// 		<Typography sx={{ textAlign: "center" }}></Typography>
+			// 	</>
+			// ),
+			message:
+				"Deleting this Habit is permanent and will also delete all history and tasks associated with it.",
+			confirmDef: true,
+		});
+	};
+
 	return (
-		<Paper
-			className="flex-center col full-w full-h"
+		<Box
+			className="flex-center col gap3 full-w full-h"
 			sx={{ p: 1, justifyContent: "flex-start" }}
 		>
 			{/* top nav */}
 			<PageNav back={true} title="Details" />
-			<Box className="flex gap3 full-w" sx={{ justifyContent: "flex-end" }}>
-				<Button
-					onClick={() => navigate("edit")}
-					endIcon={<Edit fontSize="small" />}
-					sx={{ alignItems: "flex-start" }}
+			<Box className="flex-around col gap4 full-w" sx={{ flex: 1, p: 1 }}>
+				<Paper
+					className="full-w flex-center col gap3"
+					sx={{ flex: 1, justifyContent: "flex-start" }}
 				>
-					Edit
-				</Button>
-				<Button
-					onClick={handleDelete}
-					endIcon={<Delete fontSize="small" color="warning" />}
-					sx={{ alignItems: "flex-start" }}
-				>
-					delete
-				</Button>
-			</Box>
-			{/* body */}
-			<Typography variant="h5">{habit.title}</Typography>
-			<Typography variant="h6" className="flex gap3">
-				<Days days={habit.daysOfWeek} />
-			</Typography>
-			<Typography variant="h6">
-				{habit.type}
-				{isGoodHabit(habit) &&
-					habit.timeOfDay.map((el, i) => (
-						<Box key={i}>{dayjs(el.time).format("h:mm A")}</Box>
-					))}
-			</Typography>
+					<Box className="flex-between full-w" sx={{ p: 1 }}>
+						<HabitChip type={habit.type} />
+						<Box
+							className="flex-center gap3"
+							sx={{ justifyContent: "flex-end" }}
+						>
+							<Button
+								onClick={handleClickDelete}
+								endIcon={<Delete fontSize="small" color="warning" />}
+								sx={{ alignItems: "flex-start" }}
+							>
+								delete
+							</Button>
+							<Button
+								onClick={() => navigate("edit")}
+								endIcon={<Edit fontSize="small" />}
+								sx={{ alignItems: "flex-start" }}
+							>
+								Edit
+							</Button>
+						</Box>
+					</Box>
+					{/* body */}
+					<Typography variant="h5">{habit.title}</Typography>
+					<Typography variant="h6" className="flex gap3">
+						<Days days={habit.daysOfWeek} />
+					</Typography>
 
-			<div>
-				<ResponsiveContainer width="100%" height={300}>
-					<LineChart data={graphData}>
-						<CartesianGrid strokeDasharray="3 3" />
-						<XAxis
-							dataKey="date"
-							tickFormatter={(value) => dayjs(value).format("MM/DD")}
-						/>
-						<YAxis dataKey="compRate" domain={[0, 100]}>
-							<Label
-								value="Completion (%)"
-								angle={-90}
-								position="insideLeft"
-								offset={10}
-								style={{ textAnchor: "middle" }}
+					{isGoodHabit(habit) &&
+						habit.timeOfDay.map((el, i) => (
+							<Box key={i}>{dayjs(el.time).format("h:mm A")}</Box>
+						))}
+				</Paper>
+				<Paper className="full-w " sx={{ p: 2 }}>
+					<ResponsiveContainer width="100%" height={200}>
+						<LineChart data={graphData}>
+							<CartesianGrid strokeDasharray="3 3" />
+							<XAxis
+								dataKey="date"
+								tickFormatter={(value) => dayjs(value).format("MM/DD")}
+								tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
 							/>
-						</YAxis>
-						<Line
-							type="monotone"
-							dataKey="compRate"
-							stroke="#8884d8"
-							strokeWidth={2}
-							dot={false}
-							activeDot={false}
-						/>
-					</LineChart>
-				</ResponsiveContainer>
-			</div>
-		</Paper>
+							<YAxis
+								dataKey="compRate"
+								domain={[0, 100]}
+								tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
+							>
+								<Label
+									value="Completion (%)"
+									angle={-90}
+									position="insideLeft"
+									offset={10}
+									style={{
+										textAnchor: "middle",
+										//fill: isLight ? "#555" : "#ccc", // change text color
+										fill: theme.palette.secondary.main,
+										fontSize: 12,
+										fontWeight: 500,
+									}}
+								/>
+							</YAxis>
+							<Line
+								type="monotone"
+								dataKey="compRate"
+								stroke={isLight ? "#8884d8" : theme.palette.secondary.main}
+								strokeWidth={3}
+								dot={false}
+								activeDot={false}
+							/>
+						</LineChart>
+					</ResponsiveContainer>
+				</Paper>
+			</Box>
+		</Box>
 	);
 };
 

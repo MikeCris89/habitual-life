@@ -1,6 +1,7 @@
 import {
 	Box,
 	Button,
+	Divider,
 	FormControl,
 	FormControlLabel,
 	Switch,
@@ -28,21 +29,20 @@ import {
 	useSetLastCreatedDateMutation,
 } from "../features/meta/metaApi";
 import { useThemeMode } from "../hooks/ThemeProvider";
+import { useDialogModal } from "../features/modal/DialogModal";
 
 const Account: React.FC = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { mode, toggleTheme } = useThemeMode();
+	const { openDialog } = useDialogModal();
 
 	const [createTestData, { isLoading }] = useCreateTestTaskDataMutation();
-	//const [fetchHabits, { isFetching: loadingHabits }] = useLazyGetHabitsQuery();
 	const [deleteTasks, { isLoading: loadingDeleteTasks }] =
 		useDeleteTasksMutation();
 	const { data: habits } = useGetHabitsQuery();
 	const { data: pastTasks, isLoading: loadingPastTasks } =
 		useGetTasksByRangeQuery();
-	const { data: metaData } = useGetMetaQuery();
-	const [setLastCreatedDate] = useSetLastCreatedDateMutation();
 
 	const handleTestData = async () => {
 		try {
@@ -71,29 +71,49 @@ const Account: React.FC = () => {
 		}
 	};
 
+	const handleClickTestData = () => {
+		openDialog({
+			title: "Add Test Data",
+			onConfirm: handleTestData,
+			message:
+				"This action will override all habit history. This option is for testing purposes only",
+			confirmDef: true,
+		});
+	};
+	const handleClickDeleteData = (storeName: string) => {
+		openDialog({
+			title: "Delete All Tasks",
+			onConfirm: () => handleDeleteData(storeName),
+			message:
+				"This will permanently delete all tasks and habit history. This is irreversible.",
+			confirmDef: true,
+		});
+	};
+
 	if (isLoading) return <Loading />;
 
 	return (
-		<Box className="flex-center col gap2">
+		<Box className="flex-center col gap2 full-h">
 			<Typography variant="h5">Account Settings</Typography>
+			<Divider />
+			<FormControlLabel
+				control={<Switch checked={mode === "light"} />}
+				label={"Toggle Theme"}
+				onClick={(e) => toggleTheme()}
+			/>
 			<Button
-				onClick={handleTestData}
+				onClick={handleClickTestData}
 				loading={loadingDeleteTasks || loadingPastTasks}
 			>
 				Add Test Tasks
 			</Button>
 
 			<Button
-				onClick={() => handleDeleteData("tasks")}
+				onClick={() => handleClickDeleteData("tasks")}
 				loading={loadingDeleteTasks || loadingPastTasks}
 			>
 				Delete All Tasks
 			</Button>
-			<FormControlLabel
-				control={<Switch value={mode === "light"} />}
-				label={"Toggle Theme"}
-				onClick={(e) => toggleTheme()}
-			/>
 		</Box>
 	);
 };

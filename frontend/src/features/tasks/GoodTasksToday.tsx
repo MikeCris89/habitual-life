@@ -36,7 +36,16 @@ const GoodTasksToday = () => {
 	console.log("GoodTasksToday Rendering", allTasks);
 
 	return (
-		<Paper className="flex-center col" sx={{ p: 1, gap: "10px" }}>
+		<Box
+			className="flex-center col full-h"
+			//elevation={3}
+			sx={{
+				p: 1,
+				gap: "10px",
+				justifyContent: "flex-start",
+				overflow: "auto",
+			}}
+		>
 			{!sortedTasksAllDay.length && !sortedTasksByTime.length && (
 				<Typography variant="h6">No Tasks for today.</Typography>
 			)}
@@ -52,7 +61,7 @@ const GoodTasksToday = () => {
 						borderBottom: "1px solid grey",
 						paddingBottom: "15px",
 						marginBottom: "5px",
-						bgcolor: "primary.main",
+						bgcolor: "primary.dark",
 					}}
 				>
 					<Box>
@@ -124,7 +133,7 @@ const GoodTasksToday = () => {
 						</Box>
 					);
 				})}
-		</Paper>
+		</Box>
 	);
 };
 

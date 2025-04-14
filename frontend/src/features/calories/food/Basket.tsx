@@ -3,6 +3,7 @@ import {
 	AccordionDetails,
 	AccordionSummary,
 	Box,
+	Card,
 	Chip,
 	Paper,
 	Typography,
@@ -200,7 +201,7 @@ const Basket = () => {
 				justifyContent: "flex-start",
 				overflow: "auto",
 				p: 1,
-				backgroundColor: "#f7f7f7",
+				//backgroundColor: "#f7f7f7",
 			}}
 		>
 			{sortedBaskets &&

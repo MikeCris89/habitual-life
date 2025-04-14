@@ -39,25 +39,39 @@ const LogForm = ({
 			}}
 		>
 			<Box className="flex-center col gap3 full-w" sx={{ overflow: "auto" }}>
-				<NumberInput
+				{/* <NumberInput
 					label="Calories"
 					value={calories ?? 0}
 					onChange={(value) => handleChangeCalories("calories", value)}
 					fullWidth={false}
-					sx={{ marginTop: "5px" }}
+					sx={{ marginTop: "5px", fontWeight: "bold" }}
 					min={0}
 					max={9999}
 					size="small"
 					required={false}
 					//delayChange={true}
-				/>
+				/> */}
 				{/* </Box> */}
 				<TableContainer>
-					<Table size="small">
+					<Table size="small" stickyHeader>
 						<TableHead>
 							<TableRow>
-								<TableCell sx={{ fontWeight: "bold" }}>Macros</TableCell>
-								<TableCell align="right"></TableCell>
+								<TableCell sx={{ fontWeight: "bold" }}>Calories</TableCell>
+								<TableCell align="right">
+									<NumberInput
+										value={macros[calories] ?? 0}
+										onChange={(value) =>
+											handleChangeCalories("calories", value)
+										}
+										size="small"
+										fullWidth={false}
+										min={0}
+										max={9999}
+										sx={{ width: "75px" }}
+										required={false}
+										//delayChange={true}
+									/>
+								</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
