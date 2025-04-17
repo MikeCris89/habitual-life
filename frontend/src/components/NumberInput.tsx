@@ -21,6 +21,7 @@ interface Props {
 	variant?: "standard" | "filled" | "outlined";
 	onBlur?: (value: string) => void;
 	delayChange?: boolean;
+	fontSize?: string;
 }
 
 const NumberInput = ({
@@ -42,6 +43,7 @@ const NumberInput = ({
 	variant = "outlined",
 	onBlur,
 	delayChange = false,
+	fontSize = "16px",
 }: Props) => {
 	const [strValue, setStrValue] = useState<string>(value.toString() || "0");
 	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -129,6 +131,7 @@ const NumberInput = ({
 				...sx,
 				"& .MuiInputBase-input": {
 					textAlign: textAlign,
+					fontSize: fontSize,
 				},
 				p: 0,
 			}}

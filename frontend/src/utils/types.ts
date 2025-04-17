@@ -1,6 +1,7 @@
 // Preset Id's
 export const PresetId = {
 	calorieCounter: "preset_calories",
+	weightTracker: "preset_weight",
 } as const;
 
 // Timers

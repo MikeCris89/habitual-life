@@ -16,7 +16,7 @@ export const metaApi = createApi({
 	baseQuery: fakeBaseQuery(),
 	tagTypes: ["MetaData"],
 	endpoints: (builder) => ({
-		getMeta: builder.query<any, void>({
+		getMeta: builder.query<MetaData, void>({
 			queryFn: async () => {
 				try {
 					const data = await dbActions.getAll("meta");
@@ -56,7 +56,7 @@ export const metaApi = createApi({
 			invalidatesTags: ["MetaData"],
 		}),
 		setGoal: builder.mutation({
-			queryFn: async ({ userId, goal }) => {
+			queryFn: async ({ userId, goal }: { userId: string; goal: number }) => {
 				try {
 					const data = await dbActions.putMetaGoal(userId, goal);
 					return { data };
@@ -68,6 +68,27 @@ export const metaApi = createApi({
 			},
 			invalidatesTags: ["MetaData"],
 		}),
+		setTheme: builder.mutation({
+			queryFn: async ({ userId, theme }: { userId: string; theme: string }) => {
+				try {
+					const data = await dbActions.setTheme(userId, theme);
+					return { data };
+				} catch (e) {
+					return {
+						error: {
+							message: `Error setting theme. Theme: ${theme}. Error: ${e}`,
+						},
+					};
+				}
+			},
+			onQueryStarted: (args, { dispatch }) => {
+				dispatch(
+					metaApi.util.updateQueryData("getMeta", undefined, (draft) => {
+						draft.theme = args.theme;
+					})
+				);
+			},
+		}),
 	}),
 });
 
@@ -75,4 +96,5 @@ export const {
 	useGetMetaQuery,
 	useSetLastCreatedDateMutation,
 	useSetGoalMutation,
+	useSetThemeMutation,
 } = metaApi;

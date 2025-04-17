@@ -14,6 +14,8 @@ import MealLog from "../features/calories/MealLog";
 import IngredientLog from "../features/calories/IngredientLog";
 import FoodModal from "../features/modal/FoodModal";
 import { Box, Button } from "@mui/material";
+import { PresetId } from "./types";
+import WeightTracker from "../features/weight/WeightTracker";
 
 const Habits = lazy(() => import("../pages/Habits"));
 const HabitForm = lazy(() => import("../features/habits/HabitForm"));
@@ -38,10 +40,10 @@ const routes = createRoutesFromElements(
 		<Route index element={<Home />} />
 		<Route path="habits" element={<Habits />}></Route>
 
-		<Route path="add/preset_calories" element={<CalorieForm />} />
-		<Route path="preset_calories/edit" element={<CalorieForm />} />
+		<Route path={`add/${PresetId.calorieCounter}`} element={<CalorieForm />} />
+		<Route path={`${PresetId.calorieCounter}/edit`} element={<CalorieForm />} />
 		<Route
-			path="preset_calories/log"
+			path={`${PresetId.calorieCounter}/log`}
 			element={
 				<CalorieLog>
 					<NutritionDisplay />
@@ -65,6 +67,7 @@ const routes = createRoutesFromElements(
 				}
 			/>
 		</Route>
+		<Route path={`${PresetId.weightTracker}`} element={<WeightTracker />} />
 
 		<Route path="add/:type" element={<HabitForm />} />
 

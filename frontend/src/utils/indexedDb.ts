@@ -47,6 +47,16 @@ export const dbActions = {
 		const db = await dbPromise;
 		await db.put("meta", data);
 	},
+	async setTheme(userId: string, theme: string) {
+		const db = await dbPromise;
+		const metaData = await db.get("meta", userId);
+		if (!metaData) {
+			handleError("putMetaGoal: No existing meta data.");
+		}
+		const newData: MetaData = { ...metaData, theme };
+		await db.put("meta", newData);
+		return newData;
+	},
 	async setLastCreatedDate(userId: string, date: string = startOfDay()) {
 		const db = await dbPromise;
 		const existingMeta = await db.get("meta", userId);

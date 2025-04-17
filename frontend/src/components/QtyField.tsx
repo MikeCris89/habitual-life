@@ -31,6 +31,12 @@ const QtyField = ({
 	const isCollapsed = collapse && value === 0;
 	const { isLight, theme } = useThemeMode();
 
+	const handleChange = (num: number) => {
+		if (num < min) num = min;
+		if (num > max) return;
+		onChange(num);
+	};
+
 	return (
 		<Box
 			className="flex"
@@ -60,7 +66,7 @@ const QtyField = ({
 					pointerEvents: isCollapsed ? "none" : "auto",
 				}}
 			>
-				<IconButton size="small" onClick={() => onChange(value - 1)}>
+				<IconButton size="small" onClick={() => handleChange(value - 1)}>
 					{deleteBtn && value === 1 ? (
 						<Delete fontSize="small" color="warning" />
 					) : (
@@ -71,13 +77,11 @@ const QtyField = ({
 					type="number"
 					inputMode="numeric"
 					value={value}
-					onChange={(e) => onChange(+e.target.value)}
-					min={min}
-					max={max}
+					onChange={(e) => handleChange(+e.target.value)}
 					style={{ ...inputStyle, color: theme.palette.text.primary }}
 				/>
 			</Box>
-			<IconButton size="small" onClick={() => onChange(value + 1)}>
+			<IconButton size="small" onClick={() => handleChange(value + 1)}>
 				<AddCircle fontSize="small" />
 			</IconButton>
 		</Box>

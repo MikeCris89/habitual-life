@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { darkTheme, lightTheme } from "../utils/muiTheme";
 import { ThemeProvider as MUIThemeProvider, CssBaseline } from "@mui/material";
+import { useGetMetaQuery, useSetThemeMutation } from "../features/meta/metaApi";
 
 const ThemeContext = createContext({
 	mode: "light",
@@ -16,10 +17,18 @@ export const ThemeModeProvider = ({
 }: {
 	children: React.ReactNode;
 }) => {
-	const [mode, setMode] = useState("light");
+	const { data: metaData } = useGetMetaQuery();
+	const [setTheme] = useSetThemeMutation();
+
+	const mode = metaData?.theme ?? "light";
 
 	const toggleTheme = () => {
-		setMode((prev) => (prev === "light" ? "dark" : "light"));
+		if (metaData) {
+			setTheme({
+				userId: metaData?.userId,
+				theme: mode === "light" ? "dark" : "light",
+			});
+		}
 	};
 
 	const theme = mode === "light" ? lightTheme : darkTheme;

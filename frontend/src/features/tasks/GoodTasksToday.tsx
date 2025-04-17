@@ -44,6 +44,7 @@ const GoodTasksToday = () => {
 				gap: "10px",
 				justifyContent: "flex-start",
 				overflow: "auto",
+				flex: 1,
 			}}
 		>
 			{!sortedTasksAllDay.length && !sortedTasksByTime.length && (

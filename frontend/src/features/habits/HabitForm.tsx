@@ -1,7 +1,6 @@
 import {
 	Box,
 	Button,
-	Card,
 	Checkbox,
 	FormControlLabel,
 	FormGroup,
@@ -13,6 +12,8 @@ import {
 	ToggleButton,
 	ToggleButtonGroup,
 	Typography,
+	SxProps,
+	Theme,
 } from "@mui/material";
 import React, { useMemo, useRef, useState } from "react";
 import {
@@ -61,8 +62,10 @@ import { useDispatch } from "react-redux";
 import { setError, setLoading, setSuccess } from "../loading/loadingSlice";
 import DurationPicker from "../../components/DurationPicker";
 import NumberField from "../../components/NumberField";
+import PageWrapper from "../../components/PageWrapper";
+import QtyField from "../../components/QtyField";
 
-const initHabit: HabitBase = {
+export const initHabit: HabitBase = {
 	title: "",
 	daysOfWeek: {
 		Sunday: { isTrue: true, label: "S" },
@@ -99,7 +102,7 @@ const initTimers: Record<TimerType, Timer> = {
 	[TimerTypes.ROUND]: { ...initRoundTimer },
 };
 
-const initTypes: Record<HabitType, Habit> = {
+export const initTypes: Record<HabitType, Habit> = {
 	good: {
 		...initHabit,
 		timeOfDay: [],
@@ -125,16 +128,23 @@ export const SectionContainer = ({
 	title,
 	fullWidth,
 	fullHeight,
+	className,
+	wrapperSx,
+	paperSx,
 }: {
 	children: React.ReactNode;
 	title?: string;
 	fullWidth?: boolean;
 	fullHeight?: boolean;
+	className?: string;
+	wrapperSx?: SxProps<Theme>;
+	paperSx?: SxProps<Theme>;
 }) => {
 	return (
 		<Box
-			className={`${fullWidth ? "full-w" : ""} ${fullHeight ? "full-h" : ""}`}
+			className={`${fullWidth ? "full-w" : ""} ${fullHeight ? "full-h" : ""} `}
 			p={"2px 4px"}
+			sx={wrapperSx}
 		>
 			{title && (
 				<Typography
@@ -151,11 +161,14 @@ export const SectionContainer = ({
 			)}
 			<Paper
 				elevation={3}
-				className="flex col gap2 full-w "
+				className={`flex col gap2 full-w full-h ${className}`}
 				sx={{
-					minHeight: fullHeight ? "100%" : "fit-content",
+					// justifyContent: "flex-start",
+					// alignItems: "flex-start",
+					//minHeight: fullHeight ? "100%" : "fit-content",
 					p: 1,
-					"& > *": { width: "100%" },
+					// "& > *": { width: "100%" },
+					...paperSx,
 				}}
 			>
 				{children}
@@ -381,8 +394,9 @@ const HabitForm = () => {
 	};
 
 	return (
-		<Box className="flex col gap2 full-h" sx={{ p: 1, maxWidth: "600px" }}>
-			<PageNav back={true} title={id ? "Edit Habit" : "Add Habit"} />
+		// <Box className="flex col gap2 full-h" sx={{ p: 1, maxWidth: "600px" }}>
+		<PageWrapper>
+			<PageNav back title={id ? "Edit Habit" : "Add Habit"} />
 
 			<Box
 				className="flex col gap4 full-h full-w"
@@ -397,7 +411,7 @@ const HabitForm = () => {
 					"& >*": { width: "100%" },
 				}}
 			>
-				<SectionContainer title="Details">
+				<SectionContainer title="Details" fullWidth>
 					{/* Title */}
 					<TextField
 						label="Title"
@@ -421,7 +435,6 @@ const HabitForm = () => {
 									checked={Object.values(habit.daysOfWeek).every(
 										(el) => el.isTrue
 									)}
-									sx={{ margin: 0 }}
 								/>
 							}
 							label="Select All"
@@ -469,7 +482,7 @@ const HabitForm = () => {
 					>
 						{/* All Day checkbox */}
 
-						<SectionContainer title="Days of Week">
+						<SectionContainer title="Times of Day" fullWidth>
 							<FormControlLabel
 								control={
 									<Checkbox
@@ -487,54 +500,55 @@ const HabitForm = () => {
 											});
 										}}
 										checked={habit.allDay}
-										sx={{ margin: 0 }}
 									/>
 								}
 								label="All Day"
-								sx={{ margin: 0 }}
+								sx={{ width: "100%" }}
 							/>
-							{!habit.allDay &&
-								habit.timeOfDay
-									.slice()
-									.sort((a, b) => {
-										return (
-											new Date(a.time).getTime() - new Date(b.time).getTime()
-										);
-									})
-									.map((entry) => (
-										<Box key={entry.id} className="flex-between gap1">
-											<LocalizationProvider dateAdapter={AdapterDayjs}>
-												<TimePicker
-													name="timeOfDay"
-													label="Time of Day"
-													value={dayjs(entry.time)}
-													onChange={(e) => {
-														handleChangeTime(e, entry);
-													}}
-													disabled={habit.allDay}
-												/>
-											</LocalizationProvider>
+							<Box className="flex-center col gap3 full-w full-h">
+								{!habit.allDay &&
+									habit.timeOfDay
+										.slice()
+										.sort((a, b) => {
+											return (
+												new Date(a.time).getTime() - new Date(b.time).getTime()
+											);
+										})
+										.map((entry) => (
+											<Box key={entry.id} className="flex-between gap1">
+												<LocalizationProvider dateAdapter={AdapterDayjs}>
+													<TimePicker
+														name="timeOfDay"
+														label="Time of Day"
+														value={dayjs(entry.time)}
+														onChange={(e) => {
+															handleChangeTime(e, entry);
+														}}
+														disabled={habit.allDay}
+													/>
+												</LocalizationProvider>
 
-											<Button
-												sx={{ color: "red" }}
-												onClick={() =>
-													setHabit((prev) => {
-														if (isGoodHabit(prev))
-															return {
-																...prev,
-																timeOfDay: prev.timeOfDay.filter(
-																	(el) => el.id !== entry.id
-																),
-																allDay: prev.timeOfDay.length === 1,
-															};
-														return prev;
-													})
-												}
-											>
-												<RemoveCircleOutline />
-											</Button>
-										</Box>
-									))}
+												<Button
+													sx={{ color: "red" }}
+													onClick={() =>
+														setHabit((prev) => {
+															if (isGoodHabit(prev))
+																return {
+																	...prev,
+																	timeOfDay: prev.timeOfDay.filter(
+																		(el) => el.id !== entry.id
+																	),
+																	allDay: prev.timeOfDay.length === 1,
+																};
+															return prev;
+														})
+													}
+												>
+													<RemoveCircleOutline />
+												</Button>
+											</Box>
+										))}
+							</Box>
 							{selectingTime && (
 								<LocalizationProvider dateAdapter={AdapterDayjs}>
 									<TimePicker
@@ -571,7 +585,11 @@ const HabitForm = () => {
 						</SectionContainer>
 
 						{/* Timers */}
-						<SectionContainer title="Timers">
+						<SectionContainer
+							title="Timers"
+							fullWidth
+							paperSx={{ "& >*": { width: "100%" } }}
+						>
 							<FormControlLabel
 								control={
 									<Switch
@@ -593,6 +611,7 @@ const HabitForm = () => {
 									/>
 								}
 								label="Timer"
+								sx={{ width: "100%" }}
 							/>
 							{!isNoneTimer(habit.timer) && (
 								<Box className="flex-center col" sx={{ gap: "25px" }}>
@@ -616,7 +635,7 @@ const HabitForm = () => {
 										sx={{
 											width: "100%",
 											gap: "10px",
-											"& *": { width: "100%" },
+											"& > *": { width: "100%" },
 										}}
 									>
 										{habit.timer.type === TimerTypes.SINGLE && (
@@ -630,12 +649,13 @@ const HabitForm = () => {
 												/>
 											</Box>
 										)}
+
 										{/* Round Timer */}
 										{habit.timer.type === TimerTypes.ROUND && (
 											<>
 												<Box className="flex-between" sx={{ width: "100%" }}>
 													<FormLabel>Number of Sets</FormLabel>
-													<NumberField
+													{/* <NumberField
 														value={habit.timer.sets}
 														min={1}
 														max={10}
@@ -650,14 +670,46 @@ const HabitForm = () => {
 																return prev;
 															})
 														}
+													/> */}
+													<QtyField
+														min={1}
+														max={10}
+														value={habit.timer.sets}
+														onChange={(num) =>
+															setHabit((prev) => {
+																if (isGoodHabit(prev)) {
+																	return {
+																		...prev,
+																		timer: { ...prev.timer, sets: num },
+																	};
+																}
+																return prev;
+															})
+														}
 													/>
 												</Box>
 												<Box className="flex-between" sx={{ width: "100%" }}>
 													<FormLabel>Rounds per Set</FormLabel>
-													<NumberField
+													{/* <NumberField
 														value={habit.timer.rounds}
 														min={1}
 														handleChange={(num) =>
+															setHabit((prev) => {
+																if (isGoodHabit(prev)) {
+																	return {
+																		...prev,
+																		timer: { ...prev.timer, rounds: num },
+																	};
+																}
+																return prev;
+															})
+														}
+													/> */}
+													<QtyField
+														min={1}
+														max={20}
+														value={habit.timer.rounds}
+														onChange={(num) =>
 															setHabit((prev) => {
 																if (isGoodHabit(prev)) {
 																	return {
@@ -749,7 +801,8 @@ const HabitForm = () => {
 					Submit
 				</Button>
 			</Box>
-		</Box>
+		</PageWrapper>
+		// </Box>
 	);
 };
 

@@ -42,8 +42,10 @@ export const selectCurrentWeekStats = createSelector([selectStats], (stats) =>
 	)
 );
 
+const EMPTY_GOAL = {};
+
 export const selectGoals = (state: RootState) =>
-	metaApi.endpoints.getMeta.select(undefined)(state)?.data.goal;
+	metaApi.endpoints.getMeta.select(undefined)(state)?.data?.goal ?? EMPTY_GOAL;
 
 export const selectCurrentGoal = createSelector([selectGoals], (goals) =>
 	getGoalForDate(goals)

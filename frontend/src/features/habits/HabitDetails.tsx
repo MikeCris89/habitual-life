@@ -31,6 +31,8 @@ import { Delete, Edit } from "@mui/icons-material";
 import { useThemeMode } from "../../hooks/ThemeProvider";
 import { formatLabel } from "../../utils/helpers";
 import { useDialogModal } from "../modal/DialogModal";
+import { SectionContainer } from "./HabitForm";
+import PageWrapper from "../../components/PageWrapper";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
@@ -76,7 +78,7 @@ const HabitDetails: React.FC = () => {
 				(a, b) =>
 					new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
 			)
-			.map((el, i, arr) => {
+			.map((el, i) => {
 				rate += el.complete ? 1 : 0;
 				const compRate = Math.round((rate / (i + 1)) * 100);
 				return { date: el.dateTime, compRate };
@@ -114,91 +116,91 @@ const HabitDetails: React.FC = () => {
 	};
 
 	return (
-		<Box
-			className="flex-center col gap3 full-w full-h"
-			sx={{ p: 1, justifyContent: "flex-start" }}
+		<PageWrapper
+		// className="flex-center col gap3 full-w full-h"
+		// sx={{ p: 1, justifyContent: "flex-start" }}
 		>
 			{/* top nav */}
 			<PageNav back={true} title="Details" />
-			<Box className="flex-around col gap4 full-w" sx={{ flex: 1, p: 1 }}>
-				<Paper
-					className="full-w flex-center col gap3"
-					sx={{ flex: 1, justifyContent: "flex-start" }}
-				>
-					<Box className="flex-between full-w" sx={{ p: 1 }}>
-						<HabitChip type={habit.type} />
-						<Box
-							className="flex-center gap3"
-							sx={{ justifyContent: "flex-end" }}
+			{/* <Box className="flex-around col gap4 full-w" sx={{ flex: 1, p: 1 }}> */}
+			<SectionContainer
+				fullWidth
+				wrapperSx={{ flex: 1 }}
+				//fullHeight
+				// className="full-w flex-center col gap3"
+				//sx={{ flex: 1, justifyContent: "flex-start" }}
+			>
+				<Box className="flex-between full-w" sx={{ p: 1 }}>
+					<HabitChip type={habit.type} />
+					<Box className="flex-center gap3" sx={{ justifyContent: "flex-end" }}>
+						<Button
+							onClick={handleClickDelete}
+							endIcon={<Delete fontSize="small" color="warning" />}
+							sx={{ alignItems: "flex-start" }}
 						>
-							<Button
-								onClick={handleClickDelete}
-								endIcon={<Delete fontSize="small" color="warning" />}
-								sx={{ alignItems: "flex-start" }}
-							>
-								delete
-							</Button>
-							<Button
-								onClick={() => navigate("edit")}
-								endIcon={<Edit fontSize="small" />}
-								sx={{ alignItems: "flex-start" }}
-							>
-								Edit
-							</Button>
-						</Box>
+							delete
+						</Button>
+						<Button
+							onClick={() => navigate("edit")}
+							endIcon={<Edit fontSize="small" />}
+							sx={{ alignItems: "flex-start" }}
+						>
+							Edit
+						</Button>
 					</Box>
-					{/* body */}
-					<Typography variant="h5">{habit.title}</Typography>
-					<Typography variant="h6" className="flex gap3">
-						<Days days={habit.daysOfWeek} />
-					</Typography>
+				</Box>
+				{/* body */}
+				<Typography variant="h5">{habit.title}</Typography>
+				<Typography variant="h6" className="flex gap3">
+					<Days days={habit.daysOfWeek} />
+				</Typography>
 
-					{isGoodHabit(habit) &&
-						habit.timeOfDay.map((el, i) => (
-							<Box key={i}>{dayjs(el.time).format("h:mm A")}</Box>
-						))}
-				</Paper>
-				<Paper className="full-w " sx={{ p: 2 }}>
-					<ResponsiveContainer width="100%" height={200}>
-						<LineChart data={graphData}>
-							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis
-								dataKey="date"
-								tickFormatter={(value) => dayjs(value).format("MM/DD")}
-								tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
+				{isGoodHabit(habit) &&
+					habit.timeOfDay.map((el, i) => (
+						<Box key={i}>{dayjs(el.time).format("h:mm A")}</Box>
+					))}
+			</SectionContainer>
+			<SectionContainer fullWidth>
+				<ResponsiveContainer width="100%" height={200}>
+					<LineChart data={graphData}>
+						<CartesianGrid strokeDasharray="3 3" />
+						<XAxis
+							dataKey="date"
+							tickFormatter={(value) => dayjs(value).format("MM/DD")}
+							tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
+						/>
+						<YAxis
+							dataKey="compRate"
+							domain={[0, 100]}
+							tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
+						>
+							<Label
+								value="Completion (%)"
+								angle={-90}
+								position="insideLeft"
+								offset={10}
+								style={{
+									textAnchor: "middle",
+									//fill: isLight ? "#555" : "#ccc", // change text color
+									fill: theme.palette.secondary.main,
+									fontSize: 12,
+									fontWeight: 500,
+								}}
 							/>
-							<YAxis
-								dataKey="compRate"
-								domain={[0, 100]}
-								tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
-							>
-								<Label
-									value="Completion (%)"
-									angle={-90}
-									position="insideLeft"
-									offset={10}
-									style={{
-										textAnchor: "middle",
-										//fill: isLight ? "#555" : "#ccc", // change text color
-										fill: theme.palette.secondary.main,
-										fontSize: 12,
-										fontWeight: 500,
-									}}
-								/>
-							</YAxis>
-							<Line
-								type="monotone"
-								dataKey="compRate"
-								stroke={isLight ? "#8884d8" : theme.palette.secondary.main}
-								strokeWidth={3}
-								dot={false}
-								activeDot={false}
-							/>
-						</LineChart>
-					</ResponsiveContainer>
-				</Paper>
-			</Box>
-		</Box>
+						</YAxis>
+						<Line
+							type="monotone"
+							dataKey="compRate"
+							stroke={isLight ? "#8884d8" : theme.palette.secondary.main}
+							strokeWidth={3}
+							dot={false}
+							activeDot={false}
+						/>
+					</LineChart>
+				</ResponsiveContainer>
+			</SectionContainer>
+			{/* </Box> */}
+		</PageWrapper>
 	);
 };
 

@@ -21,7 +21,19 @@ import {
 import { nanoid } from "nanoid";
 import dayjs from "dayjs";
 
-const createTask = (habit: Habit, date: string): Task => {
+const testWeightCounts = (totalDays: number, day: number) => {
+	const startWeight = 250;
+	const endWeight = 235;
+	const progress = day / totalDays;
+
+	const targetWeight = startWeight - (startWeight - endWeight) * progress;
+	const fluctuation = (Math.random() - 0.5) * 1.5;
+	const value = targetWeight + fluctuation;
+
+	return parseFloat(value.toFixed(2));
+};
+
+const createTask = (habit: Habit, date: string, testCount?: number): Task => {
 	const baseTask: TaskBase = {
 		title: habit.title,
 		habitId: habit.id,
@@ -36,7 +48,7 @@ const createTask = (habit: Habit, date: string): Task => {
 			type: HabitTypes.COUNTER,
 			isMax: habit.isMax,
 			total: habit.total,
-			count: 0,
+			count: testCount ?? 0,
 		};
 		if (habit.id === PresetId.calorieCounter && habit.macros) {
 			return {
@@ -67,21 +79,29 @@ export const generateTestTasksData = (
 ): Task[] => {
 	const tasks = [];
 	const end = dayjs(endDate);
+
 	for (
-		let date = dayjs(startDate);
+		let date = dayjs(startDate), i = 0;
 		date.isBefore(end);
-		date = date.add(1, "day")
+		date = date.add(1, "day"), i++
 	) {
 		const dayKey = DayKeys[date.day()];
 		const dailyTasks = habits
 			.filter((habit) => habit.daysOfWeek[dayKey].isTrue)
 			.flatMap((habit) => {
+				if (habit.id === PresetId.weightTracker) {
+					const testCount = testWeightCounts(30, i);
+					console.log(testCount);
+					return {
+						...createTask(habit, date.toISOString(), testCount),
+						complete: Math.random() * 100 <= completionRate,
+					};
+				}
 				if (!isGoodHabit(habit) || habit.allDay)
 					return {
 						...createTask(habit, date.toISOString()),
 						complete: Math.random() * 100 <= completionRate,
 					};
-
 				return habit.timeOfDay.map(({ time }) => {
 					const thisTime = dayjs(time);
 					return {
