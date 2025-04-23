@@ -16,6 +16,7 @@ import FoodModal from "../features/modal/FoodModal";
 import { Box, Button } from "@mui/material";
 import { PresetId } from "./types";
 import WeightTracker from "../features/weight/WeightTracker";
+import Stats from "../features/stats/Stats";
 
 const Habits = lazy(() => import("../pages/Habits"));
 const HabitForm = lazy(() => import("../features/habits/HabitForm"));
@@ -67,7 +68,9 @@ const routes = createRoutesFromElements(
 				}
 			/>
 		</Route>
-		<Route path={`${PresetId.weightTracker}`} element={<WeightTracker />} />
+		<Route path={`${PresetId.weightTracker}/log`} element={<WeightTracker />} />
+
+		<Route path={`stats`} element={<Stats />} />
 
 		<Route path="add/:type" element={<HabitForm />} />
 

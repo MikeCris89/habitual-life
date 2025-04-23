@@ -15,14 +15,14 @@ const navStyle = {
 	width: "100%",
 	marginBottom: "5px",
 	overflow: "hidden",
-	bgcolor: "background.default",
+	// bgcolor: "background.default",
 };
 
 const PageNav = ({ back = false, title = "" }: PageProps) => {
 	const navigate = useNavigate();
 
 	return (
-		<Paper sx={navStyle}>
+		<Paper elevation={2} sx={navStyle}>
 			<Box sx={{ justifySelf: "left" }}>
 				{back && (
 					<Button onClick={() => navigate(-1)} size="small">

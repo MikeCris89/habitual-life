@@ -27,6 +27,7 @@ import { useSelector } from "react-redux";
 import { selectIngredients } from "./food/foodSelectors";
 import Loading from "../../components/Loading";
 import { SectionContainer } from "../habits/HabitForm";
+import PageWrapper from "../../components/PageWrapper";
 
 interface Props {
 	source?: Exclude<FoodCategory, "custom">;
@@ -59,6 +60,7 @@ const IngredientLog = ({
 
 	useEffect(() => {
 		if (isEditing && ingredients[id]) {
+			console.log(ingredients[id]);
 			setForm({ ...ingredients[id] });
 		}
 	}, [id, isEditing, ingredients]);
@@ -96,8 +98,11 @@ const IngredientLog = ({
 			}}
 		>
 			{/* <Typography>New {formatLabel(source, true)}</Typography> */}
-			<Box>
-				<SectionContainer title="New Ingredient" fullWidth>
+			<PageWrapper>
+				<SectionContainer
+					title={isEditing ? "Edit Ingredient" : "New Ingredient"}
+					fullWidth
+				>
 					<form
 						className="flex-center col full-w gap3"
 						id="ing-form"
@@ -165,7 +170,7 @@ const IngredientLog = ({
 						</FormControl>
 					</Box>
 				</SectionContainer>
-				<SectionContainer title="Nutrition">
+				<SectionContainer title="Nutrition" fullWidth>
 					<LogForm
 						handleChangeCalories={handleChange}
 						handleChangeMacros={handleChangeMacros}
@@ -174,7 +179,7 @@ const IngredientLog = ({
 						macros={form.macros}
 					/>
 				</SectionContainer>
-			</Box>
+			</PageWrapper>
 			<Button variant="contained" type="submit" form="ing-form" fullWidth>
 				Submit
 			</Button>

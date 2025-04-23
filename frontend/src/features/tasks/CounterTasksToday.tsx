@@ -16,6 +16,7 @@ import { LocalDining, Scale } from "@mui/icons-material";
 import ProgressBar from "../../components/ProgressBar";
 import { getCompletionRate } from "../../utils/helpers";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 const PresetCard = ({
 	task,
@@ -59,15 +60,28 @@ const PresetCard = ({
 	);
 };
 
+const EMPTY_DATA: Record<string, any> = {};
+
 const CounterTasksToday = () => {
 	const navigate = useNavigate();
+
 	const { data: tasks } = useGetDailyTasksQuery(undefined, {
 		selectFromResult: ({ data = [] }) => ({ data: data.filter(isCounterTask) }),
 	});
 
-	const { dataByHabitId } = useGetTasksByRangeQuery()?.data ?? {};
+	const { data: habits } = useGetTasksByRangeQuery();
+	const { dataByHabitId } = habits ?? EMPTY_DATA;
 
 	const [incrementTask] = useIncrementCounterMutation();
+
+	const sortedTasks = useMemo(() => {
+		const timeSort = (task: Task) => {
+			return new Date(dataByHabitId[task.habitId]).getTime();
+		};
+		return tasks && dataByHabitId
+			? [...tasks].sort((a, b) => timeSort(b) - timeSort(a))
+			: [];
+	}, [tasks, dataByHabitId]);
 
 	console.log("CounterTaskToday render ", tasks);
 	return (
@@ -85,7 +99,7 @@ const CounterTasksToday = () => {
 						p: 1,
 					}}
 				>
-					{tasks.map((task) => {
+					{sortedTasks.map((task) => {
 						// Calorie Counter
 						if (task.habitId === PresetId.calorieCounter) {
 							return (
@@ -106,7 +120,7 @@ const CounterTasksToday = () => {
 									key={task.id}
 									task={task}
 									pastTasks={dataByHabitId?.[task.habitId] ?? []}
-									onClick={() => navigate(`/${PresetId.calorieCounter}/log`)}
+									onClick={() => navigate(`/${PresetId.weightTracker}/log`)}
 									title="Weight"
 									icon={<Scale />}
 									omitTotal

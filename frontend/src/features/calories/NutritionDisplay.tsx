@@ -104,12 +104,12 @@ const NutritionDisplay = () => {
 										borderBottom: "1px solid #00000080",
 									}}
 								>
-									{macro.title}
+									{macro.label}
 								</Typography>
 								<SemiCircleBar
 									count={macro.count - amount}
 									total={macro.total}
-									units={macro.units}
+									units={macro.unit}
 									addAmount={amount}
 								/>
 							</Paper>

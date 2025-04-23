@@ -1,0 +1,193 @@
+[
+  {
+    "id": "chicken_breast",
+    "title": "Chicken Breast",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 100,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 165,
+    "macros": {
+      "protein": 31,
+      "fat": 3.6,
+      "carbs": 0,
+      "iron": 1,
+      "calcium": 15,
+      "potassium": 256,
+      "sodium": 74,
+      "fiber": 0
+    }
+  },
+  {
+    "id": "broccoli",
+    "title": "Broccoli",
+    "description": "Boiled, no salt",
+    "servingSize": {
+      "serving": 100,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 35,
+    "macros": {
+      "protein": 2.4,
+      "fat": 0.4,
+      "carbs": 7.2,
+      "fiber": 3.3,
+      "iron": 0.7,
+      "calcium": 40,
+      "potassium": 293,
+      "vitaminC": 64.9
+    }
+  },
+  {
+    "id": "apple",
+    "title": "Apple",
+    "description": "Raw, with skin",
+    "servingSize": {
+      "serving": 182,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 95,
+    "macros": {
+      "protein": 0.5,
+      "fat": 0.3,
+      "carbs": 25,
+      "fiber": 4.4,
+      "potassium": 195,
+      "vitaminC": 8.4
+    }
+  },
+  {
+    "id": "white_rice",
+    "title": "White Rice",
+    "description": "Long grain, cooked",
+    "servingSize": {
+      "serving": 158,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 205,
+    "macros": {
+      "protein": 4.3,
+      "fat": 0.4,
+      "carbs": 44.5,
+      "fiber": 0.6,
+      "sodium": 1,
+      "potassium": 55
+    }
+  },
+  {
+    "id": "egg",
+    "title": "Egg",
+    "description": "Whole, boiled",
+    "servingSize": {
+      "serving": 50,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 78,
+    "macros": {
+      "protein": 6.3,
+      "fat": 5.3,
+      "carbs": 0.6,
+      "iron": 0.9,
+      "cholesterol": 186,
+      "vitaminD": 41
+    }
+  },
+  {
+    "id": "salmon",
+    "title": "Salmon",
+    "description": "Cooked, wild",
+    "servingSize": {
+      "serving": 100,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 206,
+    "macros": {
+      "protein": 22,
+      "fat": 13,
+      "carbs": 0,
+      "omega3": 2.6,
+      "potassium": 363,
+      "vitaminD": 526
+    }
+  },
+  {
+    "id": "banana",
+    "title": "Banana",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 118,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 105,
+    "macros": {
+      "protein": 1.3,
+      "fat": 0.4,
+      "carbs": 27,
+      "fiber": 3.1,
+      "potassium": 422,
+      "vitaminC": 10.3
+    }
+  },
+  {
+    "id": "almonds",
+    "title": "Almonds",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 28,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 164,
+    "macros": {
+      "protein": 6,
+      "fat": 14,
+      "carbs": 6,
+      "fiber": 3.5,
+      "calcium": 76,
+      "iron": 1.1
+    }
+  },
+  {
+    "id": "milk",
+    "title": "Milk",
+    "description": "Whole, 3.25% milkfat",
+    "servingSize": {
+      "serving": 244,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 149,
+    "macros": {
+      "protein": 7.7,
+      "fat": 7.9,
+      "carbs": 11.7,
+      "calcium": 276,
+      "vitaminD": 124
+    }
+  },
+  {
+    "id": "olive_oil",
+    "title": "Olive Oil",
+    "description": "Extra virgin",
+    "servingSize": {
+      "serving": 13.5,
+      "units": "g"
+    },
+    "source": "ingredients",
+    "calories": 119,
+    "macros": {
+      "fat": 13.5,
+      "vitaminE": 1.9,
+      "omega3": 0.1,
+      "omega6": 1.3
+    }
+  }
+]

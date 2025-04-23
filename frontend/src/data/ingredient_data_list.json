@@ -1,0 +1,2702 @@
+[
+  {
+    "id": "6c27278e-5ad5-4ddc-bf9f-2bc476e58f80",
+    "title": "Salmon",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 210,
+    "macros": {
+      "protein": 8.07,
+      "carbs": 22.52,
+      "fat": 23.35,
+      "sugar": 13.73,
+      "fiber": 0.95,
+      "saturated_fat": 17.3,
+      "unsaturated_fat": 14.16,
+      "cholesterol": 14.45,
+      "sodium": 26.5,
+      "potassium": 9.42,
+      "calcium": 7.22,
+      "iron": 10.86,
+      "vitamin_d": 19.44,
+      "vitamin_c": 14.28
+    }
+  },
+  {
+    "id": "98271aa3-1b15-43f0-bffc-5399253a7284",
+    "title": "Brown Rice",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 118,
+    "macros": {
+      "protein": 4.1,
+      "carbs": 9.35,
+      "fat": 29.74,
+      "sugar": 16.78,
+      "fiber": 4.35,
+      "saturated_fat": 8.1,
+      "unsaturated_fat": 6.4,
+      "cholesterol": 23.33,
+      "sodium": 1.97,
+      "potassium": 27.2,
+      "calcium": 7.15,
+      "iron": 15.89,
+      "vitamin_d": 7.28,
+      "vitamin_c": 11.9
+    }
+  },
+  {
+    "id": "f4eac09f-027a-4558-8625-222eee13a603",
+    "title": "Apple",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 50,
+    "macros": {
+      "protein": 25.66,
+      "carbs": 17.17,
+      "fat": 24.11,
+      "sugar": 11.74,
+      "fiber": 21.89,
+      "saturated_fat": 2.59,
+      "unsaturated_fat": 1.89,
+      "cholesterol": 20.24,
+      "sodium": 29.45,
+      "potassium": 16.04,
+      "calcium": 3.08,
+      "iron": 1.14,
+      "vitamin_d": 18.67,
+      "vitamin_c": 10.48
+    }
+  },
+  {
+    "id": "7237d4e9-624a-40ff-b6d6-8eb927af7235",
+    "title": "Banana",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 79,
+    "macros": {
+      "protein": 13.37,
+      "carbs": 12.05,
+      "fat": 7.1,
+      "sugar": 24.61,
+      "fiber": 13.91,
+      "saturated_fat": 10.21,
+      "unsaturated_fat": 28.69,
+      "cholesterol": 26.86,
+      "sodium": 13.76,
+      "potassium": 0.29,
+      "calcium": 12.58,
+      "iron": 0.95,
+      "vitamin_d": 24.09,
+      "vitamin_c": 23.76
+    }
+  },
+  {
+    "id": "cba7b4b3-275b-47bc-a65b-0ca5fe95378e",
+    "title": "Banana",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 96,
+    "macros": {
+      "protein": 13.98,
+      "carbs": 25.16,
+      "fat": 5.06,
+      "sugar": 11.87,
+      "fiber": 7.87,
+      "saturated_fat": 12.33,
+      "unsaturated_fat": 20.63,
+      "cholesterol": 18.73,
+      "sodium": 25.13,
+      "potassium": 2.33,
+      "calcium": 5.61,
+      "iron": 14.63,
+      "vitamin_d": 17.34,
+      "vitamin_c": 3.07
+    }
+  },
+  {
+    "id": "4f8ce3b7-e213-48f5-a5d6-0af7a3a623ce",
+    "title": "Whole Milk",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 68,
+    "macros": {
+      "protein": 21.55,
+      "carbs": 12.45,
+      "fat": 24.03,
+      "sugar": 24.04,
+      "fiber": 15.41,
+      "saturated_fat": 24.12,
+      "unsaturated_fat": 13.76,
+      "cholesterol": 7.16,
+      "sodium": 28.79,
+      "potassium": 4.24,
+      "calcium": 27.37,
+      "iron": 5.4,
+      "vitamin_d": 29.83,
+      "vitamin_c": 22.75
+    }
+  },
+  {
+    "id": "7c549ac5-0ff1-436a-9148-c77aa5ab340c",
+    "title": "Brown Rice",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 108,
+    "macros": {
+      "protein": 4.71,
+      "carbs": 14.08,
+      "fat": 13.97,
+      "sugar": 0.88,
+      "fiber": 2.3,
+      "saturated_fat": 24.05,
+      "unsaturated_fat": 21.23,
+      "cholesterol": 18.42,
+      "sodium": 15.19,
+      "potassium": 9.82,
+      "calcium": 7.27,
+      "iron": 4.23,
+      "vitamin_d": 8.61,
+      "vitamin_c": 12.62
+    }
+  },
+  {
+    "id": "50ac07ba-3b9e-4458-9242-ac76061b141d",
+    "title": "Banana",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 82,
+    "macros": {
+      "protein": 26.63,
+      "carbs": 15.2,
+      "fat": 14.61,
+      "sugar": 0.52,
+      "fiber": 8.87,
+      "saturated_fat": 18.41,
+      "unsaturated_fat": 2.44,
+      "cholesterol": 21.65,
+      "sodium": 18.55,
+      "potassium": 0.62,
+      "calcium": 25.94,
+      "iron": 10.87,
+      "vitamin_d": 1.58,
+      "vitamin_c": 10.23
+    }
+  },
+  {
+    "id": "e64d0cfb-4e19-4cec-aae9-0606a6afc913",
+    "title": "Apple",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 48,
+    "macros": {
+      "protein": 3.53,
+      "carbs": 24.52,
+      "fat": 16.84,
+      "sugar": 27.49,
+      "fiber": 7.31,
+      "saturated_fat": 21.15,
+      "unsaturated_fat": 1.11,
+      "cholesterol": 29.02,
+      "sodium": 11.57,
+      "potassium": 11.68,
+      "calcium": 21.72,
+      "iron": 26.88,
+      "vitamin_d": 29.23,
+      "vitamin_c": 21.08
+    }
+  },
+  {
+    "id": "45396378-312a-4d1e-9b44-428fa2d328b2",
+    "title": "Chicken Breast",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 171,
+    "macros": {
+      "protein": 26.68,
+      "carbs": 4.7,
+      "fat": 12.66,
+      "sugar": 0.76,
+      "fiber": 0.89,
+      "saturated_fat": 14.19,
+      "unsaturated_fat": 3.62,
+      "cholesterol": 5.77,
+      "sodium": 20.1,
+      "potassium": 28.26,
+      "calcium": 27.62,
+      "iron": 10.38,
+      "vitamin_d": 18.53,
+      "vitamin_c": 12.82
+    }
+  },
+  {
+    "id": "324e4bbe-d4f3-42b1-b612-675f685ed257",
+    "title": "Chicken Breast 10",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 156,
+    "macros": {
+      "protein": 4.16,
+      "carbs": 7.92,
+      "fat": 0.26,
+      "sugar": 23.27,
+      "fiber": 27.33,
+      "saturated_fat": 17.08,
+      "unsaturated_fat": 16.55,
+      "cholesterol": 17.99,
+      "sodium": 3.12,
+      "potassium": 4.17,
+      "calcium": 20.69,
+      "iron": 2.09,
+      "vitamin_d": 7.67,
+      "vitamin_c": 2.67
+    }
+  },
+  {
+    "id": "02bdb897-d2e9-465a-a5b8-f44d938468dc",
+    "title": "Chicken Breast 11",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 160,
+    "macros": {
+      "protein": 6.08,
+      "carbs": 1.35,
+      "fat": 2.28,
+      "sugar": 18.74,
+      "fiber": 4.78,
+      "saturated_fat": 29.91,
+      "unsaturated_fat": 8.64,
+      "cholesterol": 6.0,
+      "sodium": 25.91,
+      "potassium": 19.06,
+      "calcium": 0.63,
+      "iron": 20.86,
+      "vitamin_d": 17.17,
+      "vitamin_c": 15.75
+    }
+  },
+  {
+    "id": "3bc5bfc7-38b9-4e6f-adf9-712fe21783a9",
+    "title": "Broccoli 12",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 61,
+    "macros": {
+      "protein": 22.4,
+      "carbs": 20.71,
+      "fat": 8.28,
+      "sugar": 20.55,
+      "fiber": 20.03,
+      "saturated_fat": 7.26,
+      "unsaturated_fat": 3.4,
+      "cholesterol": 11.66,
+      "sodium": 9.34,
+      "potassium": 4.63,
+      "calcium": 3.25,
+      "iron": 6.21,
+      "vitamin_d": 25.55,
+      "vitamin_c": 24.26
+    }
+  },
+  {
+    "id": "2a93615d-cdb8-4704-95f3-41cbf1596d36",
+    "title": "Chicken Breast 13",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 168,
+    "macros": {
+      "protein": 4.79,
+      "carbs": 1.09,
+      "fat": 16.4,
+      "sugar": 27.0,
+      "fiber": 19.01,
+      "saturated_fat": 16.34,
+      "unsaturated_fat": 10.06,
+      "cholesterol": 23.65,
+      "sodium": 5.7,
+      "potassium": 3.33,
+      "calcium": 1.77,
+      "iron": 15.47,
+      "vitamin_d": 16.51,
+      "vitamin_c": 25.25
+    }
+  },
+  {
+    "id": "f3909b17-f005-4dbe-bfb9-818832898390",
+    "title": "Chicken Breast 14",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 171,
+    "macros": {
+      "protein": 4.43,
+      "carbs": 6.7,
+      "fat": 16.2,
+      "sugar": 23.71,
+      "fiber": 19.84,
+      "saturated_fat": 6.66,
+      "unsaturated_fat": 23.33,
+      "cholesterol": 11.19,
+      "sodium": 12.83,
+      "potassium": 21.97,
+      "calcium": 10.69,
+      "iron": 27.2,
+      "vitamin_d": 13.88,
+      "vitamin_c": 11.01
+    }
+  },
+  {
+    "id": "3c3b491d-06a5-4d55-a336-d57a9e0f5032",
+    "title": "Apple 15",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 62,
+    "macros": {
+      "protein": 15.38,
+      "carbs": 24.3,
+      "fat": 22.0,
+      "sugar": 8.03,
+      "fiber": 6.22,
+      "saturated_fat": 20.31,
+      "unsaturated_fat": 6.02,
+      "cholesterol": 23.06,
+      "sodium": 29.55,
+      "potassium": 29.38,
+      "calcium": 15.88,
+      "iron": 25.79,
+      "vitamin_d": 3.27,
+      "vitamin_c": 16.87
+    }
+  },
+  {
+    "id": "62c5924d-228d-4721-ab4f-d44c1f83e9c1",
+    "title": "Salmon 16",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 201,
+    "macros": {
+      "protein": 21.21,
+      "carbs": 24.88,
+      "fat": 17.4,
+      "sugar": 21.76,
+      "fiber": 2.88,
+      "saturated_fat": 7.13,
+      "unsaturated_fat": 9.72,
+      "cholesterol": 8.2,
+      "sodium": 28.58,
+      "potassium": 27.11,
+      "calcium": 19.33,
+      "iron": 21.91,
+      "vitamin_d": 1.13,
+      "vitamin_c": 10.79
+    }
+  },
+  {
+    "id": "2eb0364d-6c3a-41e9-9778-0dcc672ede45",
+    "title": "Almonds 17",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 574,
+    "macros": {
+      "protein": 14.73,
+      "carbs": 18.33,
+      "fat": 10.11,
+      "sugar": 27.24,
+      "fiber": 16.51,
+      "saturated_fat": 29.34,
+      "unsaturated_fat": 14.25,
+      "cholesterol": 23.55,
+      "sodium": 13.66,
+      "potassium": 12.47,
+      "calcium": 18.09,
+      "iron": 20.05,
+      "vitamin_d": 1.71,
+      "vitamin_c": 14.56
+    }
+  },
+  {
+    "id": "737ab2be-4d1b-4dbb-b686-16e9928c290e",
+    "title": "Eggs 18",
+    "description": "Large, whole, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 154,
+    "macros": {
+      "protein": 0.61,
+      "carbs": 6.77,
+      "fat": 21.89,
+      "sugar": 0.69,
+      "fiber": 4.45,
+      "saturated_fat": 7.71,
+      "unsaturated_fat": 10.82,
+      "cholesterol": 27.46,
+      "sodium": 1.91,
+      "potassium": 2.92,
+      "calcium": 25.69,
+      "iron": 5.1,
+      "vitamin_d": 2.23,
+      "vitamin_c": 2.17
+    }
+  },
+  {
+    "id": "b78cd9b5-f168-4046-8ed1-29195f40fb3a",
+    "title": "Whole Milk 19",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 62,
+    "macros": {
+      "protein": 7.81,
+      "carbs": 7.6,
+      "fat": 16.18,
+      "sugar": 21.44,
+      "fiber": 20.75,
+      "saturated_fat": 14.11,
+      "unsaturated_fat": 2.28,
+      "cholesterol": 23.59,
+      "sodium": 6.22,
+      "potassium": 15.65,
+      "calcium": 0.84,
+      "iron": 16.94,
+      "vitamin_d": 19.26,
+      "vitamin_c": 26.03
+    }
+  },
+  {
+    "id": "d0d21e62-b294-47cc-b252-da7eb2f71c3c",
+    "title": "Banana 20",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 79,
+    "macros": {
+      "protein": 1.13,
+      "carbs": 9.73,
+      "fat": 29.66,
+      "sugar": 11.14,
+      "fiber": 9.04,
+      "saturated_fat": 10.56,
+      "unsaturated_fat": 18.22,
+      "cholesterol": 20.76,
+      "sodium": 9.21,
+      "potassium": 27.26,
+      "calcium": 4.37,
+      "iron": 0.73,
+      "vitamin_d": 11.76,
+      "vitamin_c": 29.54
+    }
+  },
+  {
+    "id": "36ba02f4-515e-4bc7-85ca-f8940c56c21b",
+    "title": "Greek Yogurt 21",
+    "description": "Plain, low-fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 66,
+    "macros": {
+      "protein": 5.45,
+      "carbs": 2.75,
+      "fat": 23.57,
+      "sugar": 4.78,
+      "fiber": 23.31,
+      "saturated_fat": 5.38,
+      "unsaturated_fat": 27.27,
+      "cholesterol": 14.66,
+      "sodium": 25.61,
+      "potassium": 28.89,
+      "calcium": 27.72,
+      "iron": 15.67,
+      "vitamin_d": 3.2,
+      "vitamin_c": 3.53
+    }
+  },
+  {
+    "id": "ba03e93a-783f-48e2-8363-a62851a56d58",
+    "title": "Salmon 22",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 205,
+    "macros": {
+      "protein": 14.05,
+      "carbs": 19.55,
+      "fat": 1.53,
+      "sugar": 20.97,
+      "fiber": 28.17,
+      "saturated_fat": 20.26,
+      "unsaturated_fat": 11.02,
+      "cholesterol": 5.15,
+      "sodium": 8.57,
+      "potassium": 9.82,
+      "calcium": 26.06,
+      "iron": 9.4,
+      "vitamin_d": 10.73,
+      "vitamin_c": 13.02
+    }
+  },
+  {
+    "id": "409621b6-fea8-4bc4-b999-b10da4d1db83",
+    "title": "Salmon 23",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 199,
+    "macros": {
+      "protein": 2.9,
+      "carbs": 16.15,
+      "fat": 20.24,
+      "sugar": 4.6,
+      "fiber": 1.38,
+      "saturated_fat": 2.44,
+      "unsaturated_fat": 3.85,
+      "cholesterol": 18.16,
+      "sodium": 28.53,
+      "potassium": 0.13,
+      "calcium": 2.78,
+      "iron": 7.55,
+      "vitamin_d": 24.84,
+      "vitamin_c": 6.57
+    }
+  },
+  {
+    "id": "d611562e-8425-4017-abf5-718a8092f963",
+    "title": "Broccoli 24",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 61,
+    "macros": {
+      "protein": 17.17,
+      "carbs": 18.05,
+      "fat": 24.69,
+      "sugar": 20.91,
+      "fiber": 20.57,
+      "saturated_fat": 9.14,
+      "unsaturated_fat": 0.12,
+      "cholesterol": 2.93,
+      "sodium": 23.87,
+      "potassium": 29.74,
+      "calcium": 15.2,
+      "iron": 22.82,
+      "vitamin_d": 3.87,
+      "vitamin_c": 26.55
+    }
+  },
+  {
+    "id": "4a4465f1-2d1c-4667-83e3-52d4f74a5ad7",
+    "title": "Brown Rice 25",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 114,
+    "macros": {
+      "protein": 11.88,
+      "carbs": 24.49,
+      "fat": 23.2,
+      "sugar": 1.59,
+      "fiber": 13.89,
+      "saturated_fat": 19.96,
+      "unsaturated_fat": 29.03,
+      "cholesterol": 7.96,
+      "sodium": 6.13,
+      "potassium": 27.26,
+      "calcium": 6.76,
+      "iron": 16.87,
+      "vitamin_d": 14.79,
+      "vitamin_c": 23.76
+    }
+  },
+  {
+    "id": "0799b763-4eb7-4ce3-9434-d12b70ef0f94",
+    "title": "Brown Rice 26",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 107,
+    "macros": {
+      "protein": 2.23,
+      "carbs": 3.04,
+      "fat": 19.67,
+      "sugar": 17.11,
+      "fiber": 18.76,
+      "saturated_fat": 12.0,
+      "unsaturated_fat": 21.95,
+      "cholesterol": 9.9,
+      "sodium": 24.72,
+      "potassium": 12.4,
+      "calcium": 0.18,
+      "iron": 23.22,
+      "vitamin_d": 3.85,
+      "vitamin_c": 29.23
+    }
+  },
+  {
+    "id": "60df9b28-df1b-4ce1-96e8-79bbac2d7700",
+    "title": "Eggs 27",
+    "description": "Large, whole, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 161,
+    "macros": {
+      "protein": 20.25,
+      "carbs": 0.93,
+      "fat": 24.2,
+      "sugar": 1.2,
+      "fiber": 17.53,
+      "saturated_fat": 14.69,
+      "unsaturated_fat": 25.04,
+      "cholesterol": 4.67,
+      "sodium": 24.13,
+      "potassium": 9.11,
+      "calcium": 4.77,
+      "iron": 23.78,
+      "vitamin_d": 17.7,
+      "vitamin_c": 10.03
+    }
+  },
+  {
+    "id": "2816a516-9d7e-489b-8433-8873529d5b53",
+    "title": "Broccoli 28",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 49,
+    "macros": {
+      "protein": 4.52,
+      "carbs": 9.43,
+      "fat": 29.45,
+      "sugar": 3.65,
+      "fiber": 4.37,
+      "saturated_fat": 12.8,
+      "unsaturated_fat": 16.31,
+      "cholesterol": 27.29,
+      "sodium": 20.21,
+      "potassium": 15.02,
+      "calcium": 13.45,
+      "iron": 12.59,
+      "vitamin_d": 25.83,
+      "vitamin_c": 4.63
+    }
+  },
+  {
+    "id": "1f122707-4566-4225-9bec-2ce068769dc1",
+    "title": "Chicken Breast 29",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 167,
+    "macros": {
+      "protein": 26.1,
+      "carbs": 2.95,
+      "fat": 8.67,
+      "sugar": 15.49,
+      "fiber": 3.34,
+      "saturated_fat": 22.59,
+      "unsaturated_fat": 24.61,
+      "cholesterol": 9.66,
+      "sodium": 20.36,
+      "potassium": 28.36,
+      "calcium": 22.57,
+      "iron": 1.5,
+      "vitamin_d": 29.37,
+      "vitamin_c": 8.05
+    }
+  },
+  {
+    "id": "7b250ba2-bed0-44ce-a838-9a0f43819c8a",
+    "title": "Broccoli 30",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 56,
+    "macros": {
+      "protein": 3.91,
+      "carbs": 26.26,
+      "fat": 29.03,
+      "sugar": 20.05,
+      "fiber": 28.12,
+      "saturated_fat": 1.57,
+      "unsaturated_fat": 5.85,
+      "cholesterol": 16.12,
+      "sodium": 6.05,
+      "potassium": 12.22,
+      "calcium": 10.56,
+      "iron": 20.52,
+      "vitamin_d": 29.5,
+      "vitamin_c": 21.11
+    }
+  },
+  {
+    "id": "b53f78e2-6317-47e9-96df-ff754af75143",
+    "title": "Apple 31",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 51,
+    "macros": {
+      "protein": 1.53,
+      "carbs": 9.57,
+      "fat": 1.2,
+      "sugar": 8.81,
+      "fiber": 8.05,
+      "saturated_fat": 4.01,
+      "unsaturated_fat": 3.81,
+      "cholesterol": 4.66,
+      "sodium": 1.23,
+      "potassium": 4.57,
+      "calcium": 16.27,
+      "iron": 13.45,
+      "vitamin_d": 0.82,
+      "vitamin_c": 18.78
+    }
+  },
+  {
+    "id": "5e2e69b3-707f-4d06-9a29-1dc370684d44",
+    "title": "Brown Rice 32",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 117,
+    "macros": {
+      "protein": 17.49,
+      "carbs": 20.9,
+      "fat": 18.08,
+      "sugar": 4.32,
+      "fiber": 17.16,
+      "saturated_fat": 13.52,
+      "unsaturated_fat": 18.23,
+      "cholesterol": 8.19,
+      "sodium": 22.41,
+      "potassium": 24.15,
+      "calcium": 14.53,
+      "iron": 5.42,
+      "vitamin_d": 1.25,
+      "vitamin_c": 27.43
+    }
+  },
+  {
+    "id": "92160084-2d43-4fd9-9376-d789cc0ee8da",
+    "title": "Brown Rice 33",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 102,
+    "macros": {
+      "protein": 28.14,
+      "carbs": 22.67,
+      "fat": 21.78,
+      "sugar": 13.31,
+      "fiber": 13.85,
+      "saturated_fat": 22.36,
+      "unsaturated_fat": 4.33,
+      "cholesterol": 17.34,
+      "sodium": 9.2,
+      "potassium": 24.3,
+      "calcium": 2.66,
+      "iron": 20.06,
+      "vitamin_d": 20.32,
+      "vitamin_c": 11.48
+    }
+  },
+  {
+    "id": "85efd455-68ae-45c9-b15e-86cb5fa23418",
+    "title": "Almonds 34",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 588,
+    "macros": {
+      "protein": 4.89,
+      "carbs": 6.3,
+      "fat": 4.19,
+      "sugar": 24.17,
+      "fiber": 13.54,
+      "saturated_fat": 23.3,
+      "unsaturated_fat": 22.67,
+      "cholesterol": 15.1,
+      "sodium": 14.58,
+      "potassium": 18.13,
+      "calcium": 18.52,
+      "iron": 2.06,
+      "vitamin_d": 19.01,
+      "vitamin_c": 18.08
+    }
+  },
+  {
+    "id": "10d2c561-ab7b-4844-ae0c-7d56f9a688b9",
+    "title": "Whole Milk 35",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 59,
+    "macros": {
+      "protein": 5.97,
+      "carbs": 11.9,
+      "fat": 2.73,
+      "sugar": 26.91,
+      "fiber": 20.17,
+      "saturated_fat": 15.52,
+      "unsaturated_fat": 28.28,
+      "cholesterol": 0.5,
+      "sodium": 9.25,
+      "potassium": 8.12,
+      "calcium": 28.31,
+      "iron": 11.93,
+      "vitamin_d": 26.72,
+      "vitamin_c": 8.63
+    }
+  },
+  {
+    "id": "a5fe0cd6-5d7e-4765-891a-da15b19ddfff",
+    "title": "Brown Rice 36",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 119,
+    "macros": {
+      "protein": 7.82,
+      "carbs": 10.8,
+      "fat": 26.62,
+      "sugar": 18.46,
+      "fiber": 18.69,
+      "saturated_fat": 4.17,
+      "unsaturated_fat": 20.91,
+      "cholesterol": 17.63,
+      "sodium": 19.72,
+      "potassium": 4.93,
+      "calcium": 23.74,
+      "iron": 10.72,
+      "vitamin_d": 28.42,
+      "vitamin_c": 27.76
+    }
+  },
+  {
+    "id": "49275e98-bfa8-4951-9e7a-f2cde5a74b59",
+    "title": "Banana 37",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 84,
+    "macros": {
+      "protein": 5.01,
+      "carbs": 9.88,
+      "fat": 3.15,
+      "sugar": 9.42,
+      "fiber": 22.41,
+      "saturated_fat": 27.33,
+      "unsaturated_fat": 9.52,
+      "cholesterol": 14.36,
+      "sodium": 12.46,
+      "potassium": 3.06,
+      "calcium": 0.53,
+      "iron": 18.59,
+      "vitamin_d": 3.41,
+      "vitamin_c": 20.72
+    }
+  },
+  {
+    "id": "ef3e4c2b-4238-484d-914c-1a954f60c601",
+    "title": "Almonds 38",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 572,
+    "macros": {
+      "protein": 24.72,
+      "carbs": 25.95,
+      "fat": 12.09,
+      "sugar": 15.61,
+      "fiber": 26.92,
+      "saturated_fat": 21.38,
+      "unsaturated_fat": 15.08,
+      "cholesterol": 8.68,
+      "sodium": 13.92,
+      "potassium": 24.96,
+      "calcium": 23.22,
+      "iron": 22.78,
+      "vitamin_d": 12.94,
+      "vitamin_c": 20.51
+    }
+  },
+  {
+    "id": "e97e35f9-59d2-40bf-b411-5866df7619d0",
+    "title": "Chicken Breast 39",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 174,
+    "macros": {
+      "protein": 2.29,
+      "carbs": 5.16,
+      "fat": 6.85,
+      "sugar": 16.04,
+      "fiber": 6.01,
+      "saturated_fat": 5.3,
+      "unsaturated_fat": 7.36,
+      "cholesterol": 8.12,
+      "sodium": 18.33,
+      "potassium": 19.32,
+      "calcium": 25.31,
+      "iron": 26.09,
+      "vitamin_d": 9.83,
+      "vitamin_c": 13.98
+    }
+  },
+  {
+    "id": "88dcb571-5d2f-47c6-8bcc-6675c3cecadb",
+    "title": "Eggs 40",
+    "description": "Large, whole, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 161,
+    "macros": {
+      "protein": 1.4,
+      "carbs": 0.95,
+      "fat": 20.55,
+      "sugar": 21.42,
+      "fiber": 1.77,
+      "saturated_fat": 21.91,
+      "unsaturated_fat": 12.62,
+      "cholesterol": 6.91,
+      "sodium": 28.5,
+      "potassium": 29.03,
+      "calcium": 2.01,
+      "iron": 27.01,
+      "vitamin_d": 20.31,
+      "vitamin_c": 16.26
+    }
+  },
+  {
+    "id": "2e7bebfb-567b-4c2e-8596-8f24f4af13bc",
+    "title": "Chicken Breast 41",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 159,
+    "macros": {
+      "protein": 10.12,
+      "carbs": 15.61,
+      "fat": 19.08,
+      "sugar": 19.7,
+      "fiber": 6.35,
+      "saturated_fat": 14.18,
+      "unsaturated_fat": 27.37,
+      "cholesterol": 11.26,
+      "sodium": 23.9,
+      "potassium": 13.65,
+      "calcium": 17.63,
+      "iron": 8.06,
+      "vitamin_d": 12.24,
+      "vitamin_c": 29.27
+    }
+  },
+  {
+    "id": "38e750ce-f3c3-41bc-8761-a6943f60799a",
+    "title": "Salmon 42",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 205,
+    "macros": {
+      "protein": 26.38,
+      "carbs": 8.68,
+      "fat": 18.74,
+      "sugar": 22.49,
+      "fiber": 6.79,
+      "saturated_fat": 9.32,
+      "unsaturated_fat": 28.63,
+      "cholesterol": 14.55,
+      "sodium": 22.23,
+      "potassium": 20.49,
+      "calcium": 8.51,
+      "iron": 15.45,
+      "vitamin_d": 21.47,
+      "vitamin_c": 23.3
+    }
+  },
+  {
+    "id": "ac91f00c-b13a-4f31-b702-af55e39f56e5",
+    "title": "Brown Rice 43",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 109,
+    "macros": {
+      "protein": 24.96,
+      "carbs": 23.38,
+      "fat": 25.64,
+      "sugar": 25.32,
+      "fiber": 25.2,
+      "saturated_fat": 29.98,
+      "unsaturated_fat": 7.62,
+      "cholesterol": 1.86,
+      "sodium": 5.12,
+      "potassium": 13.72,
+      "calcium": 1.16,
+      "iron": 14.63,
+      "vitamin_d": 22.96,
+      "vitamin_c": 20.63
+    }
+  },
+  {
+    "id": "cb66f2ee-53ae-48d2-b560-d962757b3d40",
+    "title": "Almonds 44",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 571,
+    "macros": {
+      "protein": 12.43,
+      "carbs": 24.59,
+      "fat": 24.78,
+      "sugar": 9.81,
+      "fiber": 1.28,
+      "saturated_fat": 7.46,
+      "unsaturated_fat": 22.85,
+      "cholesterol": 28.47,
+      "sodium": 27.81,
+      "potassium": 20.63,
+      "calcium": 26.6,
+      "iron": 29.88,
+      "vitamin_d": 13.42,
+      "vitamin_c": 3.77
+    }
+  },
+  {
+    "id": "4c0a20a9-7179-4806-a77d-4f6fdda20e13",
+    "title": "Apple 45",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 45,
+    "macros": {
+      "protein": 12.72,
+      "carbs": 18.62,
+      "fat": 27.4,
+      "sugar": 15.2,
+      "fiber": 0.74,
+      "saturated_fat": 18.8,
+      "unsaturated_fat": 16.97,
+      "cholesterol": 25.79,
+      "sodium": 3.39,
+      "potassium": 14.42,
+      "calcium": 5.44,
+      "iron": 19.52,
+      "vitamin_d": 13.92,
+      "vitamin_c": 12.81
+    }
+  },
+  {
+    "id": "41d645f7-9c89-4b0d-b001-47a50f2ad443",
+    "title": "Banana 46",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 85,
+    "macros": {
+      "protein": 17.13,
+      "carbs": 0.94,
+      "fat": 11.71,
+      "sugar": 8.59,
+      "fiber": 1.44,
+      "saturated_fat": 27.3,
+      "unsaturated_fat": 13.58,
+      "cholesterol": 29.75,
+      "sodium": 10.69,
+      "potassium": 26.23,
+      "calcium": 13.76,
+      "iron": 2.83,
+      "vitamin_d": 8.52,
+      "vitamin_c": 11.45
+    }
+  },
+  {
+    "id": "f0b8a3c1-f2c8-4ada-a433-f4ac3602e47c",
+    "title": "Salmon 47",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 218,
+    "macros": {
+      "protein": 3.49,
+      "carbs": 3.52,
+      "fat": 4.45,
+      "sugar": 9.88,
+      "fiber": 1.44,
+      "saturated_fat": 17.26,
+      "unsaturated_fat": 8.12,
+      "cholesterol": 2.62,
+      "sodium": 15.73,
+      "potassium": 17.24,
+      "calcium": 14.44,
+      "iron": 8.29,
+      "vitamin_d": 14.86,
+      "vitamin_c": 8.27
+    }
+  },
+  {
+    "id": "85d80acd-2dce-401c-8e78-dcceb8bc5d48",
+    "title": "Brown Rice 48",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 104,
+    "macros": {
+      "protein": 18.78,
+      "carbs": 0.14,
+      "fat": 23.02,
+      "sugar": 21.95,
+      "fiber": 11.06,
+      "saturated_fat": 23.56,
+      "unsaturated_fat": 24.36,
+      "cholesterol": 21.28,
+      "sodium": 8.29,
+      "potassium": 26.56,
+      "calcium": 17.02,
+      "iron": 23.5,
+      "vitamin_d": 4.96,
+      "vitamin_c": 3.9
+    }
+  },
+  {
+    "id": "a87c95f3-8742-4064-b346-2852ff78bd69",
+    "title": "Whole Milk 49",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 56,
+    "macros": {
+      "protein": 10.36,
+      "carbs": 5.98,
+      "fat": 7.55,
+      "sugar": 11.9,
+      "fiber": 16.47,
+      "saturated_fat": 9.11,
+      "unsaturated_fat": 29.88,
+      "cholesterol": 8.98,
+      "sodium": 4.32,
+      "potassium": 6.37,
+      "calcium": 24.66,
+      "iron": 1.65,
+      "vitamin_d": 11.91,
+      "vitamin_c": 12.85
+    }
+  },
+  {
+    "id": "aeac2191-b1df-4e14-9888-c33dce830081",
+    "title": "Greek Yogurt 50",
+    "description": "Plain, low-fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 62,
+    "macros": {
+      "protein": 18.59,
+      "carbs": 22.25,
+      "fat": 29.79,
+      "sugar": 24.46,
+      "fiber": 10.95,
+      "saturated_fat": 25.11,
+      "unsaturated_fat": 4.37,
+      "cholesterol": 10.2,
+      "sodium": 10.52,
+      "potassium": 19.64,
+      "calcium": 1.3,
+      "iron": 7.06,
+      "vitamin_d": 29.26,
+      "vitamin_c": 23.58
+    }
+  },
+  {
+    "id": "3d5a3d6a-daae-4441-b66d-5829daa40bdf",
+    "title": "Banana 51",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 81,
+    "macros": {
+      "protein": 2.51,
+      "carbs": 29.42,
+      "fat": 6.66,
+      "sugar": 16.7,
+      "fiber": 28.04,
+      "saturated_fat": 6.18,
+      "unsaturated_fat": 9.97,
+      "cholesterol": 18.85,
+      "sodium": 8.06,
+      "potassium": 3.63,
+      "calcium": 26.41,
+      "iron": 8.75,
+      "vitamin_d": 17.72,
+      "vitamin_c": 1.35
+    }
+  },
+  {
+    "id": "9d72e253-1ae0-4c4e-9bca-4a44f1d67315",
+    "title": "Apple 52",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 50,
+    "macros": {
+      "protein": 10.42,
+      "carbs": 15.62,
+      "fat": 13.51,
+      "sugar": 25.01,
+      "fiber": 6.14,
+      "saturated_fat": 20.43,
+      "unsaturated_fat": 26.17,
+      "cholesterol": 8.66,
+      "sodium": 9.94,
+      "potassium": 14.12,
+      "calcium": 17.26,
+      "iron": 3.24,
+      "vitamin_d": 28.67,
+      "vitamin_c": 2.01
+    }
+  },
+  {
+    "id": "709653ba-7ad5-437f-9b05-13aaf9583b09",
+    "title": "Salmon 53",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 209,
+    "macros": {
+      "protein": 22.33,
+      "carbs": 6.67,
+      "fat": 24.77,
+      "sugar": 12.17,
+      "fiber": 18.23,
+      "saturated_fat": 17.06,
+      "unsaturated_fat": 27.05,
+      "cholesterol": 2.37,
+      "sodium": 6.27,
+      "potassium": 9.88,
+      "calcium": 13.08,
+      "iron": 6.98,
+      "vitamin_d": 7.19,
+      "vitamin_c": 26.82
+    }
+  },
+  {
+    "id": "e585c383-10b1-4a8b-9a66-8e1d0ff47131",
+    "title": "Chicken Breast 54",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 163,
+    "macros": {
+      "protein": 14.29,
+      "carbs": 0.67,
+      "fat": 4.45,
+      "sugar": 13.68,
+      "fiber": 18.24,
+      "saturated_fat": 24.39,
+      "unsaturated_fat": 12.19,
+      "cholesterol": 17.88,
+      "sodium": 19.35,
+      "potassium": 2.58,
+      "calcium": 13.22,
+      "iron": 29.38,
+      "vitamin_d": 9.12,
+      "vitamin_c": 15.27
+    }
+  },
+  {
+    "id": "1f0a64d7-eaaa-4d36-9cdb-b67a8bf44ec9",
+    "title": "Salmon 55",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 203,
+    "macros": {
+      "protein": 26.73,
+      "carbs": 27.62,
+      "fat": 20.4,
+      "sugar": 17.19,
+      "fiber": 24.52,
+      "saturated_fat": 17.69,
+      "unsaturated_fat": 3.74,
+      "cholesterol": 26.17,
+      "sodium": 27.31,
+      "potassium": 11.89,
+      "calcium": 27.32,
+      "iron": 4.38,
+      "vitamin_d": 5.86,
+      "vitamin_c": 27.14
+    }
+  },
+  {
+    "id": "2dad0380-7fe5-44a1-abde-da4dd2a7a33c",
+    "title": "Apple 56",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 47,
+    "macros": {
+      "protein": 23.1,
+      "carbs": 12.91,
+      "fat": 4.3,
+      "sugar": 8.91,
+      "fiber": 28.71,
+      "saturated_fat": 29.86,
+      "unsaturated_fat": 29.07,
+      "cholesterol": 26.08,
+      "sodium": 12.28,
+      "potassium": 24.56,
+      "calcium": 17.46,
+      "iron": 29.01,
+      "vitamin_d": 26.08,
+      "vitamin_c": 8.92
+    }
+  },
+  {
+    "id": "69bc648d-d573-4270-8e7b-825cd215040c",
+    "title": "Chicken Breast 57",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 172,
+    "macros": {
+      "protein": 6.06,
+      "carbs": 3.85,
+      "fat": 19.75,
+      "sugar": 24.46,
+      "fiber": 22.06,
+      "saturated_fat": 23.56,
+      "unsaturated_fat": 24.67,
+      "cholesterol": 26.65,
+      "sodium": 4.96,
+      "potassium": 3.84,
+      "calcium": 28.58,
+      "iron": 27.87,
+      "vitamin_d": 4.78,
+      "vitamin_c": 19.63
+    }
+  },
+  {
+    "id": "9e21f3c9-30ab-490e-81e6-e8e2613875c8",
+    "title": "Broccoli 58",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 54,
+    "macros": {
+      "protein": 11.53,
+      "carbs": 20.46,
+      "fat": 26.22,
+      "sugar": 10.38,
+      "fiber": 4.45,
+      "saturated_fat": 10.06,
+      "unsaturated_fat": 16.62,
+      "cholesterol": 25.28,
+      "sodium": 22.33,
+      "potassium": 28.3,
+      "calcium": 18.25,
+      "iron": 12.22,
+      "vitamin_d": 17.12,
+      "vitamin_c": 21.54
+    }
+  },
+  {
+    "id": "e80bae31-795f-4ac9-8866-006a6e172dbd",
+    "title": "Apple 59",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 58,
+    "macros": {
+      "protein": 22.84,
+      "carbs": 6.41,
+      "fat": 9.53,
+      "sugar": 9.85,
+      "fiber": 22.28,
+      "saturated_fat": 4.53,
+      "unsaturated_fat": 29.15,
+      "cholesterol": 25.03,
+      "sodium": 23.47,
+      "potassium": 1.6,
+      "calcium": 13.35,
+      "iron": 29.56,
+      "vitamin_d": 29.56,
+      "vitamin_c": 15.26
+    }
+  },
+  {
+    "id": "87b0c8da-4827-4eda-958f-aaa150f6ad5e",
+    "title": "Whole Milk 60",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 54,
+    "macros": {
+      "protein": 16.04,
+      "carbs": 17.51,
+      "fat": 1.56,
+      "sugar": 9.15,
+      "fiber": 16.45,
+      "saturated_fat": 15.72,
+      "unsaturated_fat": 18.58,
+      "cholesterol": 25.63,
+      "sodium": 12.27,
+      "potassium": 12.49,
+      "calcium": 8.5,
+      "iron": 18.97,
+      "vitamin_d": 20.27,
+      "vitamin_c": 14.38
+    }
+  },
+  {
+    "id": "11d9dd42-fa2b-470b-a2ab-26055e1b0ba9",
+    "title": "Chicken Breast 61",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 173,
+    "macros": {
+      "protein": 10.8,
+      "carbs": 7.91,
+      "fat": 12.15,
+      "sugar": 11.48,
+      "fiber": 15.45,
+      "saturated_fat": 2.95,
+      "unsaturated_fat": 20.29,
+      "cholesterol": 16.92,
+      "sodium": 10.07,
+      "potassium": 26.29,
+      "calcium": 1.02,
+      "iron": 21.38,
+      "vitamin_d": 7.5,
+      "vitamin_c": 1.47
+    }
+  },
+  {
+    "id": "e0d55dcf-61a9-42d6-8e92-187a8194c43c",
+    "title": "Whole Milk 62",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 52,
+    "macros": {
+      "protein": 7.76,
+      "carbs": 6.36,
+      "fat": 12.62,
+      "sugar": 27.32,
+      "fiber": 0.64,
+      "saturated_fat": 13.25,
+      "unsaturated_fat": 11.65,
+      "cholesterol": 15.67,
+      "sodium": 18.97,
+      "potassium": 24.66,
+      "calcium": 13.0,
+      "iron": 28.25,
+      "vitamin_d": 1.19,
+      "vitamin_c": 18.78
+    }
+  },
+  {
+    "id": "b4be7230-8011-4f48-8dcd-bebcc2a7ee98",
+    "title": "Broccoli 63",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 64,
+    "macros": {
+      "protein": 23.27,
+      "carbs": 13.24,
+      "fat": 29.78,
+      "sugar": 14.98,
+      "fiber": 29.26,
+      "saturated_fat": 2.16,
+      "unsaturated_fat": 25.46,
+      "cholesterol": 16.25,
+      "sodium": 6.35,
+      "potassium": 21.11,
+      "calcium": 1.34,
+      "iron": 15.44,
+      "vitamin_d": 20.55,
+      "vitamin_c": 27.01
+    }
+  },
+  {
+    "id": "30e80c88-abce-45fe-b7a1-87bcdb74c24c",
+    "title": "Banana 64",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 83,
+    "macros": {
+      "protein": 6.01,
+      "carbs": 9.27,
+      "fat": 27.27,
+      "sugar": 20.28,
+      "fiber": 29.78,
+      "saturated_fat": 21.5,
+      "unsaturated_fat": 20.08,
+      "cholesterol": 2.93,
+      "sodium": 12.12,
+      "potassium": 26.05,
+      "calcium": 2.9,
+      "iron": 19.42,
+      "vitamin_d": 18.22,
+      "vitamin_c": 1.59
+    }
+  },
+  {
+    "id": "4ffd00d5-b5d7-4ca8-9bcd-6bdd281d16e1",
+    "title": "Whole Milk 65",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 70,
+    "macros": {
+      "protein": 20.72,
+      "carbs": 17.33,
+      "fat": 18.19,
+      "sugar": 26.5,
+      "fiber": 2.74,
+      "saturated_fat": 9.11,
+      "unsaturated_fat": 29.34,
+      "cholesterol": 20.58,
+      "sodium": 17.19,
+      "potassium": 26.36,
+      "calcium": 21.5,
+      "iron": 19.11,
+      "vitamin_d": 17.59,
+      "vitamin_c": 28.88
+    }
+  },
+  {
+    "id": "04c5892a-2419-4f92-a0dc-b4758c987955",
+    "title": "Chicken Breast 66",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 157,
+    "macros": {
+      "protein": 14.47,
+      "carbs": 23.4,
+      "fat": 3.36,
+      "sugar": 1.46,
+      "fiber": 18.49,
+      "saturated_fat": 23.62,
+      "unsaturated_fat": 26.59,
+      "cholesterol": 10.79,
+      "sodium": 8.03,
+      "potassium": 24.57,
+      "calcium": 24.14,
+      "iron": 1.21,
+      "vitamin_d": 15.18,
+      "vitamin_c": 23.58
+    }
+  },
+  {
+    "id": "45883379-26fb-4d3e-a189-2229d1f86e57",
+    "title": "Brown Rice 67",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 120,
+    "macros": {
+      "protein": 16.78,
+      "carbs": 2.26,
+      "fat": 2.84,
+      "sugar": 21.19,
+      "fiber": 29.98,
+      "saturated_fat": 22.89,
+      "unsaturated_fat": 11.34,
+      "cholesterol": 13.09,
+      "sodium": 3.96,
+      "potassium": 14.93,
+      "calcium": 25.65,
+      "iron": 4.6,
+      "vitamin_d": 18.37,
+      "vitamin_c": 9.72
+    }
+  },
+  {
+    "id": "27e561f8-4afd-4303-bbb8-170fc7319a6a",
+    "title": "Whole Milk 68",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 65,
+    "macros": {
+      "protein": 8.38,
+      "carbs": 3.12,
+      "fat": 1.95,
+      "sugar": 6.74,
+      "fiber": 19.16,
+      "saturated_fat": 9.22,
+      "unsaturated_fat": 15.26,
+      "cholesterol": 8.7,
+      "sodium": 25.5,
+      "potassium": 11.42,
+      "calcium": 26.7,
+      "iron": 4.77,
+      "vitamin_d": 14.99,
+      "vitamin_c": 16.47
+    }
+  },
+  {
+    "id": "83df1808-319e-4486-aafc-b4f0935a179b",
+    "title": "Whole Milk 69",
+    "description": "3.25% fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 71,
+    "macros": {
+      "protein": 21.23,
+      "carbs": 29.88,
+      "fat": 16.24,
+      "sugar": 10.05,
+      "fiber": 20.65,
+      "saturated_fat": 21.55,
+      "unsaturated_fat": 13.61,
+      "cholesterol": 4.47,
+      "sodium": 17.68,
+      "potassium": 6.44,
+      "calcium": 28.99,
+      "iron": 0.39,
+      "vitamin_d": 12.97,
+      "vitamin_c": 6.76
+    }
+  },
+  {
+    "id": "c9363fee-782a-4318-9299-ffed13251fac",
+    "title": "Chicken Breast 70",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 174,
+    "macros": {
+      "protein": 17.73,
+      "carbs": 20.13,
+      "fat": 15.5,
+      "sugar": 28.33,
+      "fiber": 8.85,
+      "saturated_fat": 15.93,
+      "unsaturated_fat": 7.39,
+      "cholesterol": 25.89,
+      "sodium": 3.16,
+      "potassium": 28.17,
+      "calcium": 28.31,
+      "iron": 21.79,
+      "vitamin_d": 6.63,
+      "vitamin_c": 12.82
+    }
+  },
+  {
+    "id": "588a12fd-e00a-44c2-bc16-0e0fbf3c726f",
+    "title": "Eggs 71",
+    "description": "Large, whole, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 149,
+    "macros": {
+      "protein": 27.96,
+      "carbs": 12.85,
+      "fat": 20.11,
+      "sugar": 1.31,
+      "fiber": 7.01,
+      "saturated_fat": 4.23,
+      "unsaturated_fat": 12.29,
+      "cholesterol": 16.34,
+      "sodium": 10.97,
+      "potassium": 20.27,
+      "calcium": 26.29,
+      "iron": 9.31,
+      "vitamin_d": 9.19,
+      "vitamin_c": 12.08
+    }
+  },
+  {
+    "id": "85e81699-3cfb-4139-a5ed-36c4acb1773a",
+    "title": "Almonds 72",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 579,
+    "macros": {
+      "protein": 24.84,
+      "carbs": 8.65,
+      "fat": 23.04,
+      "sugar": 14.82,
+      "fiber": 14.05,
+      "saturated_fat": 27.71,
+      "unsaturated_fat": 3.86,
+      "cholesterol": 17.64,
+      "sodium": 5.23,
+      "potassium": 15.31,
+      "calcium": 1.22,
+      "iron": 10.26,
+      "vitamin_d": 4.06,
+      "vitamin_c": 10.52
+    }
+  },
+  {
+    "id": "4eed74d6-3055-4aff-b4fa-f958aba012fd",
+    "title": "Brown Rice 73",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 118,
+    "macros": {
+      "protein": 29.63,
+      "carbs": 2.68,
+      "fat": 28.51,
+      "sugar": 13.7,
+      "fiber": 6.96,
+      "saturated_fat": 15.64,
+      "unsaturated_fat": 0.18,
+      "cholesterol": 6.52,
+      "sodium": 3.46,
+      "potassium": 19.58,
+      "calcium": 25.85,
+      "iron": 16.71,
+      "vitamin_d": 3.31,
+      "vitamin_c": 4.56
+    }
+  },
+  {
+    "id": "f9c2915d-ebfa-4421-8e68-fea3e118c088",
+    "title": "Chicken Breast 74",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 175,
+    "macros": {
+      "protein": 28.67,
+      "carbs": 3.81,
+      "fat": 24.37,
+      "sugar": 10.42,
+      "fiber": 11.71,
+      "saturated_fat": 16.97,
+      "unsaturated_fat": 22.84,
+      "cholesterol": 16.98,
+      "sodium": 22.19,
+      "potassium": 21.25,
+      "calcium": 11.06,
+      "iron": 2.3,
+      "vitamin_d": 12.11,
+      "vitamin_c": 1.87
+    }
+  },
+  {
+    "id": "5b2477e6-f3d3-4a6e-b49a-e66dd187e7e9",
+    "title": "Apple 75",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 51,
+    "macros": {
+      "protein": 7.1,
+      "carbs": 18.42,
+      "fat": 6.09,
+      "sugar": 16.6,
+      "fiber": 15.58,
+      "saturated_fat": 11.2,
+      "unsaturated_fat": 6.46,
+      "cholesterol": 8.85,
+      "sodium": 8.92,
+      "potassium": 5.91,
+      "calcium": 3.6,
+      "iron": 1.96,
+      "vitamin_d": 12.46,
+      "vitamin_c": 7.7
+    }
+  },
+  {
+    "id": "d5ee5439-4b00-43a3-9b3e-522440c07787",
+    "title": "Almonds 76",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 577,
+    "macros": {
+      "protein": 11.35,
+      "carbs": 14.7,
+      "fat": 1.5,
+      "sugar": 5.65,
+      "fiber": 6.64,
+      "saturated_fat": 22.27,
+      "unsaturated_fat": 25.91,
+      "cholesterol": 1.72,
+      "sodium": 20.49,
+      "potassium": 26.22,
+      "calcium": 27.32,
+      "iron": 10.47,
+      "vitamin_d": 26.23,
+      "vitamin_c": 16.46
+    }
+  },
+  {
+    "id": "dbf30b84-dedd-4a7e-91a7-c836c146b4fb",
+    "title": "Banana 77",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 91,
+    "macros": {
+      "protein": 28.4,
+      "carbs": 27.44,
+      "fat": 22.24,
+      "sugar": 11.9,
+      "fiber": 23.2,
+      "saturated_fat": 1.05,
+      "unsaturated_fat": 29.6,
+      "cholesterol": 17.14,
+      "sodium": 27.23,
+      "potassium": 24.52,
+      "calcium": 23.14,
+      "iron": 26.26,
+      "vitamin_d": 25.92,
+      "vitamin_c": 12.62
+    }
+  },
+  {
+    "id": "16e6ceba-1392-4551-9d31-432f7afc0eb3",
+    "title": "Apple 78",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 59,
+    "macros": {
+      "protein": 28.64,
+      "carbs": 10.06,
+      "fat": 14.49,
+      "sugar": 15.82,
+      "fiber": 25.27,
+      "saturated_fat": 26.77,
+      "unsaturated_fat": 5.73,
+      "cholesterol": 25.84,
+      "sodium": 27.18,
+      "potassium": 4.45,
+      "calcium": 2.06,
+      "iron": 29.62,
+      "vitamin_d": 5.67,
+      "vitamin_c": 14.6
+    }
+  },
+  {
+    "id": "64987c26-b6df-4b11-9d96-1f0d93192c08",
+    "title": "Brown Rice 79",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 112,
+    "macros": {
+      "protein": 9.31,
+      "carbs": 27.79,
+      "fat": 27.24,
+      "sugar": 29.69,
+      "fiber": 5.07,
+      "saturated_fat": 18.44,
+      "unsaturated_fat": 20.08,
+      "cholesterol": 11.8,
+      "sodium": 25.76,
+      "potassium": 21.53,
+      "calcium": 25.77,
+      "iron": 26.5,
+      "vitamin_d": 4.72,
+      "vitamin_c": 9.33
+    }
+  },
+  {
+    "id": "39578b96-0b84-4c7d-93a7-c90d40080e83",
+    "title": "Almonds 80",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 569,
+    "macros": {
+      "protein": 2.79,
+      "carbs": 16.6,
+      "fat": 1.76,
+      "sugar": 14.7,
+      "fiber": 6.58,
+      "saturated_fat": 7.06,
+      "unsaturated_fat": 4.28,
+      "cholesterol": 10.03,
+      "sodium": 17.1,
+      "potassium": 10.3,
+      "calcium": 5.79,
+      "iron": 1.93,
+      "vitamin_d": 10.3,
+      "vitamin_c": 20.53
+    }
+  },
+  {
+    "id": "205e0917-09a6-47aa-8055-f42eb9ff226f",
+    "title": "Chicken Breast 81",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 159,
+    "macros": {
+      "protein": 25.13,
+      "carbs": 19.72,
+      "fat": 2.86,
+      "sugar": 28.83,
+      "fiber": 5.68,
+      "saturated_fat": 11.13,
+      "unsaturated_fat": 12.79,
+      "cholesterol": 14.5,
+      "sodium": 16.65,
+      "potassium": 1.29,
+      "calcium": 8.37,
+      "iron": 10.06,
+      "vitamin_d": 6.67,
+      "vitamin_c": 0.94
+    }
+  },
+  {
+    "id": "dd749b80-c7e7-44ef-b3da-079ea78f5795",
+    "title": "Broccoli 82",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 61,
+    "macros": {
+      "protein": 22.25,
+      "carbs": 7.07,
+      "fat": 6.97,
+      "sugar": 23.68,
+      "fiber": 29.31,
+      "saturated_fat": 21.08,
+      "unsaturated_fat": 11.28,
+      "cholesterol": 23.53,
+      "sodium": 6.26,
+      "potassium": 0.55,
+      "calcium": 27.02,
+      "iron": 26.86,
+      "vitamin_d": 13.22,
+      "vitamin_c": 8.33
+    }
+  },
+  {
+    "id": "144e0f1f-99f5-4eca-9214-f0e71f12d551",
+    "title": "Greek Yogurt 83",
+    "description": "Plain, low-fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 52,
+    "macros": {
+      "protein": 10.79,
+      "carbs": 0.89,
+      "fat": 26.51,
+      "sugar": 20.27,
+      "fiber": 3.29,
+      "saturated_fat": 20.51,
+      "unsaturated_fat": 15.85,
+      "cholesterol": 18.53,
+      "sodium": 10.23,
+      "potassium": 17.05,
+      "calcium": 19.96,
+      "iron": 8.88,
+      "vitamin_d": 6.18,
+      "vitamin_c": 25.95
+    }
+  },
+  {
+    "id": "b4812624-2782-43c9-b5c2-900cb4124bc3",
+    "title": "Almonds 84",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 578,
+    "macros": {
+      "protein": 26.84,
+      "carbs": 20.15,
+      "fat": 18.03,
+      "sugar": 25.51,
+      "fiber": 16.98,
+      "saturated_fat": 4.74,
+      "unsaturated_fat": 12.64,
+      "cholesterol": 6.6,
+      "sodium": 9.61,
+      "potassium": 7.7,
+      "calcium": 11.98,
+      "iron": 29.94,
+      "vitamin_d": 21.09,
+      "vitamin_c": 8.98
+    }
+  },
+  {
+    "id": "47d02eba-18e2-4bb8-aba4-354cbed68314",
+    "title": "Banana 85",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 93,
+    "macros": {
+      "protein": 13.28,
+      "carbs": 28.47,
+      "fat": 8.46,
+      "sugar": 12.02,
+      "fiber": 9.36,
+      "saturated_fat": 29.8,
+      "unsaturated_fat": 2.5,
+      "cholesterol": 29.11,
+      "sodium": 21.7,
+      "potassium": 14.54,
+      "calcium": 16.68,
+      "iron": 18.58,
+      "vitamin_d": 26.27,
+      "vitamin_c": 2.49
+    }
+  },
+  {
+    "id": "ea0a9c63-c541-45c9-b3d9-5523dec9355c",
+    "title": "Greek Yogurt 86",
+    "description": "Plain, low-fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 63,
+    "macros": {
+      "protein": 3.16,
+      "carbs": 7.12,
+      "fat": 1.06,
+      "sugar": 20.46,
+      "fiber": 8.77,
+      "saturated_fat": 13.74,
+      "unsaturated_fat": 24.39,
+      "cholesterol": 8.9,
+      "sodium": 15.65,
+      "potassium": 29.7,
+      "calcium": 21.91,
+      "iron": 4.14,
+      "vitamin_d": 6.52,
+      "vitamin_c": 16.3
+    }
+  },
+  {
+    "id": "f3c920d5-ddd7-43c2-bc3b-37c42b2d17fd",
+    "title": "Brown Rice 87",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 111,
+    "macros": {
+      "protein": 9.08,
+      "carbs": 8.54,
+      "fat": 28.16,
+      "sugar": 24.79,
+      "fiber": 14.24,
+      "saturated_fat": 13.5,
+      "unsaturated_fat": 20.74,
+      "cholesterol": 9.63,
+      "sodium": 12.21,
+      "potassium": 11.69,
+      "calcium": 19.44,
+      "iron": 5.9,
+      "vitamin_d": 20.68,
+      "vitamin_c": 17.53
+    }
+  },
+  {
+    "id": "e27cea04-c8c7-4294-a748-6fed3f0a9aba",
+    "title": "Apple 88",
+    "description": "Raw with skin",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 47,
+    "macros": {
+      "protein": 4.09,
+      "carbs": 17.59,
+      "fat": 15.04,
+      "sugar": 21.71,
+      "fiber": 9.84,
+      "saturated_fat": 15.14,
+      "unsaturated_fat": 8.97,
+      "cholesterol": 25.05,
+      "sodium": 17.28,
+      "potassium": 4.91,
+      "calcium": 11.86,
+      "iron": 12.42,
+      "vitamin_d": 0.63,
+      "vitamin_c": 19.07
+    }
+  },
+  {
+    "id": "efdad5d1-f1e4-48d5-8b63-51e5e2893f7f",
+    "title": "Salmon 89",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 216,
+    "macros": {
+      "protein": 4.77,
+      "carbs": 21.08,
+      "fat": 27.48,
+      "sugar": 22.54,
+      "fiber": 19.0,
+      "saturated_fat": 16.03,
+      "unsaturated_fat": 0.29,
+      "cholesterol": 2.61,
+      "sodium": 10.31,
+      "potassium": 27.31,
+      "calcium": 7.88,
+      "iron": 12.26,
+      "vitamin_d": 8.32,
+      "vitamin_c": 8.88
+    }
+  },
+  {
+    "id": "5f5393b3-81ad-4113-a844-131285f20ab8",
+    "title": "Eggs 90",
+    "description": "Large, whole, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 153,
+    "macros": {
+      "protein": 25.31,
+      "carbs": 21.06,
+      "fat": 17.07,
+      "sugar": 28.25,
+      "fiber": 3.56,
+      "saturated_fat": 18.12,
+      "unsaturated_fat": 20.06,
+      "cholesterol": 3.5,
+      "sodium": 17.03,
+      "potassium": 24.86,
+      "calcium": 1.93,
+      "iron": 10.09,
+      "vitamin_d": 21.36,
+      "vitamin_c": 15.32
+    }
+  },
+  {
+    "id": "9eefc4e7-523b-4be5-ab76-a6de622c05d6",
+    "title": "Broccoli 91",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 61,
+    "macros": {
+      "protein": 12.73,
+      "carbs": 29.3,
+      "fat": 7.86,
+      "sugar": 12.29,
+      "fiber": 7.38,
+      "saturated_fat": 14.79,
+      "unsaturated_fat": 14.95,
+      "cholesterol": 5.16,
+      "sodium": 11.92,
+      "potassium": 10.49,
+      "calcium": 26.9,
+      "iron": 15.06,
+      "vitamin_d": 9.15,
+      "vitamin_c": 19.85
+    }
+  },
+  {
+    "id": "1c377f33-0c76-4346-b000-b81823f40afd",
+    "title": "Broccoli 92",
+    "description": "Steamed",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 53,
+    "macros": {
+      "protein": 2.5,
+      "carbs": 4.83,
+      "fat": 17.78,
+      "sugar": 22.97,
+      "fiber": 1.61,
+      "saturated_fat": 19.26,
+      "unsaturated_fat": 28.86,
+      "cholesterol": 6.15,
+      "sodium": 4.87,
+      "potassium": 1.16,
+      "calcium": 19.77,
+      "iron": 11.03,
+      "vitamin_d": 16.86,
+      "vitamin_c": 12.25
+    }
+  },
+  {
+    "id": "73444d8b-6d9e-4d66-be2d-4ecc6b4f7fbc",
+    "title": "Greek Yogurt 93",
+    "description": "Plain, low-fat",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 63,
+    "macros": {
+      "protein": 9.71,
+      "carbs": 19.02,
+      "fat": 19.25,
+      "sugar": 15.05,
+      "fiber": 19.55,
+      "saturated_fat": 18.35,
+      "unsaturated_fat": 14.91,
+      "cholesterol": 1.64,
+      "sodium": 22.51,
+      "potassium": 18.28,
+      "calcium": 19.43,
+      "iron": 22.32,
+      "vitamin_d": 7.37,
+      "vitamin_c": 28.28
+    }
+  },
+  {
+    "id": "71cafd8c-5a90-4bde-ac89-2ae610f815e8",
+    "title": "Chicken Breast 94",
+    "description": "Skinless, boneless, cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 169,
+    "macros": {
+      "protein": 7.1,
+      "carbs": 22.09,
+      "fat": 22.78,
+      "sugar": 2.07,
+      "fiber": 23.28,
+      "saturated_fat": 18.51,
+      "unsaturated_fat": 24.92,
+      "cholesterol": 8.71,
+      "sodium": 1.16,
+      "potassium": 6.0,
+      "calcium": 1.46,
+      "iron": 13.38,
+      "vitamin_d": 16.52,
+      "vitamin_c": 25.01
+    }
+  },
+  {
+    "id": "b69e44f7-477c-4cdf-bdf5-ddf7e304fdf2",
+    "title": "Almonds 95",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 569,
+    "macros": {
+      "protein": 19.89,
+      "carbs": 23.27,
+      "fat": 18.91,
+      "sugar": 24.94,
+      "fiber": 8.04,
+      "saturated_fat": 7.76,
+      "unsaturated_fat": 0.85,
+      "cholesterol": 19.01,
+      "sodium": 10.74,
+      "potassium": 23.16,
+      "calcium": 12.76,
+      "iron": 28.93,
+      "vitamin_d": 19.4,
+      "vitamin_c": 19.87
+    }
+  },
+  {
+    "id": "37386576-df05-4581-ace7-65ccde093b4d",
+    "title": "Almonds 96",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 589,
+    "macros": {
+      "protein": 16.87,
+      "carbs": 27.86,
+      "fat": 29.55,
+      "sugar": 9.81,
+      "fiber": 29.25,
+      "saturated_fat": 19.43,
+      "unsaturated_fat": 20.69,
+      "cholesterol": 13.75,
+      "sodium": 5.23,
+      "potassium": 1.71,
+      "calcium": 29.65,
+      "iron": 21.47,
+      "vitamin_d": 14.17,
+      "vitamin_c": 5.69
+    }
+  },
+  {
+    "id": "efa2643b-6ee7-4506-97b0-266aa8a6ca21",
+    "title": "Salmon 97",
+    "description": "Cooked",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 209,
+    "macros": {
+      "protein": 28.45,
+      "carbs": 15.61,
+      "fat": 13.77,
+      "sugar": 22.61,
+      "fiber": 0.17,
+      "saturated_fat": 7.64,
+      "unsaturated_fat": 20.92,
+      "cholesterol": 25.67,
+      "sodium": 11.3,
+      "potassium": 20.94,
+      "calcium": 5.06,
+      "iron": 4.29,
+      "vitamin_d": 19.15,
+      "vitamin_c": 10.04
+    }
+  },
+  {
+    "id": "c436620c-50cf-4517-8cad-aaa52d9d8c1f",
+    "title": "Almonds 98",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 587,
+    "macros": {
+      "protein": 0.95,
+      "carbs": 4.47,
+      "fat": 15.32,
+      "sugar": 29.61,
+      "fiber": 15.6,
+      "saturated_fat": 3.6,
+      "unsaturated_fat": 23.44,
+      "cholesterol": 13.3,
+      "sodium": 10.17,
+      "potassium": 10.64,
+      "calcium": 8.37,
+      "iron": 17.28,
+      "vitamin_d": 20.58,
+      "vitamin_c": 29.58
+    }
+  },
+  {
+    "id": "a0a7810d-6be3-4b90-a370-348529934152",
+    "title": "Almonds 99",
+    "description": "Raw",
+    "servingSize": {
+      "serving": 1,
+      "units": "100g"
+    },
+    "source": "dataList",
+    "calories": 582,
+    "macros": {
+      "protein": 21.15,
+      "carbs": 10.06,
+      "fat": 14.76,
+      "sugar": 22.04,
+      "fiber": 27.06,
+      "saturated_fat": 6.46,
+      "unsaturated_fat": 25.68,
+      "cholesterol": 4.51,
+      "sodium": 0.15,
+      "potassium": 14.9,
+      "calcium": 17.17,
+      "iron": 17.37,
+      "vitamin_d": 24.28,
+      "vitamin_c": 23.76
+    }
+  }
+]

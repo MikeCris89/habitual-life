@@ -11,7 +11,7 @@ interface DayStats {
 type StatsState = {
 	totalTasks: number;
 	completedTasks: number;
-	pastStats: Record<string, DayStats>;
+	pastStats: Record<string, DayStats>; //string = date startOfDay
 };
 
 const initialState: StatsState = {

@@ -9,10 +9,11 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { Days, HabitChip } from "./HabitCard";
 import PageNav from "../../components/PageNav";
-import { isGoodHabit } from "../../utils/types";
+import { isGoodHabit, Task } from "../../utils/types";
 import { useDeleteHabitMutation, useGetHabitsQuery } from "./habitsApi";
 import {
 	useDeleteAllTasksMutation,
+	useGetDailyTasksQuery,
 	useGetTasksByRangeQuery,
 } from "../tasks/tasksApi";
 import dayjs from "dayjs";
@@ -29,10 +30,11 @@ import {
 import { useMemo } from "react";
 import { Delete, Edit } from "@mui/icons-material";
 import { useThemeMode } from "../../hooks/ThemeProvider";
-import { formatLabel } from "../../utils/helpers";
+import { formatLabel, getGraphCompRate } from "../../utils/helpers";
 import { useDialogModal } from "../modal/DialogModal";
 import { SectionContainer } from "./HabitForm";
 import PageWrapper from "../../components/PageWrapper";
+import Graph from "../../components/Graph";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
@@ -41,6 +43,12 @@ const HabitDetails: React.FC = () => {
 	//const theme = useTheme();
 	const { isLight, theme } = useThemeMode();
 
+	const { data: dailyTasks = [] } = useGetDailyTasksQuery(undefined, {
+		selectFromResult: ({ data = [] }) => {
+			const resp = data.filter((el) => el.habitId === id);
+			return { data: resp };
+		},
+	});
 	const { data: pastTasks } = useGetTasksByRangeQuery();
 
 	const history = useMemo(
@@ -71,19 +79,10 @@ const HabitDetails: React.FC = () => {
 		},
 	] = useDeleteAllTasksMutation();
 
-	const graphData = useMemo(() => {
-		let rate = 0;
-		return [...history]
-			.sort(
-				(a, b) =>
-					new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
-			)
-			.map((el, i) => {
-				rate += el.complete ? 1 : 0;
-				const compRate = Math.round((rate / (i + 1)) * 100);
-				return { date: el.dateTime, compRate };
-			});
-	}, [history]);
+	const graphData = useMemo(
+		() => getGraphCompRate([...history, ...dailyTasks]),
+		[history, dailyTasks]
+	);
 
 	if (!id) return <div>No Habit Selected.</div>;
 	if (loadingHabits) return <Loading />;
@@ -161,7 +160,12 @@ const HabitDetails: React.FC = () => {
 					))}
 			</SectionContainer>
 			<SectionContainer fullWidth>
-				<ResponsiveContainer width="100%" height={200}>
+				<Graph
+					graphData={graphData}
+					labelY="Completion (%)"
+					domain={[0, 100]}
+				/>
+				{/* <ResponsiveContainer width="100%" height={200}>
 					<LineChart data={graphData}>
 						<CartesianGrid strokeDasharray="3 3" />
 						<XAxis
@@ -197,7 +201,7 @@ const HabitDetails: React.FC = () => {
 							activeDot={false}
 						/>
 					</LineChart>
-				</ResponsiveContainer>
+				</ResponsiveContainer> */}
 			</SectionContainer>
 			{/* </Box> */}
 		</PageWrapper>

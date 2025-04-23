@@ -1,0 +1,175 @@
+[
+	{
+		"title": "Egg",
+		"description": "1 large egg (50g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "unit"
+		},
+		"source": "dataList",
+		"calories": 70,
+		"macros": {
+			"protein": 6,
+			"fat": 5,
+			"cholesterol": 186,
+			"sodium": 70
+		},
+		"id": "20c8f6a8-72ee-4890-858d-c7fd6a94dcb8"
+	},
+	{
+		"title": "Apple",
+		"description": "1 medium apple (182g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "unit"
+		},
+		"source": "dataList",
+		"calories": 95,
+		"macros": {
+			"carbs": 25,
+			"fiber": 4,
+			"sugar": 19,
+			"vitamin_c": 8.4,
+			"potassium": 195
+		},
+		"id": "b3ae5356-f3b9-4565-a59a-fc78458f02c0"
+	},
+	{
+		"title": "Chicken Breast",
+		"description": "1 grilled skinless chicken breast (120g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "unit"
+		},
+		"source": "dataList",
+		"calories": 198,
+		"macros": {
+			"protein": 37,
+			"fat": 4,
+			"cholesterol": 100,
+			"sodium": 74
+		},
+		"id": "beb83981-8973-495e-8ebe-e95fbade9832"
+	},
+	{
+		"title": "White Rice",
+		"description": "1 cup cooked white rice (158g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "cup"
+		},
+		"source": "dataList",
+		"calories": 205,
+		"macros": {
+			"carbs": 45,
+			"protein": 4,
+			"sodium": 2
+		},
+		"id": "caee297a-0699-435c-a701-fac2f9c66e23"
+	},
+	{
+		"title": "Broccoli",
+		"description": "1 cup chopped broccoli (91g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "cup"
+		},
+		"source": "dataList",
+		"calories": 31,
+		"macros": {
+			"carbs": 6,
+			"fiber": 2.4,
+			"protein": 2.5,
+			"vitamin_c": 81,
+			"iron": 0.7
+		},
+		"id": "95ba9992-823d-4bc1-be0c-368501b481ce"
+	},
+	{
+		"title": "Whole Milk",
+		"description": "1 cup whole milk (244g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "cup"
+		},
+		"source": "dataList",
+		"calories": 150,
+		"macros": {
+			"protein": 8,
+			"fat": 8,
+			"carbs": 12,
+			"sugar": 12,
+			"calcium": 276
+		},
+		"id": "6691676d-7cca-40fc-a992-0f5bef603497"
+	},
+	{
+		"title": "Almonds",
+		"description": "1 oz almonds (28g, ~23 nuts)",
+		"servingSize": {
+			"serving": 1,
+			"units": "oz"
+		},
+		"source": "dataList",
+		"calories": 164,
+		"macros": {
+			"protein": 6,
+			"fat": 14,
+			"fiber": 3.5,
+			"vitamin_e": 7.3,
+			"magnesium": 76
+		},
+		"id": "e452f1db-1027-4ef3-8d46-738e5d3df3fb"
+	},
+	{
+		"title": "Banana",
+		"description": "1 medium banana (118g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "unit"
+		},
+		"source": "dataList",
+		"calories": 105,
+		"macros": {
+			"carbs": 27,
+			"fiber": 3,
+			"sugar": 14,
+			"potassium": 422
+		},
+		"id": "bac4183f-d49b-4b70-af01-fd479a8291d1"
+	},
+	{
+		"title": "Oatmeal",
+		"description": "1 cup cooked oatmeal (234g)",
+		"servingSize": {
+			"serving": 1,
+			"units": "cup"
+		},
+		"source": "dataList",
+		"calories": 154,
+		"macros": {
+			"carbs": 27,
+			"protein": 6,
+			"fiber": 4,
+			"iron": 1.7
+		},
+		"id": "99d8f7ed-05fe-47f5-97c7-08ec7a98d295"
+	},
+	{
+		"title": "Greek Yogurt",
+		"description": "Plain",
+		"servingSize": {
+			"serving": 100,
+			"units": "g"
+		},
+		"source": "dataList",
+		"calories": 59,
+		"macros": {
+			"protein": 10,
+			"carbs": 3.6,
+			"sugar": 4,
+			"calcium": 187
+		},
+		"id": "0e3ef532-721c-4c4d-9109-3a68d9fb6676"
+	}
+]

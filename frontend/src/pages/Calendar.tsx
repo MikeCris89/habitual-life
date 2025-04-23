@@ -8,6 +8,7 @@ import GoodCalendar from "../features/calendar/GoodCalendar";
 
 import { useGetHabitsQuery } from "../features/habits/habitsApi";
 import Loading from "../components/Loading";
+import PageWrapper from "../components/PageWrapper";
 
 const Calendar = () => {
 	const [calendarTasks, setCalendarTasks] = useState<Task[]>([]);
@@ -51,7 +52,7 @@ const Calendar = () => {
 	if (isLoading || loadingHabits) return <Loading />;
 
 	return (
-		<Box sx={{ height: "100%", width: "100vw" }}>
+		<PageWrapper>
 			{
 				<GoodCalendar
 					tasks={calendarTasks.filter((task): task is GoodTask =>
@@ -59,7 +60,7 @@ const Calendar = () => {
 					)}
 				/>
 			}
-		</Box>
+		</PageWrapper>
 	);
 };
 

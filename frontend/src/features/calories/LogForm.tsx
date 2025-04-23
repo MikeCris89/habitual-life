@@ -38,7 +38,10 @@ const LogForm = ({
 				overflow: "hidden",
 			}}
 		>
-			<Box className="flex-center col gap3 full-w" sx={{ overflow: "auto" }}>
+			<Box
+				className="flex-center col gap3 full-w full-h"
+				sx={{ overflow: "auto" }}
+			>
 				{/* <NumberInput
 					label="Calories"
 					value={calories ?? 0}
@@ -78,7 +81,7 @@ const LogForm = ({
 							{baseMacros?.map((macro) => (
 								<TableRow key={macro.id}>
 									<TableCell component="th" scope="row">
-										{macro.title} {`(${macro.units})`}
+										{macro.label} {`(${macro.unit})`}
 									</TableCell>
 									<TableCell align="right">
 										<NumberInput

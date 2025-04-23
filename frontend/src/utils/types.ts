@@ -84,9 +84,11 @@ export interface BadType extends HabitBase {
 }
 
 export interface MacrosType {
-	title: string;
+	label: string;
 	total: number;
-	units: string;
+	unit: string;
+	type: string;
+	active: boolean;
 	id: string;
 }
 

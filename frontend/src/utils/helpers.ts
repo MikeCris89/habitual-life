@@ -43,3 +43,18 @@ export const formatLabel = (
 	const formatted = label[0].toUpperCase() + label.slice(1);
 	return dropLastChar ? formatted.slice(0, -1) : formatted;
 };
+
+export const getGraphCompRate = (
+	allTasks: Task[]
+): { date: string; value: number }[] => {
+	let rate = 0;
+	return [...allTasks]
+		.sort(
+			(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+		)
+		.map((el, i) => {
+			rate += el.complete ? 1 : 0;
+			const value = Math.round((rate / (i + 1)) * 100);
+			return { date: el.dateTime, value };
+		});
+};

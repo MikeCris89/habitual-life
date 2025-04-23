@@ -55,12 +55,12 @@ const GoodCalendar = ({ tasks }: Props) => {
 	return (
 		<Box
 			sx={{
-				height: "100%",
 				overflowY: "auto",
 				overflowX: "hidden",
 				minHeight: 0,
 				maxWidth: "100%",
 				padding: "5px",
+				flex: 1,
 			}}
 		>
 			<Box
@@ -73,6 +73,7 @@ const GoodCalendar = ({ tasks }: Props) => {
 					border: "1px solid  rgba(0, 0, 0, 0.3)",
 					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
 					borderRadius: "8px",
+					height: "100%",
 					"& > *": {
 						//borderRight: "1px solid rgba(0, 0, 0, 0.3)",
 						//borderBottom: "1px solid rgba(0, 0, 0, 0.3)",

@@ -1,19 +1,25 @@
 import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { selectCurrentStats } from "./statsSelectors";
+import { selectCurrentStats, selectStats } from "./statsSelectors";
 import { RootState } from "../../app/store";
 import ProgressBar from "../../components/ProgressBar";
 import { SectionContainer } from "../habits/HabitForm";
+import { useNavigate } from "react-router-dom";
 
 const StatsSummary = () => {
-	const pastStats = useSelector((state: RootState) => state.stats);
+	const pastStats = useSelector(selectStats);
+	const navigate = useNavigate();
 
 	const { completionRate } = useSelector(selectCurrentStats);
 
 	console.log("StatsSummary Rendering ", pastStats);
 
 	return (
-		<Box className="flex-center col" sx={{ width: "90%" }}>
+		<Box
+			className="flex-center col"
+			sx={{ width: "min(400px, 90%)" }}
+			onClick={() => navigate("stats")}
+		>
 			<SectionContainer fullWidth>
 				{pastStats && (
 					<Box className="flex-center col" sx={{ width: "100%" }}>

@@ -38,6 +38,7 @@ import { DinnerDiningOutlined } from "@mui/icons-material";
 import Loading from "../../components/Loading";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionContainer } from "../habits/HabitForm";
+import PageWrapper from "../../components/PageWrapper";
 
 const initMeal: MealForm = {
 	title: "",
@@ -63,7 +64,11 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 
 	return (
 		// <Card elevation={2} sx={{ p: 1, width: "100%" }}>
-		<SectionContainer title="Meal Nutrition Summary">
+		<SectionContainer
+			title="Meal Nutrition Summary"
+			fullWidth
+			wrapperSx={{ minHeight: "200px" }}
+		>
 			{/* <Typography variant="subtitle2" sx={{ mb: 1 }}>
 					Meal Nutrition Summary
 				</Typography> */}
@@ -90,10 +95,10 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 										: 0;
 								return (
 									<TableRow key={mac.id}>
-										<TableCell>{mac.title}</TableCell>
+										<TableCell>{mac.label}</TableCell>
 										<TableCell align="right">
 											{mealTotals.macros[mac.id] ?? 0}
-											{mac.units}
+											{mac.unit}
 										</TableCell>
 										<TableCell align="right">{macTotal}%</TableCell>
 									</TableRow>
@@ -143,7 +148,7 @@ const MotionTabPanel = ({ children, value, index, direction }: TabProps) => {
 				exit="exit"
 				custom={direction}
 				className="full-w full-h"
-				style={{ overflow: "hidden" }}
+				style={{ overflow: "hidden", flex: 1 }}
 			>
 				{children}
 			</motion.div>
@@ -248,7 +253,7 @@ const MealLog = () => {
 		<Box
 			className="flex-center col full-w full-h"
 			sx={{
-				overflow: "hidden",
+				//overflow: "hidden",
 				alignItems: "flex-start",
 			}}
 		>
@@ -269,29 +274,25 @@ const MealLog = () => {
 
 			{!newIng && (
 				<Box
-					className="flex-center col gap2 full-w full-h"
+					className="flex-between col gap2 full-w full-h"
 					sx={{ overflow: "hidden", flex: 1 }}
 				>
 					<MealNutrition form={form} qtyMap={ingQtyMap} />
 					{/* Meal List */}
-					<Divider />
-					{/* <Typography
-						variant="subtitle2"
-						sx={{ textAlign: "center", width: "100%" }}
-					>
-						{isEditing ? "Edit Meal" : "New Meal"}
-					</Typography> */}
 					<Box
-						className="flex-center col gap3 full-w full-h"
+						className="flex-center col gap3 full-w"
 						sx={{
-							height: "60%",
+							height: "fit-content",
 							minHeight: 0,
 							alignSelf: "flex-start",
 							justifyContent: "flex-start",
 							flex: 1,
 						}}
 					>
-						<SectionContainer title={isEditing ? "Edit Meal" : "New Meal"}>
+						<SectionContainer
+							title={isEditing ? "Edit Meal" : "New Meal"}
+							wrapperSx={{}}
+						>
 							<form id="meal-form" onSubmit={handleSubmit}>
 								<TextField
 									label="Title"
@@ -357,53 +358,67 @@ const MealLog = () => {
 								}}
 							/>
 						</Tabs>
-						<Box sx={{ position: "relative", height: "100%", width: "100%" }}>
-							<SectionContainer fullWidth fullHeight>
-								<MotionTabPanel value={tab} index={0} direction={direction}>
-									<Box className="flex-center col gap2 full-w full-h">
-										<FoodList
-											items={ingList}
-											qtyMap={ingQtyMap}
-											onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
-											newButton={() => setNewIng(true)}
-										/>
-									</Box>
-								</MotionTabPanel>
-								<MotionTabPanel value={tab} index={1} direction={direction}>
-									<Box className="flex-between col gap2 full-w full-h">
-										<LogForm
-											calories={customForm.calories}
-											macros={customForm.macros}
-											handleChangeCalories={(_, value) =>
-												setCustomForm((prev) => ({
-													...prev,
-													calories: value,
-												}))
-											}
-											handleChangeMacros={(macId, value) =>
-												setCustomForm((prev) => ({
-													...prev,
-													macros: { ...prev.macros, [macId]: value },
-												}))
-											}
-										/>
-										<Button variant="contained" onClick={handleSubmitCustom}>
-											Add to Meal
-										</Button>
-									</Box>
-								</MotionTabPanel>
-								<MotionTabPanel value={tab} index={2} direction={direction}>
-									<Box className="flex-center col gap2 full-w full-h">
-										<FoodList
-											items={mealIngList}
-											qtyMap={ingQtyMap}
-											onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
-											searchBar={false}
-										/>
-									</Box>
-								</MotionTabPanel>
-							</SectionContainer>
-						</Box>
+						{/* <Box sx={{ position: "relative", height: "100%", width: "100%" }}> */}
+						<SectionContainer
+							className="flex-center"
+							fullWidth
+							fullHeight
+							wrapperSx={{ flex: 1 }}
+						>
+							<MotionTabPanel value={tab} index={0} direction={direction}>
+								<Box
+									className="flex-center col gap2 full-w full-h"
+									//sx={{ overflow: "hidden" }}
+								>
+									<FoodList
+										items={ingList}
+										qtyMap={ingQtyMap}
+										onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
+										newButton={() => setNewIng(true)}
+									/>
+								</Box>
+							</MotionTabPanel>
+							<MotionTabPanel value={tab} index={1} direction={direction}>
+								<Box
+									className="flex-between col gap2 full-w full-h"
+									//sx={{ overflow: "hidden" }}
+								>
+									<LogForm
+										calories={customForm.calories}
+										macros={customForm.macros}
+										handleChangeCalories={(_, value) =>
+											setCustomForm((prev) => ({
+												...prev,
+												calories: value,
+											}))
+										}
+										handleChangeMacros={(macId, value) =>
+											setCustomForm((prev) => ({
+												...prev,
+												macros: { ...prev.macros, [macId]: value },
+											}))
+										}
+									/>
+									<Button variant="contained" onClick={handleSubmitCustom}>
+										Add to Meal
+									</Button>
+								</Box>
+							</MotionTabPanel>
+							<MotionTabPanel value={tab} index={2} direction={direction}>
+								<Box
+									className="flex-center col gap2 full-w full-h"
+									//sx={{ overflow: "hidden" }}
+								>
+									<FoodList
+										items={mealIngList}
+										qtyMap={ingQtyMap}
+										onAddItem={(itemId, qty) => addIngToMeal(itemId, qty)}
+										searchBar={false}
+									/>
+								</Box>
+							</MotionTabPanel>
+						</SectionContainer>
+						{/* </Box> */}
 					</Box>
 
 					{tab !== 1 && (

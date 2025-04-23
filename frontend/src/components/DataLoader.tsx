@@ -120,7 +120,8 @@ const DataLoader = ({ children }: Props) => {
 		clearDailyBaskets,
 		setLastCreatedDate,
 		createDailyTasks,
-		metaData,
+		metaData?.userId,
+		metaData?.lastCreatedDate,
 	]);
 
 	useVisibilityEffect(createTasks);

@@ -142,9 +142,11 @@ export const SectionContainer = ({
 }) => {
 	return (
 		<Box
-			className={`${fullWidth ? "full-w" : ""} ${fullHeight ? "full-h" : ""} `}
+			className={` flex col gap 2 ${fullWidth ? "full-w" : ""} ${
+				fullHeight ? "full-h" : ""
+			} `}
 			p={"2px 4px"}
-			sx={wrapperSx}
+			sx={{ ...wrapperSx }}
 		>
 			{title && (
 				<Typography
@@ -161,12 +163,15 @@ export const SectionContainer = ({
 			)}
 			<Paper
 				elevation={3}
-				className={`flex col gap2 full-w full-h ${className}`}
+				className={`flex col gap2 full-w ${className}`}
 				sx={{
 					// justifyContent: "flex-start",
 					// alignItems: "flex-start",
 					//minHeight: fullHeight ? "100%" : "fit-content",
+					minHeight: 0,
 					p: 1,
+					flex: 1,
+
 					// "& > *": { width: "100%" },
 					...paperSx,
 				}}
@@ -399,7 +404,7 @@ const HabitForm = () => {
 			<PageNav back title={id ? "Edit Habit" : "Add Habit"} />
 
 			<Box
-				className="flex col gap4 full-h full-w"
+				className="flex col gap4 full-w"
 				id="habitForm"
 				component="form"
 				onSubmit={handleSubmit}
@@ -476,12 +481,12 @@ const HabitForm = () => {
 				{/**GoodHabit */}
 
 				{isGoodHabit(habit) && (
-					<Box
-						className="flex-center col gap2"
-						sx={{ "& > *": { width: "100%" } }}
-					>
+					// <Box
+					// 	className="flex-center col gap2"
+					// 	sx={{ "& > *": { width: "100%" } }}
+					// >
+					<>
 						{/* All Day checkbox */}
-
 						<SectionContainer title="Times of Day" fullWidth>
 							<FormControlLabel
 								control={
@@ -746,12 +751,14 @@ const HabitForm = () => {
 								</Box>
 							)}
 						</SectionContainer>
-					</Box>
+					</>
+					// </Box>
 				)}
 
 				{/** CounterHabit  */}
 				{isCounterHabit(habit) && (
-					<Box className="flex-center col gap2">
+					// <Box className="flex-center col gap2">
+					<>
 						<FormControlLabel
 							control={
 								<Switch
@@ -793,7 +800,8 @@ const HabitForm = () => {
 								onChange={handleChange}
 							/>
 						</Box>
-					</Box>
+					</>
+					// </Box>
 				)}
 			</Box>
 			<Box className="full-w">

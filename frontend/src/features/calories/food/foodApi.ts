@@ -7,6 +7,7 @@ import {
 } from "./../../../utils/types";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../../utils/indexedDb";
+import dataList from "../../../data/curated_ingredients.json";
 
 export const foodApi = createApi({
 	reducerPath: "food",
@@ -21,7 +22,9 @@ export const foodApi = createApi({
 				try {
 					const ingredients = (await dbActions.getAll("ingredients")) ?? [];
 					const meals = (await dbActions.getAll("meals")) ?? [];
-					return { data: { ingredients, meals } };
+					return {
+						data: { ingredients: [...ingredients, ...dataList], meals },
+					};
 				} catch (e) {
 					return { error: { message: `Error fetching food. Error: ${e}` } };
 				}
