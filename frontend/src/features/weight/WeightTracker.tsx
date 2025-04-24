@@ -3,32 +3,18 @@ import {
 	useEditTaskMutation,
 	useGetDailyTasksQuery,
 	useGetTasksByRangeQuery,
-	useIncrementCounterMutation,
 } from "../tasks/tasksApi";
 import { CounterTask, PresetId } from "../../utils/types";
-import Loading from "../../components/Loading";
 import { SectionContainer } from "../habits/HabitForm";
 import NumberInput from "../../components/NumberInput";
 import { useEffect, useMemo, useState } from "react";
 import PageNav from "../../components/PageNav";
-import {
-	LineChart,
-	Line,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	ResponsiveContainer,
-	Label,
-} from "recharts";
-import { useThemeMode } from "../../hooks/ThemeProvider";
-import dayjs from "dayjs";
 import PageWrapper from "../../components/PageWrapper";
 import Graph from "../../components/Graph";
 import { startOfDay } from "../../utils/timeUtils";
 import { getGraphCompRate } from "../../utils/helpers";
 
 const WeightTracker = () => {
-	const { theme, isLight } = useThemeMode();
 	const [newWeight, setNewWeight] = useState(0);
 	const [editTask] = useEditTaskMutation();
 	const { data: task } = useGetDailyTasksQuery(undefined, {
@@ -55,13 +41,12 @@ const WeightTracker = () => {
 
 	const graphData = useMemo(() => {
 		if (task) {
-			const filtered = [...pastTasks, task].filter(
-				(el) => el.count !== 0 && el.complete
-			);
+			const allTasks = [...pastTasks, task];
 
-			const compRate = getGraphCompRate(filtered);
+			const compRate = getGraphCompRate(allTasks);
 
-			const weight = filtered
+			const weight = allTasks
+				.filter((el) => el.count !== 0 && el.complete)
 				.sort(
 					(a, b) =>
 						new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
@@ -96,7 +81,7 @@ const WeightTracker = () => {
 					<Graph graphData={graphData.weight} title="Weight" />
 				</SectionContainer>
 				<SectionContainer fullWidth>
-					<Graph graphData={graphData.compRate} />
+					<Graph graphData={graphData.compRate} domain={[0, 100]} />
 				</SectionContainer>
 			</Box>
 		</PageWrapper>

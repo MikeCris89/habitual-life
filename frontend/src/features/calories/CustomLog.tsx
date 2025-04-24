@@ -49,6 +49,10 @@ const CustomLog = () => {
 		}
 	};
 
+	const canSave = !!(
+		form.calories || Object.values(form.macros).some((el) => el !== 0)
+	);
+
 	return (
 		<Box
 			className="flex-between col gap2 full-h wull-w"
@@ -61,7 +65,12 @@ const CustomLog = () => {
 				handleChangeCalories={handleChange}
 				handleChangeMacros={handleChangeMacros}
 			/>
-			<Button variant="contained" onClick={handleSubmit} fullWidth>
+			<Button
+				variant="contained"
+				onClick={handleSubmit}
+				disabled={!canSave}
+				fullWidth
+			>
 				Add To basket
 			</Button>
 		</Box>

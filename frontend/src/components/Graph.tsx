@@ -23,6 +23,8 @@ const Graph = ({
 	labelY?: string;
 }) => {
 	const { theme, isLight } = useThemeMode();
+	console.log(graphData);
+
 	return (
 		<Box className="flex-center col gap3 full-w full-h">
 			<Typography variant="body2" color="secondary">
@@ -42,7 +44,7 @@ const Graph = ({
 					/>
 					<YAxis
 						dataKey="value"
-						domain={domain}
+						domain={domain ?? ["dataMin - 10", "dataMax + 10"]}
 						tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
 					/>
 					{/* <Label

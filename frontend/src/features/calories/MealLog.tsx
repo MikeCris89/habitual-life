@@ -249,6 +249,11 @@ const MealLog = () => {
 		navigate(-1);
 	};
 
+	const canSaveCustom = !!(
+		Object.values(customForm.macros).some((el) => el !== 0) ||
+		customForm.calories
+	);
+
 	return (
 		<Box
 			className="flex-center col full-w full-h"
@@ -302,6 +307,11 @@ const MealLog = () => {
 									sx={{ marginTop: "5px" }}
 									fullWidth
 									required
+									slotProps={{
+										input: {
+											inputProps: { maxLength: 25 },
+										},
+									}}
 								/>
 
 								<TextField
@@ -312,6 +322,11 @@ const MealLog = () => {
 									onChange={(e) => handleChange("description", e.target.value)}
 									fullWidth
 									sx={{ marginTop: "8px" }}
+									slotProps={{
+										input: {
+											inputProps: { maxLength: 60 },
+										},
+									}}
 								/>
 							</form>
 						</SectionContainer>
@@ -399,7 +414,11 @@ const MealLog = () => {
 											}))
 										}
 									/>
-									<Button variant="contained" onClick={handleSubmitCustom}>
+									<Button
+										variant="contained"
+										onClick={handleSubmitCustom}
+										disabled={!canSaveCustom}
+									>
 										Add to Meal
 									</Button>
 								</Box>

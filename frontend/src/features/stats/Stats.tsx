@@ -113,7 +113,7 @@ const Stats = () => {
 				</Box>
 			</SectionContainer>
 			<SectionContainer fullWidth>
-				<Graph graphData={graphData} />
+				<Graph graphData={graphData} domain={[0, 100]} />
 			</SectionContainer>
 		</PageWrapper>
 	);

@@ -62,7 +62,7 @@ const LogForm = ({
 								<TableCell sx={{ fontWeight: "bold" }}>Calories</TableCell>
 								<TableCell align="right">
 									<NumberInput
-										value={macros[calories] ?? 0}
+										value={calories ?? 0}
 										onChange={(value) =>
 											handleChangeCalories("calories", value)
 										}
