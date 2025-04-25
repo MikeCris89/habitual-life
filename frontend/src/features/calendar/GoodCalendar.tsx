@@ -58,7 +58,8 @@ const GoodCalendar = ({ tasks }: Props) => {
 				overflowY: "auto",
 				overflowX: "hidden",
 				minHeight: 0,
-				maxWidth: "100%",
+				width: "100%",
+				maxWidth: "900px",
 				padding: "5px",
 				flex: 1,
 			}}
