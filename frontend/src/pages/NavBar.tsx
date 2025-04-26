@@ -60,7 +60,7 @@ const NavBar: React.FC<Props> = ({ isMobile = true }) => {
 		<Box sx={{ width: "100%" }}>
 			{!isMobile && (
 				<Toolbar sx={topNav}>
-					<Typography variant="h6">Better Habits</Typography>
+					<Typography variant="h6">Habitual Life</Typography>
 					<Toolbar sx={{ justifyContent: "space-around" }}>
 						<NavLink to={Nav.home}>Home</NavLink>
 						<NavLink to={Nav.habits}>Habits</NavLink>

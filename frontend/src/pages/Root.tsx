@@ -11,39 +11,50 @@ import GlobalModal from "../features/modal/GlobalModal";
 import PageWrapper from "../components/PageWrapper";
 
 const Root = () => {
-	const { isMobile } = useDisplay();
+	const { isMobile, isDesktop } = useDisplay();
 
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				flexDirection: isMobile ? "column-reverse" : "column",
-				width: "100%",
-				height: "100%",
-				overflow: "hidden",
-			}}
-		>
-			<GlobalModal />
-			<NavBar isMobile={isMobile} />
-
+		<Box className="flex-center full-w full-h">
 			<Box
+				className="full-w full-h"
 				sx={{
-					width: "100%",
-					overflow: "hidden",
-					flex: 1,
-					minHeight: 0,
-					"& >*": { width: "100%", minHeight: 0, height: "100%" },
+					maxHeight: "1100px",
+					border: isDesktop ? "3px solid black" : "none",
+					borderRadius: isDesktop ? "12px" : "0",
+					maxWidth: "800px",
 				}}
 			>
-				<ErrorBoundary FallbackComponent={ErrorFallback}>
-					<DataLoader>
-						<Suspense fallback={<Loading />}>
-							<PageWrapper>
-								<Outlet />
-							</PageWrapper>
-						</Suspense>
-					</DataLoader>
-				</ErrorBoundary>
+				<Box
+					className="flex-center col full-w full-h"
+					sx={{
+						flexDirection: isMobile ? "column-reverse" : "column",
+						overflow: "hidden",
+						borderRadius: isDesktop ? "12px" : "0",
+					}}
+				>
+					<GlobalModal />
+					<NavBar isMobile={isMobile} />
+
+					<Box
+						sx={{
+							width: "100%",
+							overflow: "hidden",
+							flex: 1,
+							minHeight: 0,
+							"& >*": { width: "100%", minHeight: 0, height: "100%" },
+						}}
+					>
+						<ErrorBoundary FallbackComponent={ErrorFallback}>
+							<DataLoader>
+								<Suspense fallback={<Loading />}>
+									<PageWrapper>
+										<Outlet />
+									</PageWrapper>
+								</Suspense>
+							</DataLoader>
+						</ErrorBoundary>
+					</Box>
+				</Box>
 			</Box>
 		</Box>
 	);
