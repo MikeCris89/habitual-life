@@ -1,3 +1,4 @@
+// tasks/tasksApi.ts
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../utils/indexedDb";
 import {
@@ -75,7 +76,7 @@ export const generateTestTasksData = (
 	habits: Habit[],
 	completionRate: number,
 	startDate: string = startOfDay(),
-	endDate: string = nextDay()
+	endDate: string = nextDay(),
 ): Task[] => {
 	const tasks = [];
 	const end = dayjs(endDate);
@@ -112,7 +113,7 @@ export const generateTestTasksData = (
 								.minute(thisTime.minute())
 								.second(0)
 								.millisecond(0)
-								.toISOString()
+								.toISOString(),
 						),
 						complete: Math.random() * 100 <= completionRate,
 					};
@@ -126,7 +127,7 @@ export const generateTestTasksData = (
 export const generateTasks = (
 	habits: Habit[],
 	startDate: string = startOfDay(),
-	endDate: string = nextDay()
+	endDate: string = nextDay(),
 ): Task[] => {
 	const tasks = [];
 	const end = dayjs(endDate);
@@ -151,7 +152,7 @@ export const generateTasks = (
 							.minute(thisTime.minute())
 							.second(0)
 							.millisecond(0)
-							.toISOString()
+							.toISOString(),
 					);
 				});
 			});
@@ -183,7 +184,7 @@ export const tasksApi = createApi({
 							acc[task.habitId].push(task);
 							return acc;
 						},
-						{}
+						{},
 					);
 					return { data: { dataArray, dataByHabitId } };
 				} catch (e) {
@@ -214,7 +215,7 @@ export const tasksApi = createApi({
 						habits,
 						completionRate,
 						startDate,
-						endDate
+						endDate,
 					);
 					await dbActions.batchCreateDailyTasks(data);
 					return { data };
@@ -268,7 +269,7 @@ export const tasksApi = createApi({
 					tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
 						let index = draft.findIndex((el) => el.id === task.id);
 						if (index !== -1) draft[index] = { ...task };
-					})
+					}),
 				);
 			},
 		}),
@@ -289,7 +290,7 @@ export const tasksApi = createApi({
 					tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
 						const taskToUpdate = draft.find((el) => el.id === task.id);
 						if (taskToUpdate) taskToUpdate.complete = !taskToUpdate.complete;
-					})
+					}),
 				);
 			},
 		}),
@@ -314,7 +315,7 @@ export const tasksApi = createApi({
 						const taskToUpdate = draft.find((el) => el.id === task.id);
 						if (taskToUpdate && isCounterTask(taskToUpdate))
 							taskToUpdate.count += value;
-					})
+					}),
 				);
 			},
 		}),

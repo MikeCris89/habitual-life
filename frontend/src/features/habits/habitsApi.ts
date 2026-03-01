@@ -1,3 +1,4 @@
+// habits/habitsApi.ts
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Habit } from "../../utils/types";
 import { dbActions } from "../../utils/indexedDb";
@@ -42,7 +43,7 @@ export const habitsApi = createApi({
 					dispatch(
 						habitsApi.util.updateQueryData("getHabits", undefined, (draft) => {
 							draft.push(addedHabit);
-						})
+						}),
 					);
 				} catch (e) {
 					handleError(`Failed to update cache on addHabit. Error: ${e}`);
@@ -66,14 +67,14 @@ export const habitsApi = createApi({
 					dispatch(
 						habitsApi.util.updateQueryData("getHabits", undefined, (draft) => {
 							const index = draft.findIndex(
-								(habit) => habit.id === updatedHabit.id
+								(habit) => habit.id === updatedHabit.id,
 							);
 							if (index === -1)
 								handleError(
-									"editHabit - onQueryStarted: Failed to find index for habit"
+									"editHabit - onQueryStarted: Failed to find index for habit",
 								);
 							draft[index] = updatedHabit;
-						})
+						}),
 					);
 				} catch (e) {
 					handleError(`Failed to edit habit. Error: ${e}`);
@@ -99,10 +100,10 @@ export const habitsApi = createApi({
 							const index = draft.findIndex((habit) => habit.id === deleteId);
 							if (index === -1)
 								handleError(
-									"deleteHabit - onQueryStarted: Failed to find index for habit."
+									"deleteHabit - onQueryStarted: Failed to find index for habit.",
 								);
 							draft.splice(index, 1);
-						})
+						}),
 					);
 				} catch (e) {
 					handleError(`Failed to delete habit. Error: ${e}`);

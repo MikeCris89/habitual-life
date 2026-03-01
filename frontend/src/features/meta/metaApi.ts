@@ -53,6 +53,13 @@ export const metaApi = createApi({
 					};
 				}
 			},
+			onQueryStarted: async ({ date }, { dispatch, queryFulfilled }) => {
+				dispatch(
+					metaApi.util.updateQueryData("getMeta", undefined, (draft) => {
+						draft.lastCreatedDate = date;
+					}),
+				);
+			},
 			invalidatesTags: ["MetaData"],
 		}),
 		setGoal: builder.mutation({
@@ -85,7 +92,7 @@ export const metaApi = createApi({
 				dispatch(
 					metaApi.util.updateQueryData("getMeta", undefined, (draft) => {
 						draft.theme = args.theme;
-					})
+					}),
 				);
 			},
 		}),
