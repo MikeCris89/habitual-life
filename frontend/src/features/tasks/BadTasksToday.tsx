@@ -1,10 +1,11 @@
-import { Box, Paper, Typography } from "@mui/material";
-import { isBadTask } from "../../utils/types";
+import { Box, Typography } from "@mui/material";
+import { isBadTask, Task } from "../../utils/types";
 import { useGetDailyTasksQuery, useGetTasksByRangeQuery } from "./tasksApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { selectCurrentGoal } from "../stats/statsSelectors";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../app/store";
+// import { selectCurrentGoal } from "../stats/statsSelectors";
 import TaskCard from "./TaskCard";
+import { nextDay, startOfDay } from "../../utils/timeUtils";
 
 // type TaskProps = {
 // 	task: Task;
@@ -75,14 +76,35 @@ import TaskCard from "./TaskCard";
 // 	);
 // };
 
-const BadTasksToday = () => {
-	const { data: tasks } = useGetDailyTasksQuery(undefined, {
+interface BadTasksTodayProps {
+	selectedDate: string;
+}
+
+const BadTasksToday = ({ selectedDate }: BadTasksTodayProps) => {
+	const todayStart = startOfDay();
+	const selectedStart = startOfDay(selectedDate);
+	const isToday = todayStart === selectedStart;
+	const selectedEnd = nextDay(selectedStart);
+
+	const { data: todayTasks = [] } = useGetDailyTasksQuery(undefined, {
 		selectFromResult: ({ data = [] }) => ({ data: data.filter(isBadTask) }),
 	});
-	const { dataByHabitId: pastTasks = {} } =
+
+	const { dataArray = [], dataByHabitId: pastTasks = {} } =
 		useGetTasksByRangeQuery()?.data ?? {};
 
-	console.log("BadTasksToday Rendering: ", tasks);
+	const startMs = new Date(selectedStart).getTime();
+	const endMs = new Date(selectedEnd).getTime();
+
+	const tasks: Task[] = isToday
+		? todayTasks
+		: dataArray.filter((task) => {
+				if (!isBadTask(task)) return false;
+				const time = new Date(task.dateTime).getTime();
+				return time >= startMs && time < endMs;
+		  });
+
+	console.log("BadTasksToday Rendering: ", { selectedDate, tasks });
 
 	return (
 		<Box

@@ -1,11 +1,25 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { isGoodTask, Task } from "../../utils/types";
 import { useGetDailyTasksQuery, useGetTasksByRangeQuery } from "./tasksApi";
 import dayjs from "dayjs";
 import TaskCard from "./TaskCard";
+import { nextDay, startOfDay } from "../../utils/timeUtils";
 
-const GoodTasksToday = () => {
-	const { tasksAllDay, tasksByTime, allTasks } = useGetDailyTasksQuery(
+interface GoodTasksTodayProps {
+	selectedDate: string;
+}
+
+const GoodTasksToday = ({ selectedDate }: GoodTasksTodayProps) => {
+	const todayStart = startOfDay();
+	const selectedStart = startOfDay(selectedDate);
+	const isToday = todayStart === selectedStart;
+	const selectedEnd = nextDay(selectedStart);
+
+	const {
+		tasksAllDay: todayTasksAllDay,
+		tasksByTime: todayTasksByTime,
+		allTasks: todayAllTasks,
+	} = useGetDailyTasksQuery(
 		undefined,
 		{
 			selectFromResult: ({ data = [] }) => {
@@ -17,23 +31,49 @@ const GoodTasksToday = () => {
 							: acc.tasksByTime.push(task);
 						return acc;
 					},
-					{ allTasks: [], tasksAllDay: [], tasksByTime: [] }
+					{ allTasks: [], tasksAllDay: [], tasksByTime: [] },
 				);
 			},
-		}
+		},
 	);
 
-	const { dataByHabitId: pastTasks = {} } =
+	const { dataArray = [], dataByHabitId: pastTasks = {} } =
 		useGetTasksByRangeQuery()?.data ?? {};
 
+	const startMs = new Date(selectedStart).getTime();
+	const endMs = new Date(selectedEnd).getTime();
+
+	const { tasksAllDay, tasksByTime, allTasks } = isToday
+		? {
+				tasksAllDay: todayTasksAllDay,
+				tasksByTime: todayTasksByTime,
+				allTasks: todayAllTasks,
+		  }
+		: dataArray
+				.filter(isGoodTask)
+				.filter((task) => {
+					const time = new Date(task.dateTime).getTime();
+					return time >= startMs && time < endMs;
+				})
+				.reduce<Record<string, Task[]>>(
+					(acc, task) => {
+						acc.allTasks.push(task);
+						task.allDay
+							? acc.tasksAllDay.push(task)
+							: acc.tasksByTime.push(task);
+						return acc;
+					},
+					{ allTasks: [], tasksAllDay: [], tasksByTime: [] },
+				);
+
 	const sortedTasksByTime = [...tasksByTime].sort(
-		(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+		(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
 	);
 	const sortedTasksAllDay = [...tasksAllDay].sort(
-		(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+		(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
 	);
 
-	console.log("GoodTasksToday Rendering", allTasks);
+	console.log("GoodTasksToday Rendering", { selectedDate, allTasks });
 
 	return (
 		<Box

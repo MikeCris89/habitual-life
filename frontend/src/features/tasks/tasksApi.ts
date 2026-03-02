@@ -292,6 +292,31 @@ export const tasksApi = createApi({
 						if (taskToUpdate) taskToUpdate.complete = !taskToUpdate.complete;
 					}),
 				);
+
+				dispatch(
+					tasksApi.util.updateQueryData(
+						"getTasksByRange",
+						undefined,
+						(draft) => {
+							if (!draft) return;
+
+							const taskInArray = draft.dataArray.find(
+								(el) => el.id === task.id,
+							);
+							if (taskInArray) {
+								taskInArray.complete = !taskInArray.complete;
+							}
+
+							const byHabit = draft.dataByHabitId[task.habitId];
+							if (byHabit) {
+								const taskInHabit = byHabit.find((el) => el.id === task.id);
+								if (taskInHabit) {
+									taskInHabit.complete = !taskInHabit.complete;
+								}
+							}
+						},
+					),
+				);
 			},
 		}),
 		incrementCounter: builder.mutation({

@@ -3,13 +3,21 @@ import { useState } from "react";
 import GoodTasksToday from "./GoodTasksToday";
 import BadTasksToday from "./BadTasksToday";
 import AddButton from "../../components/AddButton";
+import DateNavigator from "../../components/DateNavigator";
+import { startOfDay } from "../../utils/timeUtils";
 
 const GoodBadSwitcher = () => {
 	const [tab, setTab] = useState(false);
-	console.log("GoodBadSwitcher Rendering ");
+	const [selectedDate, setSelectedDate] = useState<string>(startOfDay());
+
+	console.log("GoodBadSwitcher Rendering ", { tab, selectedDate });
 
 	return (
 		<>
+			<DateNavigator
+				selectedDate={selectedDate}
+				onChange={(date) => setSelectedDate(date)}
+			/>
 			<Box
 				sx={{
 					p: 1,
@@ -50,7 +58,11 @@ const GoodBadSwitcher = () => {
 					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
 				}}
 			>
-				{!tab ? <GoodTasksToday /> : <BadTasksToday />}
+				{!tab ? (
+					<GoodTasksToday selectedDate={selectedDate} />
+				) : (
+					<BadTasksToday selectedDate={selectedDate} />
+				)}
 			</Paper>
 		</>
 	);
