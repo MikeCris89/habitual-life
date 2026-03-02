@@ -208,7 +208,7 @@ const HabitForm = () => {
 		if (type && isValidHabitType(type)) return type;
 		handleError(
 			`Habit Form: Habit type not found. Type: ${type}, habitToEdit: ${habitToEdit}`,
-			{}
+			{},
 		);
 	}, [type, habitToEdit]);
 
@@ -235,7 +235,7 @@ const HabitForm = () => {
 		setHabit((prev) => {
 			const newDays: DaysOfWeek = { ...prev.daysOfWeek };
 			DayKeys.forEach(
-				(day: DayKey) => (newDays[day] = { ...newDays[day], isTrue: checked })
+				(day: DayKey) => (newDays[day] = { ...newDays[day], isTrue: checked }),
 			);
 
 			return {
@@ -247,7 +247,7 @@ const HabitForm = () => {
 
 	// Generic field changes for string and number properties and days of week checkbox
 	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) => {
 		const { name, type, value } = e.target;
 
@@ -302,7 +302,7 @@ const HabitForm = () => {
 	// GoodHabit - edit existing timeOfDay array element
 	const handleChangeTime = (
 		time: Dayjs | null,
-		entry: { id: number; time: string }
+		entry: { id: number; time: string },
 	) => {
 		console.log("handle change time");
 		let date: Date;
@@ -318,7 +318,7 @@ const HabitForm = () => {
 					return {
 						...prev,
 						timeOfDay: prev.timeOfDay.map((el) =>
-							el.id === entry.id ? { ...entry, time: date.toISOString() } : el
+							el.id === entry.id ? { ...entry, time: date.toISOString() } : el,
 						),
 					};
 				} else {
@@ -337,7 +337,7 @@ const HabitForm = () => {
 	// GoodHabit - set timers - TYPE
 	const handleTimerType = (
 		event: React.MouseEvent<HTMLElement>,
-		type: string
+		type: string,
 	) => {
 		setHabit((prev) => {
 			if (isGoodHabit(prev) && isTimerType(type)) {
@@ -350,7 +350,7 @@ const HabitForm = () => {
 	// goodhabit - set timer duration for single / round
 	const handleTimerDuration = (
 		msDuration: number,
-		type: "duration" | "break"
+		type: "duration" | "break",
 	) => {
 		setHabit((prev) => {
 			if (isGoodHabit(prev)) {
@@ -375,9 +375,7 @@ const HabitForm = () => {
 			if (habitToEdit) {
 				await editHabit(habit).unwrap();
 				const tasksToDelete =
-					dailyTasks?.filter(
-						(task) => task.habitId === habit.id && !task.complete
-					) ?? [];
+					dailyTasks?.filter((task) => task.habitId === habit.id) ?? [];
 
 				if (tasksToDelete.length) {
 					await deleteTasks(tasksToDelete).unwrap();
@@ -438,7 +436,7 @@ const HabitForm = () => {
 								<Checkbox
 									onChange={handleSelectAll}
 									checked={Object.values(habit.daysOfWeek).every(
-										(el) => el.isTrue
+										(el) => el.isTrue,
 									)}
 								/>
 							}
@@ -541,7 +539,7 @@ const HabitForm = () => {
 																return {
 																	...prev,
 																	timeOfDay: prev.timeOfDay.filter(
-																		(el) => el.id !== entry.id
+																		(el) => el.id !== entry.id,
 																	),
 																	allDay: prev.timeOfDay.length === 1,
 																};
@@ -608,7 +606,7 @@ const HabitForm = () => {
 															? { ...initNoneTimer }
 															: {
 																	...initSingleTimer,
-															  },
+																},
 													};
 												return prev;
 											});

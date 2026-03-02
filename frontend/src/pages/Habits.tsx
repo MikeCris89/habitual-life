@@ -19,11 +19,11 @@ const HabitsList = memo(({ search }: ListProps) => {
 
 	if (habits && search)
 		habits = habits.filter((habit) =>
-			habit.title.toLowerCase().includes(search.toLowerCase())
+			habit.title.toLowerCase().includes(search.toLowerCase()),
 		);
 
 	return (
-		<Box className="flex-center col gap2">
+		<Box className="flex-center col gap2" style={{ cursor: "pointer" }}>
 			{habits?.map((habit: Habit) => (
 				<Box key={habit.id} sx={{ width: "100%" }}>
 					<HabitCard habit={habit} />

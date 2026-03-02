@@ -46,7 +46,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 		<Card
 			elevation={3}
 			className="flex-center col gap2"
-			sx={{ p: 2, overflowX: "hidden" }}
+			sx={{ p: 2, overflowX: "hidden", cursor: "pointer" }}
 		>
 			<Box
 				className="flex-between"
@@ -78,7 +78,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 										openModal({
 											component: "singleTimer",
 											props: { task },
-										})
+										}),
 									);
 								}}
 							>
@@ -96,7 +96,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 										openModal({
 											component: "roundTimer",
 											props: { task },
-										})
+										}),
 									);
 								}}
 							>

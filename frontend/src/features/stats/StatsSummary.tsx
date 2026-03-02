@@ -17,7 +17,7 @@ const StatsSummary = () => {
 	return (
 		<Box
 			className="flex-center col"
-			sx={{ width: "min(400px, 90%)" }}
+			sx={{ width: "min(400px, 90%)", cursor: "pointer" }}
 			onClick={() => navigate("stats")}
 		>
 			<SectionContainer fullWidth>

@@ -4,6 +4,8 @@ import { handleError } from "../../utils/errors";
 import { useDispatch, useSelector } from "react-redux";
 import { useCheckOffTaskMutation } from "../tasks/tasksApi";
 import magicSound from "../../assets/sounds/message-ringtone-magic.mp3";
+import roundSound from "../../assets/sounds/self-assured-notification.mp3";
+import breakSound from "../../assets/sounds/pristine-609.mp3";
 import TimerBase from "./TimerBase";
 import { Check } from "@mui/icons-material";
 import { closeModal } from "../modal/modalSlice";
@@ -18,19 +20,31 @@ const RoundTimer = ({ task }: Props) => {
 	const { timer, ...timerState } = useSelector(selectTimer);
 	const dispatch = useDispatch();
 	const [checkoffTask] = useCheckOffTaskMutation();
-	const sound = useMemo(() => new Audio(magicSound), []);
+	const soundComplete = useMemo(() => new Audio(magicSound), []);
+	const soundBreak = useMemo(() => new Audio(breakSound), []);
+	const soundRound = useMemo(() => new Audio(roundSound), []);
 
 	if (timer && !isRoundTimer(timer)) {
 		handleError("Non round timer passed to round timer component.");
 	}
 
-	const { isComplete } = timerState;
+	const { isComplete, isBreak, currRound, isPlaying } = timerState;
 
 	useEffect(() => {
 		if (isComplete) {
-			sound.play();
+			soundComplete.play();
 		}
-	}, [isComplete, sound]);
+	}, [isComplete, soundComplete]);
+
+	useEffect(() => {
+		if (isBreak) {
+			soundBreak.play();
+		}
+	}, [isBreak, soundBreak]);
+
+	useEffect(() => {
+		if (!isBreak && isPlaying) soundRound.play();
+	}, [currRound, soundRound]);
 
 	return (
 		<Box className="flex-center col gap2" sx={{ width: "100%" }}>
