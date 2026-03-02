@@ -1,7 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectCurrentStats, selectStats } from "./statsSelectors";
-import { RootState } from "../../app/store";
 import ProgressBar from "../../components/ProgressBar";
 import { SectionContainer } from "../habits/HabitForm";
 import { useNavigate } from "react-router-dom";

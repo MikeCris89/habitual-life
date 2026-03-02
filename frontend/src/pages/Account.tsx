@@ -30,6 +30,9 @@ import {
 } from "../features/meta/metaApi";
 import { useThemeMode } from "../hooks/ThemeProvider";
 import { useDialogModal } from "../features/modal/DialogModal";
+import TutorialButton, {
+	TUTORIAL_SECTIONS,
+} from "../features/tutorial/TutorialButton";
 
 const Account: React.FC = () => {
 	const dispatch = useDispatch();
@@ -101,13 +104,17 @@ const Account: React.FC = () => {
 				label={"Toggle Theme"}
 				onClick={(e) => toggleTheme()}
 			/>
+			<TutorialButton
+				section={TUTORIAL_SECTIONS.overview}
+				text="View Tutorial"
+			/>
+			<br />
 			<Button
 				onClick={handleClickTestData}
 				loading={loadingDeleteTasks || loadingPastTasks}
 			>
 				Add Test Tasks
 			</Button>
-
 			<Button
 				onClick={() => handleClickDeleteData("tasks")}
 				loading={loadingDeleteTasks || loadingPastTasks}

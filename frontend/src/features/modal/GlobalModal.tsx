@@ -15,6 +15,8 @@ import RoundTimer from "../timer/RoundTimer";
 import AddMenu from "../../components/AddMenu";
 import IngredientLog from "../calories/IngredientLog";
 import MealLog from "../calories/MealLog";
+import Tutorial from "../tutorial/Tutorial";
+import useDisplay from "../../hooks/useDisplay";
 
 const MODAL_COMPONENTS: Record<string, React.FC<any>> = {
 	singleTimer: SingleTimer,
@@ -22,7 +24,7 @@ const MODAL_COMPONENTS: Record<string, React.FC<any>> = {
 	addMenu: AddMenu,
 	ingredientLog: IngredientLog,
 	mealLog: MealLog,
-	// tutorial: undefined,
+	tutorial: Tutorial,
 };
 
 const GlobalModal = () => {
@@ -38,15 +40,21 @@ const GlobalModal = () => {
 		dispatch(closeModal());
 	};
 
+	const { isDesktop } = useDisplay();
+
 	const boxSx: SxProps<Theme> = fullScreen
 		? {
 				position: "absolute",
-				top: 0,
-				left: 0,
+				top: "50%",
+				left: "50%",
+				transform: "translate(-50%, -50%)",
 				width: "100%",
+				maxWidth: "800px",
 				height: "100%",
+				maxHeight: "1100px",
 				bgcolor: "background.paper",
 				overflow: "hidden",
+				borderRadius: isDesktop ? "12px" : "0",
 			}
 		: {
 				position: "absolute",

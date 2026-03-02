@@ -1,0 +1,205 @@
+import { ArrowBack, CloseOutlined } from "@mui/icons-material";
+import {
+	Box,
+	IconButton,
+	List,
+	ListItemButton,
+	ListItemText,
+	Typography,
+} from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import useDisplay from "../../hooks/useDisplay";
+import { closeModal } from "../modal/modalSlice";
+
+type TutorialSectionId =
+	| "overview"
+	| "stats"
+	| "goodHabits"
+	| "badHabits"
+	| "timers"
+	| "weightTracker"
+	| "calorieCounter"
+	| "calendar"
+	| "testData";
+
+const SECTIONS: Array<{ id: TutorialSectionId; label: string }> = [
+	{ id: "overview", label: "Overview" },
+	{ id: "stats", label: "Stats" },
+	{ id: "goodHabits", label: "Good Habits" },
+	{ id: "badHabits", label: "Bad Habits" },
+	{ id: "timers", label: "Timers" },
+	{ id: "weightTracker", label: "Weight Tracker" },
+	{ id: "calorieCounter", label: "Calorie Counter" },
+	{ id: "calendar", label: "Calendar" },
+	{ id: "testData", label: "Test Data" },
+];
+
+const isSectionId = (value: string): value is TutorialSectionId =>
+	SECTIONS.some((s) => s.id === value);
+
+interface TutorialProps {
+	section?: string;
+}
+
+const Tutorial = ({ section }: TutorialProps) => {
+	const dispatch = useDispatch();
+	const { isDesktop, isMobile } = useDisplay();
+
+	const initialSection: TutorialSectionId = useMemo(() => {
+		if (section && isSectionId(section)) return section;
+		return "overview";
+	}, [section]);
+
+	const [selectedSection, setSelectedSection] =
+		useState<TutorialSectionId>(initialSection);
+
+	const [showMenu, setShowMenu] = useState<boolean>(() => {
+		if (!isMobile) return true;
+		return section ? false : true;
+	});
+
+	useEffect(() => {
+		setSelectedSection(initialSection);
+		if (isMobile) setShowMenu(section ? false : true);
+	}, [initialSection, isMobile, section]);
+
+	const selectedLabel =
+		SECTIONS.find((s) => s.id === selectedSection)?.label ?? "Overview";
+
+	const handleSelect = (id: TutorialSectionId) => {
+		setSelectedSection(id);
+		if (isMobile) setShowMenu(false);
+	};
+
+	const handleClose = () => {
+		dispatch(closeModal());
+	};
+
+	const HeaderRightClose = (
+		<IconButton
+			onClick={handleClose}
+			sx={{ position: "absolute", top: 6, right: 6, zIndex: 2 }}
+			aria-label="Close tutorial"
+		>
+			<CloseOutlined />
+		</IconButton>
+	);
+
+	const Menu = (
+		<Box sx={{ width: "100%" }}>
+			<Typography sx={{ px: 2, pt: 2, pb: 1 }} variant="h6">
+				Tutorial
+			</Typography>
+			<List sx={{ p: 0 }}>
+				{SECTIONS.map((s) => {
+					const selected = s.id === selectedSection;
+					return (
+						<ListItemButton
+							key={s.id}
+							onClick={() => handleSelect(s.id)}
+							selected={selected}
+							sx={{
+								...(selected ? { bgcolor: "primary.main" } : {}),
+								...(selected
+									? { "&:hover": { bgcolor: "primary.main" } }
+									: {}),
+							}}
+						>
+							<ListItemText
+								primary={s.label}
+								primaryTypographyProps={{
+									sx: selected ? { color: "primary.contrastText" } : {},
+								}}
+							/>
+						</ListItemButton>
+					);
+				})}
+			</List>
+		</Box>
+	);
+
+	const Content = (
+		<Box
+			sx={{
+				width: "100%",
+				height: "100%",
+				overflowY: "auto",
+				p: 2,
+			}}
+		>
+			<Typography variant="h5" sx={{ mb: 2 }}>
+				{selectedLabel}
+			</Typography>
+			<Typography variant="body1">
+				Placeholder content for {selectedLabel}. This section will be filled in
+				later.
+			</Typography>
+		</Box>
+	);
+
+	// Desktop: always show menu + scrollable content.
+	if (isDesktop) {
+		return (
+			<Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+				{HeaderRightClose}
+				<Box
+					sx={{
+						display: "grid",
+						gridTemplateColumns: "280px 1fr",
+						height: "100%",
+						width: "100%",
+						minHeight: 0,
+					}}
+				>
+					<Box
+						sx={{
+							borderRight: "1px solid",
+							borderColor: "divider",
+							overflowY: "auto",
+							minHeight: 0,
+						}}
+					>
+						{Menu}
+					</Box>
+					<Box sx={{ minHeight: 0 }}>{Content}</Box>
+				</Box>
+			</Box>
+		);
+	}
+
+	// Mobile: menu by default; content view with back arrow.
+	return (
+		<Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+			{HeaderRightClose}
+			{showMenu ? (
+				<Box sx={{ pt: 1 }}>{Menu}</Box>
+			) : (
+				<Box sx={{ height: "100%", width: "100%" }}>
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							gap: 1,
+							p: 1,
+						}}
+					>
+						<IconButton
+							onClick={() => setShowMenu(true)}
+							aria-label="Back to sections"
+						>
+							<ArrowBack />
+						</IconButton>
+						<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							{selectedLabel}
+						</Typography>
+					</Box>
+					{Content}
+				</Box>
+			)}
+		</Box>
+	);
+};
+
+export default Tutorial;
+

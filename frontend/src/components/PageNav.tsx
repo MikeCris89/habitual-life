@@ -1,10 +1,16 @@
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, HelpOutline } from "@mui/icons-material";
 import { Box, Button, Paper, Typography } from "@mui/material";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { openModal } from "../features/modal/modalSlice";
+import TutorialButton, {
+	TUTORIAL_SECTIONS,
+} from "../features/tutorial/TutorialButton";
 
 interface PageProps {
 	back?: boolean;
 	title: string;
+	tutorialSection?: keyof typeof TUTORIAL_SECTIONS;
 }
 
 const navStyle = {
@@ -18,7 +24,7 @@ const navStyle = {
 	// bgcolor: "background.default",
 };
 
-const PageNav = ({ back = false, title = "" }: PageProps) => {
+const PageNav = ({ back = false, title = "", tutorialSection }: PageProps) => {
 	const navigate = useNavigate();
 
 	return (
@@ -31,7 +37,11 @@ const PageNav = ({ back = false, title = "" }: PageProps) => {
 				)}
 			</Box>
 			<Typography variant="body2">{title}</Typography>
-			<Box></Box>
+			{tutorialSection ? (
+				<TutorialButton section={tutorialSection} />
+			) : (
+				<Box></Box>
+			)}
 		</Paper>
 	);
 };
