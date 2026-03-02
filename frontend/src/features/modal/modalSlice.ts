@@ -5,11 +5,13 @@ interface InitType {
 	component: string | null;
 	props?: Record<string, any>;
 	title?: string;
+	fullScreen?: boolean;
 }
 
 const initialState: InitType = {
 	isOpen: false,
 	component: null,
+	fullScreen: false,
 };
 
 const modalSlice = createSlice({
@@ -22,12 +24,14 @@ const modalSlice = createSlice({
 				component: string;
 				props?: Record<string, any>;
 				title?: string;
-			}>
+				fullScreen?: boolean;
+			}>,
 		) => {
 			state.isOpen = true;
 			state.component = action.payload.component;
 			state.props = action.payload.props || {};
 			state.title = action.payload.title || "";
+			state.fullScreen = action.payload.fullScreen || false;
 		},
 		closeModal: (state) => {
 			state.isOpen = false;

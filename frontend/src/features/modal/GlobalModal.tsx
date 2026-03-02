@@ -1,4 +1,11 @@
-import { Box, IconButton, Modal, Typography } from "@mui/material";
+import {
+	Box,
+	IconButton,
+	Modal,
+	SxProps,
+	Theme,
+	Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "./modalSlice";
 import { RootState } from "../../app/store";
@@ -15,12 +22,13 @@ const MODAL_COMPONENTS: Record<string, React.FC<any>> = {
 	addMenu: AddMenu,
 	ingredientLog: IngredientLog,
 	mealLog: MealLog,
+	// tutorial: undefined,
 };
 
 const GlobalModal = () => {
 	const dispatch = useDispatch();
-	const { isOpen, component, props, title } = useSelector(
-		(state: RootState) => state.modal
+	const { isOpen, component, props, title, fullScreen } = useSelector(
+		(state: RootState) => state.modal,
 	);
 	const ModalComponent = component ? MODAL_COMPONENTS[component] : null;
 
@@ -30,30 +38,41 @@ const GlobalModal = () => {
 		dispatch(closeModal());
 	};
 
+	const boxSx: SxProps<Theme> = fullScreen
+		? {
+				position: "absolute",
+				top: 0,
+				left: 0,
+				width: "100%",
+				height: "100%",
+				bgcolor: "background.paper",
+				overflow: "hidden",
+			}
+		: {
+				position: "absolute",
+				top: "50%",
+				left: "50%",
+				transform: "translate(-50%, -50%)",
+				bgcolor: "background.paper",
+				boxShadow: 24,
+				p: 1,
+				borderRadius: 2,
+				minHeight: "200px",
+				minWidth: "250px",
+			};
+
 	return (
 		<Modal open={isOpen} onClose={handleClose}>
-			<Box
-				sx={{
-					position: "absolute",
-					top: "50%",
-					left: "50%",
-					transform: "translate(-50%, -50%)",
-					bgcolor: "background.paper",
-					boxShadow: 24,
-					p: 1,
-					borderRadius: 2,
-					minHeight: "200px",
-					minWidth: "250px",
-				}}
-				//onClick={(e) => e.stopPropagation()}
-			>
-				<Box className="flex-between" sx={{ width: "100%" }}>
-					<Typography variant="h6">{title}</Typography>
-					<IconButton onClick={handleClose}>
-						<CloseOutlined />
-					</IconButton>
-				</Box>
-				<Box sx={{ p: 4, paddingTop: "5px" }}>
+			<Box sx={{ ...boxSx }}>
+				{!fullScreen && (
+					<Box className="flex-between" sx={{ width: "100%" }}>
+						<Typography variant="h6">{title}</Typography>
+						<IconButton onClick={handleClose}>
+							<CloseOutlined />
+						</IconButton>
+					</Box>
+				)}
+				<Box sx={fullScreen ? {} : { p: 4, paddingTop: "5px" }}>
 					{ModalComponent && <ModalComponent {...props} />}
 				</Box>
 			</Box>
