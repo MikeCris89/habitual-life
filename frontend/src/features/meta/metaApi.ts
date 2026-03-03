@@ -25,7 +25,7 @@ export const metaApi = createApi({
 						const metaInit: MetaData = {
 							userId: nanoid(),
 							lastCreatedDate: "",
-							theme: "light",
+							theme: "dark",
 							goal: { [startOfDay()]: 70 },
 							hasSeenTutorial: false,
 						};

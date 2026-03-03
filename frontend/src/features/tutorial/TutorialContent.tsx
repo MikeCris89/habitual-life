@@ -13,9 +13,27 @@ const TutorialContent = ({ section }: { section: TutorialSection }) => {
 						gap: 2,
 					}}
 				>
-					<Typography variant="h5" sx={{ fontWeight: "bold" }}>
-						Welcome to Habitual Life
-					</Typography>
+					<Box
+						sx={{
+							display: "flex",
+							gap: "10px",
+							// justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<img
+							src="favicon-96x96.png"
+							alt="habitual-logo"
+							height={75}
+							width={75}
+						/>
+						<Typography
+							variant="h5"
+							sx={{ fontWeight: "bold", textWrap: "balance" }}
+						>
+							Welcome to Habitual Life
+						</Typography>
+					</Box>
 
 					<Typography variant="body1">
 						Habitual Life is a habit tracking app designed to help you build
