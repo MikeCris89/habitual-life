@@ -36,7 +36,7 @@ const PresetCard = ({
 	return (
 		<Card
 			className="flex-between col gap1 full-h"
-			sx={{ padding: "3px 6px", minWidth: "100px" }}
+			sx={{ padding: "3px 6px", minWidth: "100px", cursor: "pointer" }}
 			onClick={onClick}
 		>
 			<Typography variant="body2" sx={{ fontSize: "12px" }}>

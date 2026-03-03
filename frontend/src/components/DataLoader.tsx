@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { handleError } from "../utils/errors";
 import {
 	useGetMetaQuery,
+	useSetHasSeenTutorialMutation,
 	useSetLastCreatedDateMutation,
 } from "../features/meta/metaApi";
 import { startOfDay } from "../utils/timeUtils";
@@ -21,6 +22,7 @@ import {
 } from "../features/calories/food/foodApi";
 import useVisibilityEffect from "../hooks/useVisibilityEffect";
 import { dbPromise } from "../utils/indexedDb";
+import { openModal } from "../features/modal/modalSlice";
 
 interface Props {
 	children: ReactNode;
@@ -29,6 +31,7 @@ interface Props {
 const DataLoader = ({ children }: Props) => {
 	const dispatch = useDispatch();
 	const createRef = useRef(false);
+	const [setHasSeenTutorial] = useSetHasSeenTutorialMutation();
 
 	const {
 		data: metaData,
@@ -76,6 +79,19 @@ const DataLoader = ({ children }: Props) => {
 	} = useGetTasksByRangeQuery();
 
 	useEffect(() => {
+		if (metaData && !metaData.hasSeenTutorial) {
+			dispatch(
+				openModal({
+					component: "tutorial",
+					props: { section: "overview" },
+					fullScreen: true,
+				}),
+			);
+			setHasSeenTutorial({ userId: metaData.userId });
+		}
+	}, [metaData, dispatch, setHasSeenTutorial]);
+
+	useEffect(() => {
 		if (pastTasks) {
 			console.log("DataLoader - Dispatching setPastStats", pastTasks);
 			dispatch(setPastStats(pastTasks.dataArray));
@@ -108,7 +124,7 @@ const DataLoader = ({ children }: Props) => {
 				});
 			} catch (e) {
 				handleError(
-					`DataLoader failed to create tasks and update meta data. ${e} `
+					`DataLoader failed to create tasks and update meta data. ${e} `,
 				);
 			} finally {
 				createRef.current = false;

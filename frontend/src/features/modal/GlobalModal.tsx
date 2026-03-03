@@ -50,7 +50,7 @@ const GlobalModal = () => {
 				transform: "translate(-50%, -50%)",
 				width: "100%",
 				maxWidth: "800px",
-				height: "100%",
+				height: "100vh",
 				maxHeight: "1100px",
 				bgcolor: "background.paper",
 				overflow: "hidden",
@@ -80,7 +80,13 @@ const GlobalModal = () => {
 						</IconButton>
 					</Box>
 				)}
-				<Box sx={fullScreen ? {} : { p: 4, paddingTop: "5px" }}>
+				<Box
+					sx={
+						fullScreen
+							? { height: "100%", minHeight: 0 }
+							: { p: 4, paddingTop: "5px" }
+					}
+				>
 					{ModalComponent && <ModalComponent {...props} />}
 				</Box>
 			</Box>

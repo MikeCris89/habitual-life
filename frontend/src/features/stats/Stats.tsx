@@ -17,6 +17,7 @@ import { startOfDay } from "../../utils/timeUtils";
 import { Box, FormControl, Slider, Typography } from "@mui/material";
 import { useThemeMode } from "../../hooks/ThemeProvider";
 import { useGetMetaQuery, useSetGoalMutation } from "../meta/metaApi";
+import { TUTORIAL_SECTIONS } from "../tutorial/TutorialButton";
 
 const marks = [
 	{
@@ -61,7 +62,7 @@ const Stats = () => {
 				date,
 				value: data.completionRate,
 			})),
-		[history, currStats]
+		[history, currStats],
 	);
 
 	const handleChange = (value: number) => {
@@ -79,7 +80,7 @@ const Stats = () => {
 
 	return (
 		<PageWrapper sx={{ justifyContent: "space-between" }}>
-			<PageNav title="Stats" back />
+			<PageNav title="Stats" back tutorialSection={TUTORIAL_SECTIONS.stats} />
 			<SectionContainer fullWidth title="Set Goal">
 				<Typography variant="h6">Completion Goal</Typography>
 				<Box className="flex-center full-w" p={3}>

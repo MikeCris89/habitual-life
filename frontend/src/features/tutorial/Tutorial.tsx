@@ -11,12 +11,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import useDisplay from "../../hooks/useDisplay";
 import { closeModal } from "../modal/modalSlice";
+import TutorialContent from "./TutorialContent";
 
 type TutorialSectionId =
 	| "overview"
 	| "stats"
-	| "goodHabits"
-	| "badHabits"
+	| "habits"
 	| "timers"
 	| "weightTracker"
 	| "calorieCounter"
@@ -26,8 +26,7 @@ type TutorialSectionId =
 const SECTIONS: Array<{ id: TutorialSectionId; label: string }> = [
 	{ id: "overview", label: "Overview" },
 	{ id: "stats", label: "Stats" },
-	{ id: "goodHabits", label: "Good Habits" },
-	{ id: "badHabits", label: "Bad Habits" },
+	{ id: "habits", label: "Habits" },
 	{ id: "timers", label: "Timers" },
 	{ id: "weightTracker", label: "Weight Tracker" },
 	{ id: "calorieCounter", label: "Calorie Counter" },
@@ -101,15 +100,15 @@ const Tutorial = ({ section }: TutorialProps) => {
 							selected={selected}
 							sx={{
 								...(selected ? { bgcolor: "primary.main" } : {}),
-								...(selected
-									? { "&:hover": { bgcolor: "primary.main" } }
-									: {}),
+								...(selected ? { "&:hover": { bgcolor: "primary.main" } } : {}),
 							}}
 						>
 							<ListItemText
 								primary={s.label}
-								primaryTypographyProps={{
-									sx: selected ? { color: "primary.contrastText" } : {},
+								slotProps={{
+									primary: {
+										sx: selected ? { color: "primary.main" } : {},
+									},
 								}}
 							/>
 						</ListItemButton>
@@ -126,15 +125,14 @@ const Tutorial = ({ section }: TutorialProps) => {
 				height: "100%",
 				overflowY: "auto",
 				p: 2,
+				minHeight: 0,
+				// flex: "1 1 auto",
 			}}
 		>
-			<Typography variant="h5" sx={{ mb: 2 }}>
+			{/* <Typography variant="h5" sx={{ mb: 2 }}>
 				{selectedLabel}
-			</Typography>
-			<Typography variant="body1">
-				Placeholder content for {selectedLabel}. This section will be filled in
-				later.
-			</Typography>
+			</Typography> */}
+			<TutorialContent section={selectedSection} />
 		</Box>
 	);
 
@@ -162,7 +160,7 @@ const Tutorial = ({ section }: TutorialProps) => {
 					>
 						{Menu}
 					</Box>
-					<Box sx={{ minHeight: 0 }}>{Content}</Box>
+					{Content}
 				</Box>
 			</Box>
 		);
@@ -175,7 +173,14 @@ const Tutorial = ({ section }: TutorialProps) => {
 			{showMenu ? (
 				<Box sx={{ pt: 1 }}>{Menu}</Box>
 			) : (
-				<Box sx={{ height: "100%", width: "100%" }}>
+				<Box
+					sx={{
+						height: "100%",
+						width: "100%",
+						display: "flex",
+						flexDirection: "column",
+					}}
+				>
 					<Box
 						sx={{
 							display: "flex",
@@ -191,7 +196,7 @@ const Tutorial = ({ section }: TutorialProps) => {
 							<ArrowBack />
 						</IconButton>
 						<Typography variant="body1" sx={{ fontWeight: "bold" }}>
-							{selectedLabel}
+							Tutorial
 						</Typography>
 					</Box>
 					{Content}
@@ -202,4 +207,3 @@ const Tutorial = ({ section }: TutorialProps) => {
 };
 
 export default Tutorial;
-

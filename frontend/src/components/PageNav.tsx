@@ -1,8 +1,6 @@
-import { ArrowBack, HelpOutline } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, Paper, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { openModal } from "../features/modal/modalSlice";
 import TutorialButton, {
 	TUTORIAL_SECTIONS,
 } from "../features/tutorial/TutorialButton";
@@ -21,6 +19,7 @@ const navStyle = {
 	width: "100%",
 	marginBottom: "5px",
 	overflow: "hidden",
+	minHeight: "30px",
 	// bgcolor: "background.default",
 };
 
@@ -38,7 +37,9 @@ const PageNav = ({ back = false, title = "", tutorialSection }: PageProps) => {
 			</Box>
 			<Typography variant="body2">{title}</Typography>
 			{tutorialSection ? (
-				<TutorialButton section={tutorialSection} />
+				<Box sx={{ justifySelf: "right", mr: 2 }}>
+					<TutorialButton section={tutorialSection} />
+				</Box>
 			) : (
 				<Box></Box>
 			)}

@@ -85,10 +85,29 @@ const Account: React.FC = () => {
 	};
 	const handleClickDeleteData = (storeName: string) => {
 		openDialog({
-			title: "Delete All Tasks",
+			title: "Delete History",
 			onConfirm: () => handleDeleteData(storeName),
 			message:
 				"This will permanently delete all tasks and habit history. This is irreversible.",
+			confirmDef: true,
+		});
+	};
+
+	const handleDeleteAllData = async () => {
+		try {
+			await dbActions.deleteAllData();
+			navigate(0); // reload app, meta will reinitialize fresh
+		} catch (e) {
+			handleError(`Error deleting all data. Error: ${e}`);
+		}
+	};
+
+	const handleClickDeleteAllData = () => {
+		openDialog({
+			title: "Delete All Data",
+			onConfirm: handleDeleteAllData,
+			message:
+				"This will permanently delete ALL data including habits, history, meals and ingredients. This is irreversible.",
 			confirmDef: true,
 		});
 	};
@@ -113,14 +132,15 @@ const Account: React.FC = () => {
 				onClick={handleClickTestData}
 				loading={loadingDeleteTasks || loadingPastTasks}
 			>
-				Add Test Tasks
+				Add Test Data
 			</Button>
 			<Button
 				onClick={() => handleClickDeleteData("tasks")}
 				loading={loadingDeleteTasks || loadingPastTasks}
 			>
-				Delete All Tasks
+				Delete History
 			</Button>
+			<Button onClick={handleClickDeleteAllData}>Delete All Data</Button>
 		</Box>
 	);
 };

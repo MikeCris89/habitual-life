@@ -10,6 +10,7 @@ import { nanoid } from "nanoid";
 import useDisplay from "../../hooks/useDisplay";
 import { Outlet } from "react-router-dom";
 import NutritionInput from "./NutritionInput";
+import { TUTORIAL_SECTIONS } from "../tutorial/TutorialButton";
 
 export const CurrBasketIdContext = createContext<string | undefined>(undefined);
 
@@ -17,7 +18,7 @@ export const useCurrBasketId = () => {
 	const value = useContext(CurrBasketIdContext);
 	if (value == null) {
 		handleError(
-			"Current Basket ID is null. useCurrBasketId hook must be used within Calorie Log component."
+			"Current Basket ID is null. useCurrBasketId hook must be used within Calorie Log component.",
 		);
 	}
 	return value;
@@ -51,7 +52,7 @@ const CalorieLog = ({ children }: CalorieProps) => {
 
 		const caloriesChanged = task.count !== allBasketsTotal.calories;
 		const macrosChanged = task.macros.some(
-			(mac) => mac.count !== allBasketsTotal.macros[mac.id]
+			(mac) => mac.count !== allBasketsTotal.macros[mac.id],
 		);
 
 		if (caloriesChanged || macrosChanged) {
@@ -84,7 +85,11 @@ const CalorieLog = ({ children }: CalorieProps) => {
 			}}
 		>
 			<CurrBasketIdContext.Provider value={currentBasketId}>
-				<PageNav back={true} title="Calorie Counter" />
+				<PageNav
+					back={true}
+					title="Calorie Counter"
+					tutorialSection={TUTORIAL_SECTIONS.calorieCounter}
+				/>
 
 				<Outlet />
 

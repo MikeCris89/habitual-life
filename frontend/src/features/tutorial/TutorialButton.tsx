@@ -6,8 +6,7 @@ import { openModal } from "../modal/modalSlice";
 export const TUTORIAL_SECTIONS = {
 	overview: "overview",
 	stats: "stats",
-	goodHabits: "goodHabits",
-	badHabits: "badHabits",
+	habits: "habits",
 	timers: "timers",
 	weightTracker: "weightTracker",
 	calorieCounter: "calorieCounter",

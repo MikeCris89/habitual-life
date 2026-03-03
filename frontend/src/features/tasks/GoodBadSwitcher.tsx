@@ -33,14 +33,14 @@ const GoodBadSwitcher = () => {
 						variant={tab ? "outlined" : "contained"}
 						onClick={() => setTab(false)}
 					>
-						Today
+						To-Do
 					</Button>
 					<Button
 						size="small"
 						variant={tab ? "contained" : "outlined"}
 						onClick={() => setTab(true)}
 					>
-						No-No List
+						Not To-Do
 					</Button>
 				</Box>
 				<AddButton />

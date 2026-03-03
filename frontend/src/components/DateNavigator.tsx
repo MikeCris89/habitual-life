@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { ChevronLeft, ChevronRight, Today } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import dayjs from "dayjs";
 // import { startOfDay } from "../utils/timeUtils";
@@ -50,22 +50,24 @@ const DateNavigator = ({ selectedDate, onChange }: DateNavigatorProps) => {
 				<IconButton size="small" onClick={handleNext} disabled={isToday}>
 					<ChevronRight fontSize="small" />
 				</IconButton>
-				<Button
-					size="small"
-					variant="text"
+				<IconButton
+					// size="small"
+					// variant="text"
 					onClick={handleToday}
 					disabled={isToday}
 					sx={{
-						ml: 1,
 						position: "absolute",
 						left: "100%",
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
+						padding: 0,
+						margin: 0,
+						color: "primary.main",
 					}}
 				>
-					Today
-				</Button>
+					<Today sx={{ height: "20px" }} />
+				</IconButton>
 			</div>
 		</Box>
 	);

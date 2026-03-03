@@ -61,6 +61,9 @@ const AddMenu = () => {
 			borderColor: habitCreated ? "gray" : "primary.main",
 			opacity: habitCreated ? 0.6 : 1,
 			transition: "0.3s",
+			display: "flex",
+			gap: "10px",
+			alignItems: "center",
 		};
 	};
 
@@ -76,12 +79,13 @@ const AddMenu = () => {
 			<Button variant="outlined" onClick={() => handleMenuNav(HabitTypes.BAD)}>
 				Bad Habit
 			</Button>
-			<Button
+			{/* KEEP FOR NOW */}
+			{/* <Button
 				variant="outlined"
 				onClick={() => handleMenuNav(HabitTypes.COUNTER)}
 			>
 				Counter Habit
-			</Button>
+			</Button> */}
 
 			<Typography variant="body1" sx={{ textAlign: "center" }}>
 				Presets

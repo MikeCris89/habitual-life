@@ -35,6 +35,7 @@ import { useDialogModal } from "../modal/DialogModal";
 import { SectionContainer } from "./HabitForm";
 import PageWrapper from "../../components/PageWrapper";
 import Graph from "../../components/Graph";
+import { TUTORIAL_SECTIONS } from "../tutorial/TutorialButton";
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
@@ -52,8 +53,8 @@ const HabitDetails: React.FC = () => {
 	const { data: pastTasks } = useGetTasksByRangeQuery();
 
 	const history = useMemo(
-		() => (id ? pastTasks?.dataByHabitId[id] ?? [] : []),
-		[id, pastTasks]
+		() => (id ? (pastTasks?.dataByHabitId[id] ?? []) : []),
+		[id, pastTasks],
 	);
 
 	const {
@@ -81,7 +82,7 @@ const HabitDetails: React.FC = () => {
 
 	const graphData = useMemo(
 		() => getGraphCompRate([...history, ...dailyTasks]),
-		[history, dailyTasks]
+		[history, dailyTasks],
 	);
 
 	if (!id) return <div>No Habit Selected.</div>;
@@ -120,7 +121,11 @@ const HabitDetails: React.FC = () => {
 		// sx={{ p: 1, justifyContent: "flex-start" }}
 		>
 			{/* top nav */}
-			<PageNav back={true} title="Details" />
+			<PageNav
+				back={true}
+				title="Details"
+				tutorialSection={TUTORIAL_SECTIONS.habits}
+			/>
 			{/* <Box className="flex-around col gap4 full-w" sx={{ flex: 1, p: 1 }}> */}
 			<SectionContainer
 				fullWidth

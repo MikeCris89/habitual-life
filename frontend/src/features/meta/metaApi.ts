@@ -9,6 +9,7 @@ export type MetaData = {
 	lastCreatedDate: string;
 	theme: string;
 	goal: Record<string, number>;
+	hasSeenTutorial: boolean;
 };
 
 export const metaApi = createApi({
@@ -26,6 +27,7 @@ export const metaApi = createApi({
 							lastCreatedDate: "",
 							theme: "light",
 							goal: { [startOfDay()]: 70 },
+							hasSeenTutorial: false,
 						};
 						await dbActions.setMetaData(metaInit);
 						return { data: metaInit };
@@ -41,6 +43,26 @@ export const metaApi = createApi({
 				}
 			},
 			providesTags: ["MetaData"],
+		}),
+		setHasSeenTutorial: builder.mutation({
+			queryFn: async ({ userId }) => {
+				try {
+					const db = await dbActions.getAll("meta");
+					const meta = db[0];
+					const newData = { ...meta, hasSeenTutorial: true };
+					await dbActions.setMetaData(newData);
+					return { data: newData };
+				} catch (e) {
+					return { error: { message: `Error setting hasSeenTutorial: ${e}` } };
+				}
+			},
+			onQueryStarted: (_, { dispatch }) => {
+				dispatch(
+					metaApi.util.updateQueryData("getMeta", undefined, (draft) => {
+						draft.hasSeenTutorial = true;
+					}),
+				);
+			},
 		}),
 		setLastCreatedDate: builder.mutation({
 			queryFn: async ({ userId, date = startOfDay() }) => {
@@ -101,6 +123,7 @@ export const metaApi = createApi({
 
 export const {
 	useGetMetaQuery,
+	useSetHasSeenTutorialMutation,
 	useSetLastCreatedDateMutation,
 	useSetGoalMutation,
 	useSetThemeMutation,

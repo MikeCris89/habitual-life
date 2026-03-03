@@ -109,7 +109,7 @@ export const dbActions = {
 		const tasks = [];
 
 		let cursor = await index.openCursor(
-			IDBKeyRange.bound(startOfWeek(date), endOfWeek(date), false, true)
+			IDBKeyRange.bound(startOfWeek(date), endOfWeek(date), false, true),
 		);
 
 		while (cursor) {
@@ -128,7 +128,7 @@ export const dbActions = {
 		const tasks = [];
 
 		let cursor = await index.openCursor(
-			IDBKeyRange.bound(startOfDay(), nextDay(), false, true)
+			IDBKeyRange.bound(startOfDay(), nextDay(), false, true),
 		);
 
 		while (cursor) {
@@ -141,7 +141,7 @@ export const dbActions = {
 	},
 	async getTasksByRange(
 		startDate: string = statsStartDate(),
-		endDate: string = dayBefore()
+		endDate: string = dayBefore(),
 	): Promise<Task[]> {
 		const db = await dbPromise;
 		const tx = db.transaction("tasks", "readonly");
@@ -150,7 +150,7 @@ export const dbActions = {
 		const tasks = [];
 
 		let cursor = await index.openCursor(
-			IDBKeyRange.bound(startOfDay(startDate), nextDay(endDate), false, true)
+			IDBKeyRange.bound(startOfDay(startDate), nextDay(endDate), false, true),
 		);
 
 		while (cursor) {
@@ -229,5 +229,15 @@ export const dbActions = {
 		} catch (e) {
 			console.log("error logging error: ", e);
 		}
+	},
+	async deleteAllData() {
+		const db = await dbPromise;
+		await db.clear("tasks");
+		await db.clear("habits");
+		await db.clear("baskets");
+		await db.clear("ingredients");
+		await db.clear("meals");
+		await db.clear("meta");
+		console.log("All data cleared.");
 	},
 };

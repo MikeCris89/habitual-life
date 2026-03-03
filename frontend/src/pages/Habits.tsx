@@ -1,13 +1,14 @@
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import HabitCard from "../features/habits/HabitCard";
 import { Habit } from "../utils/types";
 import useDisplay from "../hooks/useDisplay";
 import { Outlet, useLocation, useParams } from "react-router-dom";
-import { Close, Search } from "@mui/icons-material";
 import { memo, useState } from "react";
 import { useGetHabitsQuery } from "../features/habits/habitsApi";
 import AddButton from "../components/AddButton";
 import SearchBar from "../components/SearchBar";
+import PageNav from "../components/PageNav";
+import { TUTORIAL_SECTIONS } from "../features/tutorial/TutorialButton";
 
 interface ListProps {
 	habits?: Habit[];
@@ -94,6 +95,7 @@ const Habits = () => {
 			className="flex col"
 			sx={{ overflow: "hidden", height: "100%", width: "100%" }}
 		>
+			<PageNav title="Habits" tutorialSection={TUTORIAL_SECTIONS.habits} />
 			<Box sx={{ flex: 1, width: "100%", minHeight: 0 }}>
 				{/* Mobile - full page  */}
 				{isMobile && (

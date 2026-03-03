@@ -16,7 +16,7 @@ const Calendar = () => {
 	const { isLoading: loadingHabits } = useGetHabitsQuery();
 
 	const allWeeklyTasks = useSelector((state: RootState) =>
-		selectWeeklyTasks(state)
+		selectWeeklyTasks(state),
 	);
 
 	// const {
@@ -53,13 +53,11 @@ const Calendar = () => {
 
 	return (
 		<PageWrapper>
-			{
-				<GoodCalendar
-					tasks={calendarTasks.filter((task): task is GoodTask =>
-						isGoodTask(task)
-					)}
-				/>
-			}
+			<GoodCalendar
+				tasks={calendarTasks.filter((task): task is GoodTask =>
+					isGoodTask(task),
+				)}
+			/>
 		</PageWrapper>
 	);
 };
