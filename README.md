@@ -1,46 +1,43 @@
-# Getting Started with Create React App
+# Habitual Life
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A habit tracking progressive web app built with React and TypeScript. Designed with a local-first architecture and structured for future migration to a backend with authentication.
 
-## Available Scripts
+**Live:** [https://habitual-life.web.app]
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Daily task generation based on configurable habits
+- Good habits (to-do) and bad habits (not-to-do) tracking
+- Completion rate tracking over a rolling 30-day window with a configurable goal
+- Single and round interval timers for workouts and breathing exercises
+- Weight tracking with historical graph
+- Calorie and macro tracking with saved ingredients, meals, and custom entries
+- Past day navigation with full edit support
+- PWA — installable on mobile and desktop, works offline
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Stack
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- React 18, TypeScript
+- Redux Toolkit + RTK Query (used as data abstraction layer over IndexedDB)
+- IndexedDB via idb for local persistence
+- Material UI
+- Recharts
+- Framer Motion
+- Day.js
 
-### `npm test`
+## Architecture
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The app is intentionally structured as if it were a production application backed by a real API.
 
-### `npm run build`
+RTK Query manages all data fetching and cache updates despite the data layer being local. This keeps the components decoupled from the persistence layer and makes a future migration to a REST or GraphQL API straightforward — only the `queryFn` implementations would need to change.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Data is scoped per user via a `userId` stored in metadata, anticipating future JWT-based authentication.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Daily tasks are generated programmatically on app load based on habit definitions rather than being stored statically, reducing data duplication and aligning with how a server-side cron job would work.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Running Locally
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm install
+npm start
+```
