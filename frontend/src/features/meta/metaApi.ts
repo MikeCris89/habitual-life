@@ -76,11 +76,16 @@ export const metaApi = createApi({
 				}
 			},
 			onQueryStarted: async ({ date }, { dispatch, queryFulfilled }) => {
-				dispatch(
+				const path = dispatch(
 					metaApi.util.updateQueryData("getMeta", undefined, (draft) => {
 						draft.lastCreatedDate = date;
 					}),
 				);
+				try {
+					await queryFulfilled;
+				} catch {
+					path.undo();
+				}
 			},
 			invalidatesTags: ["MetaData"],
 		}),
