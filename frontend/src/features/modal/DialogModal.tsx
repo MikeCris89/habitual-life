@@ -1,11 +1,9 @@
 import {
-	Box,
 	Button,
 	Dialog,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	Paper,
 	Typography,
 } from "@mui/material";
 import { createContext, useContext, useState } from "react";

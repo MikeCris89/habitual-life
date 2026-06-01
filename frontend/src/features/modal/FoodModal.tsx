@@ -1,4 +1,4 @@
-import { Box, Modal, Paper } from "@mui/material";
+import { Box, Modal } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useThemeMode } from "../../hooks/ThemeProvider";
 
