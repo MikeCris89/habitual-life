@@ -84,7 +84,7 @@ const DataLoader = ({ children }: Props) => {
 				openModal({
 					component: "tutorial",
 					props: { section: "overview" },
-					fullScreen: true,
+					fullScreen: false,
 				}),
 			);
 			setHasSeenTutorial({ userId: metaData.userId });

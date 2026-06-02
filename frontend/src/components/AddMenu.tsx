@@ -68,7 +68,10 @@ const AddMenu = () => {
 	};
 
 	return (
-		<Box className="flex-center col gap2" sx={{ "& > *": { width: "100%" } }}>
+		<Box
+			className="flex-center col gap2"
+			sx={{ "& > *": { width: "100%" }, p: 1 }}
+		>
 			<Typography variant="body1" sx={{ textAlign: "center" }}>
 				Custom
 			</Typography>

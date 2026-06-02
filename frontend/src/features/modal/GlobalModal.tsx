@@ -51,9 +51,9 @@ const GlobalModal = () => {
 				width: "100%",
 				maxWidth: "800px",
 				height: "100dvh",
+				maxHeight: "1100px",
 				// my: 1,
 				py: 1,
-				maxHeight: "1100px",
 				bgcolor: "background.paper",
 				overflow: "hidden",
 				borderRadius: isDesktop ? "12px" : "0",
@@ -69,12 +69,16 @@ const GlobalModal = () => {
 				borderRadius: 2,
 				minHeight: "200px",
 				minWidth: "250px",
+				// height: "90%",
+				// width: "95%",
+				// maxWidth: "750px",
+				// maxHeight: "800px",
 			};
 
 	return (
 		<Modal open={isOpen} onClose={handleClose}>
 			<Box sx={{ ...boxSx }}>
-				{!fullScreen && (
+				{component !== "tutorial" && (
 					<Box className="flex-between" sx={{ width: "100%" }}>
 						<Typography variant="h6">{title}</Typography>
 						<IconButton onClick={handleClose}>
@@ -82,13 +86,7 @@ const GlobalModal = () => {
 						</IconButton>
 					</Box>
 				)}
-				<Box
-					sx={
-						fullScreen
-							? { height: "100%", minHeight: 0 }
-							: { p: 4, paddingTop: "5px" }
-					}
-				>
+				<Box sx={{ height: "100%", minHeight: 0 }}>
 					{ModalComponent && <ModalComponent {...props} />}
 				</Box>
 			</Box>

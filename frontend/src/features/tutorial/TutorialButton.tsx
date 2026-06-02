@@ -30,7 +30,7 @@ const TutorialButton = ({ section, text }: TutorialButtonProps) => {
 			openModal({
 				component: "tutorial",
 				props: { section },
-				fullScreen: true,
+				fullScreen: false,
 			}),
 		);
 	};

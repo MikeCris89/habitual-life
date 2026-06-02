@@ -7,7 +7,7 @@ import {
 	ListItemText,
 	Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import useDisplay from "../../hooks/useDisplay";
 import { closeModal } from "../modal/modalSlice";
@@ -58,13 +58,13 @@ const Tutorial = ({ section }: TutorialProps) => {
 		return section ? false : true;
 	});
 
-	useEffect(() => {
-		setSelectedSection(initialSection);
-		if (isMobile) setShowMenu(section ? false : true);
-	}, [initialSection, isMobile, section]);
+	// useEffect(() => {
+	// 	setSelectedSection(initialSection);
+	// 	if (isMobile) setShowMenu(section ? false : true);
+	// }, [initialSection, isMobile, section]);
 
-	const selectedLabel =
-		SECTIONS.find((s) => s.id === selectedSection)?.label ?? "Overview";
+	// const selectedLabel =
+	// 	SECTIONS.find((s) => s.id === selectedSection)?.label ?? "Overview";
 
 	const handleSelect = (id: TutorialSectionId) => {
 		setSelectedSection(id);
@@ -86,11 +86,17 @@ const Tutorial = ({ section }: TutorialProps) => {
 	);
 
 	const Menu = (
-		<Box sx={{ width: "100%" }}>
+		<Box
+			sx={{
+				width: "100%",
+				height: "100%",
+				overflow: "hidden",
+			}}
+		>
 			<Typography sx={{ px: 2, pt: 2, pb: 1 }} variant="h6">
 				Tutorial
 			</Typography>
-			<List sx={{ p: 0 }}>
+			<List sx={{ p: 0, overflow: "auto" }}>
 				{SECTIONS.map((s) => {
 					const selected = s.id === selectedSection;
 					return (
@@ -121,17 +127,15 @@ const Tutorial = ({ section }: TutorialProps) => {
 	const Content = (
 		<Box
 			sx={{
+				minWidth: "300px",
 				width: "100%",
 				height: "100%",
 				overflowY: "auto",
-				p: 2,
+				p: 1,
 				minHeight: 0,
 				// flex: "1 1 auto",
 			}}
 		>
-			{/* <Typography variant="h5" sx={{ mb: 2 }}>
-				{selectedLabel}
-			</Typography> */}
 			<TutorialContent section={selectedSection} />
 		</Box>
 	);
@@ -139,7 +143,15 @@ const Tutorial = ({ section }: TutorialProps) => {
 	// Desktop: always show menu + scrollable content.
 	if (isDesktop) {
 		return (
-			<Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+			<Box
+				sx={{
+					position: "relative",
+					height: "100%",
+					width: "100%",
+					maxWidth: "700px",
+					maxHeight: "900px",
+				}}
+			>
 				{HeaderRightClose}
 				<Box
 					sx={{
@@ -168,7 +180,7 @@ const Tutorial = ({ section }: TutorialProps) => {
 
 	// Mobile: menu by default; content view with back arrow.
 	return (
-		<Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+		<Box sx={{ position: "relative", height: "90dvh", width: "90vw" }}>
 			{HeaderRightClose}
 			{showMenu ? (
 				<Box sx={{ pt: 1 }}>{Menu}</Box>
