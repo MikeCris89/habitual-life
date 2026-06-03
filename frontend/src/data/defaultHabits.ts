@@ -130,5 +130,14 @@ export const getDefaultHabits = (): Habit[] => {
 				},
 			],
 		},
+		{
+			type: "counter",
+			title: "Weight Tracker",
+			id: "preset_weight",
+			createdAt,
+			daysOfWeek: everyDay(),
+			isMax: false,
+			total: 0,
+		},
 	];
 };
