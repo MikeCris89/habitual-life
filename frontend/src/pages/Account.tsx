@@ -12,22 +12,15 @@ import {
 	useDeleteTasksMutation,
 	useGetTasksByRangeQuery,
 } from "../features/tasks/tasksApi";
-import {
-	useGetHabitsQuery,
-	useLazyGetHabitsQuery,
-} from "../features/habits/habitsApi";
+import { useGetHabitsQuery } from "../features/habits/habitsApi";
 import { handleError } from "../utils/errors";
-import { dayBefore, startOfDay, statsStartDate } from "../utils/timeUtils";
+import { startOfDay, statsStartDate } from "../utils/timeUtils";
 import Loading from "../components/Loading";
 import { dbActions } from "../utils/indexedDb";
-import { Task } from "../utils/types";
 import { useDispatch } from "react-redux";
 import { resetPastStats } from "../features/stats/statsSlice";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-	useGetMetaQuery,
-	useSetLastCreatedDateMutation,
-} from "../features/meta/metaApi";
+import { useNavigate } from "react-router-dom";
+
 import { useThemeMode } from "../hooks/ThemeProvider";
 import { useDialogModal } from "../features/modal/DialogModal";
 import TutorialButton, {
@@ -47,67 +40,85 @@ const Account: React.FC = () => {
 	const { data: pastTasks, isLoading: loadingPastTasks } =
 		useGetTasksByRangeQuery();
 
-	const handleTestData = async () => {
+	// const handleTestData = async () => {
+	// 	try {
+	// 		if (habits && habits.length > 0) {
+	// 			await deleteTasks(pastTasks?.dataArray ?? []);
+	// 			dispatch(resetPastStats());
+	// 			await createTestData({
+	// 				habits,
+	// 				completionRate: 70,
+	// 				startDate: statsStartDate(),
+	// 				endDate: startOfDay(),
+	// 			});
+	// 		} else {
+	// 		}
+	// 	} catch (e) {
+	// 		handleError("Error creating test data.");
+	// 	}
+	// };
+
+	// const handleClickTestData = () => {
+	// 	openDialog({
+	// 		title: "Add Test Data",
+	// 		onConfirm: handleTestData,
+	// 		message:
+	// 			"This action will override all habit history. This option is for testing purposes only",
+	// 		confirmDef: true,
+	// 	});
+	// };
+
+	// const handleDeleteAllData = async () => {
+	// 	try {
+	// 		await dbActions.deleteAllData();
+	// 		navigate(0); // reload app, meta will reinitialize fresh
+	// 	} catch (e) {
+	// 		handleError(`Error deleting all data. Error: ${e}`);
+	// 	}
+	// };
+
+	// const handleClickDeleteAllData = () => {
+	// 	openDialog({
+	// 		title: "Delete All Data",
+	// 		onConfirm: handleDeleteAllData,
+	// 		message:
+	// 			"This will permanently delete ALL data including habits, history, meals and ingredients. This is irreversible.",
+	// 		confirmDef: true,
+	// 	});
+	// };
+
+	const handleResetDemoData = async () => {
 		try {
-			if (habits && habits.length > 0) {
-				await deleteTasks(pastTasks?.dataArray ?? []);
-				dispatch(resetPastStats());
-				await createTestData({
-					habits,
-					completionRate: 70,
-					startDate: statsStartDate(),
-					endDate: startOfDay(),
-				});
-			} else {
-			}
+			await dbActions.resetDemoData();
+			window.location.assign("/");
 		} catch (e) {
-			handleError("Error creating test data.");
+			handleError(`Error resetting demo data. Error: ${e}`);
 		}
 	};
 
-	const handleDeleteData = async (storeName: string) => {
+	const handleClearExisting = async () => {
 		try {
-			await dbActions.batchDeleteAllTasks(storeName);
-			navigate(0);
+			await dbActions.clearExistingData();
+			window.location.assign("/");
 		} catch (e) {
-			//	handleError(`Error batch deleting all ${storeName}. Error: ${e}`);
+			handleError(`Error clearing data. Error: ${e}`);
 		}
 	};
-
-	const handleClickTestData = () => {
+	const handleClickClearExisting = () => {
 		openDialog({
-			title: "Add Test Data",
-			onConfirm: handleTestData,
+			title: "Clear Existing Data",
+			onConfirm: () => handleClearExisting(),
 			message:
-				"This action will override all habit history. This option is for testing purposes only",
+				"This will permanently delete all habits, tasks and habit history. This is irreversible.",
 			confirmDef: true,
 		});
 	};
-	const handleClickDeleteData = (storeName: string) => {
+	const handleClickResetDemoData = () => {
 		openDialog({
-			title: "Delete History",
-			onConfirm: () => handleDeleteData(storeName),
+			title: "Reset Demo Data",
+			onConfirm: () => handleResetDemoData(),
 			message:
-				"This will permanently delete all tasks and habit history. This is irreversible.",
-			confirmDef: true,
-		});
-	};
-
-	const handleDeleteAllData = async () => {
-		try {
-			await dbActions.deleteAllData();
-			navigate(0); // reload app, meta will reinitialize fresh
-		} catch (e) {
-			handleError(`Error deleting all data. Error: ${e}`);
-		}
-	};
-
-	const handleClickDeleteAllData = () => {
-		openDialog({
-			title: "Delete All Data",
-			onConfirm: handleDeleteAllData,
-			message:
-				"This will permanently delete ALL data including habits, history, meals and ingredients. This is irreversible.",
+				"This will replace all current data with the default demo data. This is irreversible.",
 			confirmDef: true,
 		});
 	};
@@ -128,19 +139,24 @@ const Account: React.FC = () => {
 				text="View Tutorial"
 			/>
 			<br />
-			<Button
+			{/* <Button
 				onClick={handleClickTestData}
 				loading={loadingDeleteTasks || loadingPastTasks}
 			>
 				Add Test Data
-			</Button>
+			</Button> */}
 			<Button
-				onClick={() => handleClickDeleteData("tasks")}
+				onClick={() => handleClickResetDemoData()}
 				loading={loadingDeleteTasks || loadingPastTasks}
 			>
-				Delete History
+				Reset Demo Data
 			</Button>
-			<Button onClick={handleClickDeleteAllData}>Delete All Data</Button>
+			<Button
+				onClick={() => handleClickClearExisting()}
+				loading={loadingDeleteTasks || loadingPastTasks}
+			>
+				Clear Existing Data
+			</Button>
 		</Box>
 	);
 };
