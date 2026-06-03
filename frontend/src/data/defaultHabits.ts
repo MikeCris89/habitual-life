@@ -54,7 +54,7 @@ export const getDefaultHabits = (): Habit[] => {
 			title: "HIIT workout",
 			id: "habit-hiit",
 			createdAt,
-			daysOfWeek: everyDay(),
+			daysOfWeek: days([DayKeys[1], DayKeys[3], DayKeys[5]]),
 			allDay: false,
 			timeOfDay: [{ id: 1, time: at(18, 0) }],
 			timer: {
