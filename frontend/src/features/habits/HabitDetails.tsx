@@ -32,7 +32,11 @@ import {
 	PinOutlined,
 	TimerOutlined,
 } from "@mui/icons-material";
-import { displayTitle, getGraphCompRate, getStreaks } from "../../utils/helpers";
+import {
+	displayTitle,
+	getGraphCompRate,
+	getStreaks,
+} from "../../utils/helpers";
 import { useDialogModal } from "../modal/DialogModal";
 import { openModal } from "../modal/modalSlice";
 import { setTimer } from "../timer/timerSlice";
@@ -164,7 +168,7 @@ const HabitDetails: React.FC = () => {
 				title="Details"
 				tutorialSection={TUTORIAL_SECTIONS.habits}
 			/>
-			<Box className="flex-between full-w full-h col">
+			<Box className="flex-between full-w full-h col" sx={{ overflow: "auto" }}>
 				<SectionContainer fullWidth wrapperSx={{}} paperSx={{ p: 2, pb: 4 }}>
 					<Box className="flex-between full-w" sx={{}}>
 						<HabitChip type={habit.type} />
