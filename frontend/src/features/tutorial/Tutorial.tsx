@@ -137,10 +137,9 @@ const Tutorial = ({ section }: TutorialProps) => {
 			<Box
 				sx={{
 					position: "relative",
-					height: "90dvh",
+					height: "100%",
 					width: "100%",
 					maxWidth: "700px",
-					maxHeight: "90dvh",
 					minHeight: 0,
 					display: "flex",
 				}}
@@ -173,7 +172,15 @@ const Tutorial = ({ section }: TutorialProps) => {
 
 	// Mobile: menu by default; content view with back arrow.
 	return (
-		<Box sx={{ position: "relative", height: "90dvh", width: "90vw" }}>
+		<Box
+			sx={{
+				position: "relative",
+				height: "100%",
+				width: "90vw",
+				minHeight: 0,
+				display: "flex",
+			}}
+		>
 			{HeaderRightClose}
 			{showMenu ? (
 				<Box sx={{ pt: 1 }}>{Menu}</Box>

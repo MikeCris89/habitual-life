@@ -40,6 +40,8 @@ const GlobalModal = () => {
 		dispatch(closeModal());
 	};
 
+	const isTutorial = component === "tutorial";
+
 	const { isDesktop } = useDisplay();
 
 	const boxSx: SxProps<Theme> = fullScreen
@@ -68,6 +70,7 @@ const GlobalModal = () => {
 				borderRadius: 2,
 				minHeight: "200px",
 				minWidth: "250px",
+				height: isTutorial ? "100%" : "fit",
 				maxHeight: "90dvh",
 				maxWidth: isDesktop ? "700px" : "90vw",
 			};
@@ -75,7 +78,7 @@ const GlobalModal = () => {
 	return (
 		<Modal open={isOpen} onClose={handleClose}>
 			<Box sx={{ ...boxSx }}>
-				{component !== "tutorial" && (
+				{!isTutorial && (
 					<Box className="flex-between" sx={{ width: "100%" }}>
 						<Typography variant="h6">{title}</Typography>
 						<IconButton onClick={handleClose}>
@@ -83,7 +86,7 @@ const GlobalModal = () => {
 						</IconButton>
 					</Box>
 				)}
-				<Box sx={{ height: "100%", minHeight: 0 }}>
+				<Box sx={{ height: "100%", minHeight: 0, display: "flex" }}>
 					{ModalComponent && <ModalComponent {...props} />}
 				</Box>
 			</Box>
