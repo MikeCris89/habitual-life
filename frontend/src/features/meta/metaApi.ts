@@ -2,7 +2,9 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../utils/indexedDb";
 import { nanoid } from "nanoid";
 import { handleError } from "../../utils/errors";
-import { startOfDay } from "../../utils/timeUtils";
+import { startOfDay, statsStartDate } from "../../utils/timeUtils";
+import { generateTestTasksData } from "../tasks/tasksApi";
+import { getDefaultHabits } from "../../data/defaultHabits";
 
 export type MetaData = {
 	userId: string;
@@ -22,6 +24,7 @@ export const metaApi = createApi({
 				try {
 					const data = await dbActions.getAll("meta");
 					if (!data || !data.length) {
+						console.log("Creating init metadata and habits.");
 						const metaInit: MetaData = {
 							userId: nanoid(),
 							lastCreatedDate: "",
@@ -30,6 +33,16 @@ export const metaApi = createApi({
 							hasSeenTutorial: false,
 						};
 						await dbActions.setMetaData(metaInit);
+						const habits =
+							await dbActions.batchCreateDefaultHabits(getDefaultHabits());
+						const tasks = generateTestTasksData(
+							habits,
+							70,
+							statsStartDate(),
+							startOfDay(),
+						);
+						await dbActions.batchCreateDailyTasks(tasks);
+						console.log(habits);
 						return { data: metaInit };
 					}
 					if (data.length > 1) {

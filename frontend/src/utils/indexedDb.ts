@@ -10,6 +10,7 @@ import {
 import { Habit, Task } from "./types";
 import { handleError } from "./errors";
 import { MetaData } from "../features/meta/metaApi";
+import { nanoid } from "nanoid";
 
 export const dbPromise = openDB("habitsDB", 5, {
 	upgrade(db) {
@@ -162,6 +163,14 @@ export const dbActions = {
 
 		return tasks;
 	},
+	async batchCreateDefaultHabits(habits: Habit[]): Promise<Habit[]> {
+		const db = await dbPromise;
+		const tx = db.transaction("habits", "readwrite");
+		const store = tx.objectStore("habits");
+		await Promise.all(habits.map((habit) => store.put(habit)));
+		await tx.done;
+		return habits;
+	},
 	async batchCreateDailyTasks(tasks: Task[]): Promise<Task[]> {
 		const db = await dbPromise;
 		const tx = db.transaction("tasks", "readwrite");
@@ -230,14 +239,33 @@ export const dbActions = {
 			console.log("error logging error: ", e);
 		}
 	},
-	async deleteAllData() {
+	async resetDemoData() {
 		const db = await dbPromise;
-		await db.clear("tasks");
-		await db.clear("habits");
-		await db.clear("baskets");
-		await db.clear("ingredients");
-		await db.clear("meals");
-		await db.clear("meta");
-		console.log("All data cleared.");
+		await Promise.all([
+			db.clear("tasks"),
+			db.clear("habits"),
+			db.clear("baskets"),
+			db.clear("ingredients"),
+			db.clear("meals"),
+			db.clear("meta"),
+		]);
+	},
+	async clearExistingData() {
+		const db = await dbPromise;
+		await Promise.all([
+			db.clear("tasks"),
+			db.clear("habits"),
+			db.clear("baskets"),
+			db.clear("ingredients"),
+			db.clear("meals"),
+			db.clear("meta"),
+		]);
+		await dbActions.setMetaData({
+			userId: nanoid(),
+			lastCreatedDate: "",
+			theme: "dark",
+			goal: { [startOfDay()]: 70 },
+			hasSeenTutorial: true, // they've used the app — don't re-show tutorial
+		});
 	},
 };
