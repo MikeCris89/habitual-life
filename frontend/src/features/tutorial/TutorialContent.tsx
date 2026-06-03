@@ -374,36 +374,6 @@ const TutorialContent = ({ section }: { section: TutorialSection }) => {
 					</Typography>
 				</Box>
 			);
-		case TUTORIAL_SECTIONS.testData:
-			return (
-				<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-					<Typography variant="h5" sx={{ fontWeight: "bold" }}>
-						Test Data 🧪
-					</Typography>
-
-					<Typography variant="body1">
-						New to the app and want to see what it looks like with real data?
-						The Test Data button in Account Settings generates realistic habit
-						history based on your current habits and completion goal.
-					</Typography>
-
-					<Typography variant="body1">
-						Make sure you've created your habits first — the generator uses your
-						existing habits to populate the history. It aims to match your
-						target completion rate with natural variation, so the stats and
-						graphs look like a real user's data.
-					</Typography>
-
-					<Typography
-						variant="body2"
-						sx={{ color: "text.secondary", fontStyle: "italic" }}
-					>
-						Note: Test data cannot be selectively removed. Use the "Delete All
-						Tasks" option in Account Settings to start fresh without deleting
-						your habits.
-					</Typography>
-				</Box>
-			);
 		default:
 			return null;
 	}
