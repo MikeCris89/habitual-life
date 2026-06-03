@@ -1,5 +1,7 @@
 # Habitual Life
 
+[![CI](https://github.com/MikeCris89/habitual-life/actions/workflows/ci.yml/badge.svg)](https://github.com/MikeCris89/habitual-life/actions/workflows/ci.yml)
+
 A mobile-first habit tracking PWA built with React 18 + TypeScript. Build good habits and break bad ones, track completion rates over time, log calories and macros with saved ingredients and reusable meals, and use built-in timers for workouts and breathing exercises. Everything runs locally on the device and works offline.
 
 I built this because I wanted a single customizable app for all my habits, and it ended up being my first fully finished and deployed project. The architecture is the part I'm most proud of — RTK Query abstracting over IndexedDB so the whole app is ready for a backend migration without changing a single component.
