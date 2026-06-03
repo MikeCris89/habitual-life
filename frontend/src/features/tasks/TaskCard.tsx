@@ -43,16 +43,15 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 			className="flex-center col gap2"
 			sx={{ p: 2, overflowX: "hidden", cursor: "pointer" }}
 		>
+			{/* Title + check-off */}
 			<Box
 				className="flex-between"
-				sx={{ width: "100%", alignItems: "center" }}
+				sx={{ width: "100%", alignItems: "center", gap: 1 }}
 			>
 				<Typography
 					variant="body1"
 					sx={{
 						flex: "1 1 auto",
-						flexWrap: "wrap",
-						height: "100%",
 						overflowWrap: "break-word",
 						overflow: "hidden",
 						alignSelf: "center",
@@ -61,18 +60,52 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 				>
 					{task.title}
 				</Typography>
-				{streak > 0 && (
-					<Chip
+				{circleIcon ? (
+					<Button
 						size="small"
-						color="warning"
-						variant="outlined"
-						icon={<LocalFireDepartmentTwoTone fontSize="small" />}
-						label={streak}
-						sx={{ mx: 1, flexShrink: 0 }}
-					/>
+						variant={task.complete ? "contained" : "outlined"}
+						onClick={() => {
+							checkOffTask(task);
+						}}
+						sx={{
+							borderRadius: "50%",
+							padding: 0,
+							minHeight: 40,
+							minWidth: 40,
+							flexShrink: 0,
+						}}
+					>
+						<Check />
+					</Button>
+				) : (
+					<Button
+						variant={task.complete ? "contained" : "outlined"}
+						onClick={() => {
+							checkOffTask(task);
+						}}
+						sx={{ flexShrink: 0 }}
+					>
+						<CheckCircleTwoTone />
+					</Button>
 				)}
+			</Box>
+
+			{/* Streak + timer */}
+			<Box
+				className="flex-between"
+				sx={{ width: "100%", alignItems: "center", gap: 1 }}
+			>
+				<Chip
+					size="small"
+					color={task.complete ? "warning" : "default"}
+					variant="outlined"
+					disabled={!task.complete}
+					icon={<LocalFireDepartmentTwoTone fontSize="small" />}
+					label={streak}
+					sx={{ flexShrink: 0 }}
+				/>
 				{isGoodTask(task) && !isNoneTimer(task.timer) && (
-					<Box className="flex-center col">
+					<>
 						{isSingleTimer(task.timer) && (
 							<IconButton
 								onClick={() => {
@@ -107,35 +140,10 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 								<PinOutlined />
 							</IconButton>
 						)}
-					</Box>
-				)}
-				{circleIcon ? (
-					<Button
-						size="small"
-						variant={task.complete ? "contained" : "outlined"}
-						onClick={() => {
-							checkOffTask(task);
-						}}
-						sx={{
-							borderRadius: "50%",
-							padding: 0,
-							minHeight: 40,
-							minWidth: 40,
-						}}
-					>
-						<Check />
-					</Button>
-				) : (
-					<Button
-						variant={task.complete ? "contained" : "outlined"}
-						onClick={() => {
-							checkOffTask(task);
-						}}
-					>
-						<CheckCircleTwoTone />
-					</Button>
+					</>
 				)}
 			</Box>
+
 			<ProgressBar completionRate={completionRate} />
 		</Card>
 	);

@@ -164,135 +164,140 @@ const HabitDetails: React.FC = () => {
 				title="Details"
 				tutorialSection={TUTORIAL_SECTIONS.habits}
 			/>
-			<SectionContainer fullWidth wrapperSx={{ flex: 1 }}>
-				<Box className="flex-between full-w" sx={{ p: 1 }}>
-					<HabitChip type={habit.type} />
-					<Box className="flex-center gap3" sx={{ justifyContent: "flex-end" }}>
-						<Button
-							onClick={handleClickDelete}
-							endIcon={<Delete fontSize="small" color="warning" />}
-							sx={{ alignItems: "flex-start" }}
+			<Box className="flex-between full-w full-h col">
+				<SectionContainer fullWidth wrapperSx={{}} paperSx={{ p: 2, pb: 4 }}>
+					<Box className="flex-between full-w" sx={{}}>
+						<HabitChip type={habit.type} />
+						<Box
+							className="flex-center gap3"
+							sx={{ justifyContent: "flex-end" }}
 						>
-							delete
-						</Button>
-						<Button
-							onClick={() => navigate("edit")}
-							endIcon={<Edit fontSize="small" />}
-							sx={{ alignItems: "flex-start" }}
-						>
-							Edit
-						</Button>
-					</Box>
-				</Box>
-				{/* body */}
-				<Box className="flex-center col gap2 full-w">
-					<Typography variant="h5" sx={{ textAlign: "center" }}>
-						{habit.title}
-					</Typography>
-					<Days days={habit.daysOfWeek} />
-
-					{isGoodHabit(habit) && habit.timeOfDay.length > 0 && (
-						<Box className="flex-center gap2" sx={{ flexWrap: "wrap" }}>
-							{habit.timeOfDay.map((el, i) => (
-								<Chip
-									key={i}
-									size="small"
-									variant="outlined"
-									icon={<AccessTime fontSize="small" />}
-									label={dayjs(el.time).format("h:mm A")}
-								/>
-							))}
-						</Box>
-					)}
-				</Box>
-
-				{dailyTasks.length > 0 && (
-					<Box className="flex-center col gap2" sx={{ mt: 1 }}>
-						<Chip
-							size="small"
-							label={completedToday ? "Completed today" : "Not completed yet"}
-							color={completedToday ? "success" : "warning"}
-							variant={completedToday ? "filled" : "outlined"}
-						/>
-						<Box className="flex-center gap3">
-							{timerTask && isGoodTask(timerTask) && (
-								<Button
-									variant="outlined"
-									onClick={startTimer}
-									startIcon={
-										isRoundTimer(timerTask.timer) ? (
-											<>
-												<TimerOutlined fontSize="small" />
-												<PinOutlined fontSize="small" />
-											</>
-										) : (
-											<AvTimerTwoTone fontSize="small" />
-										)
-									}
-								>
-									Start Timer
-								</Button>
-							)}
 							<Button
-								variant={completedToday ? "contained" : "outlined"}
-								color="success"
-								onClick={handleCheckOff}
-								startIcon={<CheckCircleTwoTone fontSize="small" />}
+								onClick={handleClickDelete}
+								endIcon={<Delete fontSize="small" color="warning" />}
+								sx={{ alignItems: "flex-start" }}
 							>
-								{completedToday ? "Completed" : "Check off"}
+								delete
+							</Button>
+							<Button
+								onClick={() => navigate("edit")}
+								endIcon={<Edit fontSize="small" />}
+								sx={{ alignItems: "flex-start" }}
+							>
+								Edit
 							</Button>
 						</Box>
 					</Box>
-				)}
-			</SectionContainer>
-			{stats && (
-				<SectionContainer fullWidth title="Stats">
-					<Box
-						sx={{
-							display: "grid",
-							gridTemplateColumns: "1fr 1fr",
-							gap: 2,
-							width: "100%",
-							py: 1,
-						}}
-					>
-						<StatItem
-							icon={<LocalFireDepartmentTwoTone fontSize="small" />}
-							value={stats.current}
-							label="Current streak"
-						/>
-						<StatItem
-							icon={<EmojiEventsTwoTone fontSize="small" />}
-							value={stats.best}
-							label="Best streak"
-						/>
-						<StatItem
-							icon={<CheckCircleTwoTone fontSize="small" />}
-							value={stats.totalDone}
-							label="Completed"
-						/>
-						<StatItem
-							icon={<Check fontSize="small" />}
-							value={`${stats.completionRate}%`}
-							label="Completion"
-						/>
+					{/* body */}
+					<Box className="flex-center col gap2 full-w">
+						<Typography variant="h5" sx={{ textAlign: "center" }}>
+							{habit.title}
+						</Typography>
+						<Days days={habit.daysOfWeek} />
+
+						{isGoodHabit(habit) && habit.timeOfDay.length > 0 && (
+							<Box className="flex-center gap2" sx={{ flexWrap: "wrap" }}>
+								{habit.timeOfDay.map((el, i) => (
+									<Chip
+										key={i}
+										size="small"
+										variant="outlined"
+										icon={<AccessTime fontSize="small" />}
+										label={dayjs(el.time).format("h:mm A")}
+									/>
+								))}
+							</Box>
+						)}
 					</Box>
-					<Typography
-						variant="caption"
-						color="text.secondary"
-						sx={{ textAlign: "center" }}
-					>
-						Tracking since {dayjs(habit.createdAt).format("MMM D, YYYY")}
-					</Typography>
+
+					{dailyTasks.length > 0 && (
+						<Box className="flex-center col gap2" sx={{ mt: 1 }}>
+							<Chip
+								size="small"
+								label={completedToday ? "Completed today" : "Not completed yet"}
+								color={completedToday ? "success" : "warning"}
+								variant={completedToday ? "filled" : "outlined"}
+							/>
+							<Box className="flex-center gap3">
+								{timerTask && isGoodTask(timerTask) && (
+									<Button
+										variant="outlined"
+										onClick={startTimer}
+										startIcon={
+											isRoundTimer(timerTask.timer) ? (
+												<>
+													<TimerOutlined fontSize="small" />
+													<PinOutlined fontSize="small" />
+												</>
+											) : (
+												<AvTimerTwoTone fontSize="small" />
+											)
+										}
+									>
+										Start Timer
+									</Button>
+								)}
+								<Button
+									variant={completedToday ? "contained" : "outlined"}
+									color="success"
+									onClick={handleCheckOff}
+									startIcon={<CheckCircleTwoTone fontSize="small" />}
+								>
+									{completedToday ? "Completed" : "Check off"}
+								</Button>
+							</Box>
+						</Box>
+					)}
 				</SectionContainer>
-			)}
-			<SectionContainer fullWidth>
-				<Graph
-					graphData={graphData}
-					labelY="Completion (%)"
-					domain={[0, 100]}
-				/>
-			</SectionContainer>
+				{stats && (
+					<SectionContainer fullWidth title="Stats">
+						<Box
+							sx={{
+								display: "grid",
+								gridTemplateColumns: "1fr 1fr",
+								gap: 2,
+								width: "100%",
+								py: 1,
+							}}
+						>
+							<StatItem
+								icon={<LocalFireDepartmentTwoTone fontSize="small" />}
+								value={stats.current}
+								label="Current streak"
+							/>
+							<StatItem
+								icon={<EmojiEventsTwoTone fontSize="small" />}
+								value={stats.best}
+								label="Best streak"
+							/>
+							<StatItem
+								icon={<CheckCircleTwoTone fontSize="small" />}
+								value={stats.totalDone}
+								label="Completed"
+							/>
+							<StatItem
+								icon={<Check fontSize="small" />}
+								value={`${stats.completionRate}%`}
+								label="Completion"
+							/>
+						</Box>
+						<Typography
+							variant="caption"
+							color="text.secondary"
+							sx={{ textAlign: "center" }}
+						>
+							Tracking since {dayjs(habit.createdAt).format("MMM D, YYYY")}
+						</Typography>
+					</SectionContainer>
+				)}
+				<SectionContainer fullWidth>
+					<Graph
+						graphData={graphData}
+						labelY="Completion (%)"
+						domain={[0, 100]}
+					/>
+				</SectionContainer>
+			</Box>
 		</PageWrapper>
 	);
 };
