@@ -31,8 +31,8 @@ export const getDefaultHabits = (): Habit[] => {
 	return [
 		{
 			type: "good",
-			title: "Drink water",
-			id: "habit-water",
+			title: "Read",
+			id: "habit-read",
 			createdAt,
 			daysOfWeek: everyDay(),
 			allDay: true,
@@ -76,16 +76,6 @@ export const getDefaultHabits = (): Habit[] => {
 				{ id: 1, time: at(8, 0) },
 				{ id: 2, time: at(20, 0) },
 			],
-			timer: { type: "none" },
-		},
-		{
-			type: "good",
-			title: "Read",
-			id: "habit-read",
-			createdAt,
-			daysOfWeek: days(["Monday", "Wednesday", "Friday"]),
-			allDay: false,
-			timeOfDay: [{ id: 1, time: at(20, 0) }],
 			timer: { type: "none" },
 		},
 		{
