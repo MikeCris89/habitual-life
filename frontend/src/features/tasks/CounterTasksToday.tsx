@@ -18,6 +18,7 @@ const PresetCard = ({
 	title,
 	icon,
 	omitTotal = false,
+	displayCount,
 }: {
 	task: CounterTask;
 	pastTasks: Task[];
@@ -25,6 +26,7 @@ const PresetCard = ({
 	title: string;
 	icon?: React.ReactNode;
 	omitTotal?: boolean;
+	displayCount?: React.ReactNode;
 }) => {
 	return (
 		<Card
@@ -39,7 +41,7 @@ const PresetCard = ({
 				{icon}
 
 				<Box className="flex-center col">
-					<Typography variant="body1">{task.count}</Typography>
+					<Typography variant="body1">{displayCount ?? task.count}</Typography>
 					{!omitTotal && (
 						<Typography variant="body2" sx={{ fontSize: "12px" }}>
 							/{task.total}
@@ -102,6 +104,7 @@ const CounterTasksToday = () => {
 									onClick={() => navigate(`/${PresetId.calorieCounter}/log`)}
 									title="Calories"
 									icon={<LocalDining />}
+									displayCount={task.count !== 0 ? task.count : "–"}
 								/>
 							);
 						}
@@ -116,6 +119,7 @@ const CounterTasksToday = () => {
 									title="Weight"
 									icon={<Scale />}
 									omitTotal
+									displayCount={task.complete && task.count !== 0 ? task.count : "–"}
 								/>
 							);
 						}

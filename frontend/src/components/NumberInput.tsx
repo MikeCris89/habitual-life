@@ -149,7 +149,7 @@ const NumberInput = ({
 					setStrValue((prev) => prev.split(".")[0]);
 				// if (strValue.includes(".") && strValue.split(".")[1].length < 2)
 				// 	setStrValue((prev) => prev + "0");
-				//if (onBlur) onBlur(e.target.value);
+				if (onBlur) onBlur(e.target.value);
 			}}
 		/>
 	);
