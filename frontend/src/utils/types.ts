@@ -211,14 +211,14 @@ export const getFoodCategory = (log: FoodFormTypes): FoodCategory => {
 };
 
 export const isIngOrCustom = (
-	log: FoodFormTypes | null
+	log: FoodFormTypes | null,
 ): log is CustomForm | IngredientForm => {
 	return log != null && "calories" in log;
 };
 
 export const isValidKey = <T extends object>(
 	obj: T,
-	key: PropertyKey
+	key: PropertyKey,
 ): key is keyof T => key in obj;
 
 export const isIngredientLog = (log: unknown): log is IngredientForm =>

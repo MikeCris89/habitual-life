@@ -2,7 +2,6 @@ import { Box, Card, Chip, Typography } from "@mui/material";
 import { DaysOfWeek, Habit, HabitType, HabitTypes } from "../../utils/types";
 import { useNavigate } from "react-router-dom";
 import { dayStyle, dayActive } from "../../utils/styles";
-import { BorderColor } from "@mui/icons-material";
 import { useThemeMode } from "../../hooks/ThemeProvider";
 import { formatLabel } from "../../utils/helpers";
 
@@ -32,9 +31,7 @@ export const Days = ({ days }: DaysProps) => {
 								border: `1px solid ${theme.palette.primary.main}`,
 							}}
 							key={`${day.label}${i}`}
-						>
-							{/* {day.label} */}
-						</Typography>
+						/>
 					);
 				})}
 		</Box>

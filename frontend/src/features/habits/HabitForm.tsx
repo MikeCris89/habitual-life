@@ -164,14 +164,9 @@ export const SectionContainer = ({
 				elevation={3}
 				className={`flex col gap2 full-w ${className}`}
 				sx={{
-					// justifyContent: "flex-start",
-					// alignItems: "flex-start",
-					//minHeight: fullHeight ? "100%" : "fit-content",
 					minHeight: 0,
 					p: 1,
 					flex: 1,
-
-					// "& > *": { width: "100%" },
 					...paperSx,
 				}}
 			>
@@ -255,7 +250,6 @@ const HabitForm = () => {
 			if (isDayKey(name)) {
 				key = name;
 			} else {
-				console.log("Error. Wrong Key for Days of Week.");
 				return;
 			}
 
@@ -277,10 +271,8 @@ const HabitForm = () => {
 		}
 	};
 
-	// GoddHabit - add new timeOfDay element to array
+	// GoodHabit - add new timeOfDay element to array
 	const handleAddTime = (time: Dayjs | null) => {
-		console.log("add time start");
-
 		setHabit((prev) => {
 			if (isGoodHabit(prev))
 				if (time) {
@@ -303,7 +295,6 @@ const HabitForm = () => {
 		time: Dayjs | null,
 		entry: { id: number; time: string },
 	) => {
-		console.log("handle change time");
 		let date: Date;
 		if (time) {
 			date = new Date(time.toISOString());
@@ -313,7 +304,6 @@ const HabitForm = () => {
 		setHabit((prev) => {
 			if (isGoodHabit(prev)) {
 				if (date) {
-					console.log("date exists");
 					return {
 						...prev,
 						timeOfDay: prev.timeOfDay.map((el) =>
@@ -321,7 +311,6 @@ const HabitForm = () => {
 						),
 					};
 				} else {
-					console.log("No date exists");
 					if (prev.timeOfDay.length === 0) {
 						return { ...prev, allDay: true };
 					} else {
@@ -396,7 +385,6 @@ const HabitForm = () => {
 	};
 
 	return (
-		// <Box className="flex col gap2 full-h" sx={{ p: 1, maxWidth: "600px" }}>
 		<PageWrapper>
 			<PageNav back title={id ? "Edit Habit" : "Add Habit"} />
 
@@ -478,10 +466,6 @@ const HabitForm = () => {
 				{/**GoodHabit */}
 
 				{isGoodHabit(habit) && (
-					// <Box
-					// 	className="flex-center col gap2"
-					// 	sx={{ "& > *": { width: "100%" } }}
-					// >
 					<>
 						{/* All Day checkbox */}
 						<SectionContainer title="Times of Day" fullWidth>
@@ -657,22 +641,6 @@ const HabitForm = () => {
 											<>
 												<Box className="flex-between" sx={{ width: "100%" }}>
 													<FormLabel>Number of Sets</FormLabel>
-													{/* <NumberField
-														value={habit.timer.sets}
-														min={1}
-														max={10}
-														handleChange={(num) =>
-															setHabit((prev) => {
-																if (isGoodHabit(prev)) {
-																	return {
-																		...prev,
-																		timer: { ...prev.timer, sets: num },
-																	};
-																}
-																return prev;
-															})
-														}
-													/> */}
 													<QtyField
 														min={1}
 														max={10}
@@ -692,21 +660,6 @@ const HabitForm = () => {
 												</Box>
 												<Box className="flex-between" sx={{ width: "100%" }}>
 													<FormLabel>Rounds per Set</FormLabel>
-													{/* <NumberField
-														value={habit.timer.rounds}
-														min={1}
-														handleChange={(num) =>
-															setHabit((prev) => {
-																if (isGoodHabit(prev)) {
-																	return {
-																		...prev,
-																		timer: { ...prev.timer, rounds: num },
-																	};
-																}
-																return prev;
-															})
-														}
-													/> */}
 													<QtyField
 														min={1}
 														max={20}
@@ -749,12 +702,10 @@ const HabitForm = () => {
 							)}
 						</SectionContainer>
 					</>
-					// </Box>
 				)}
 
 				{/** CounterHabit  */}
 				{isCounterHabit(habit) && (
-					// <Box className="flex-center col gap2">
 					<>
 						<FormControlLabel
 							control={
@@ -778,7 +729,6 @@ const HabitForm = () => {
 							<Typography variant="h6">
 								{habit.isMax ? "Maximum" : "Minimum"} /day
 							</Typography>
-							{/* <Typography variant="body2">/day</Typography> */}
 							<TextField
 								type="number"
 								name="total"
@@ -798,7 +748,6 @@ const HabitForm = () => {
 							/>
 						</Box>
 					</>
-					// </Box>
 				)}
 			</Box>
 			<Box className="full-w">
@@ -807,7 +756,6 @@ const HabitForm = () => {
 				</Button>
 			</Box>
 		</PageWrapper>
-		// </Box>
 	);
 };
 

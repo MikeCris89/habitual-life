@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 import { darkTheme, lightTheme } from "../utils/muiTheme";
 import { ThemeProvider as MUIThemeProvider, CssBaseline } from "@mui/material";
 import { useGetMetaQuery, useSetThemeMutation } from "../features/meta/metaApi";

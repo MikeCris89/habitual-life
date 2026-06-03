@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DayKeys, GoodTask } from "../../utils/types";
 import dayjs from "dayjs";
 import { startOfWeek } from "../../utils/timeUtils";
@@ -18,7 +18,7 @@ const GoodCalendar = ({ tasks }: Props) => {
 		...DayKeys.map((day, i) => ({
 			label: day.slice(0, 1),
 			date: new Date(
-				new Date(weekStart).setDate(new Date(weekStart).getDate() + i)
+				new Date(weekStart).setDate(new Date(weekStart).getDate() + i),
 			).toISOString(),
 		})),
 	];
@@ -27,16 +27,16 @@ const GoodCalendar = ({ tasks }: Props) => {
 			if (!task.allDay) {
 				acc.min = Math.max(
 					0,
-					Math.min(acc.min, new Date(task.dateTime).getHours() - 1)
+					Math.min(acc.min, new Date(task.dateTime).getHours() - 1),
 				);
 				acc.max = Math.min(
 					23,
-					Math.max(acc.max, new Date(task.dateTime).getHours() + 1)
+					Math.max(acc.max, new Date(task.dateTime).getHours() + 1),
 				);
 			}
 			return acc;
 		},
-		{ min: 7, max: 22 }
+		{ min: 7, max: 22 },
 	);
 	const rows = [
 		{ label: "", date: "" },
@@ -75,10 +75,6 @@ const GoodCalendar = ({ tasks }: Props) => {
 					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
 					borderRadius: "8px",
 					height: "100%",
-					"& > *": {
-						//borderRight: "1px solid rgba(0, 0, 0, 0.3)",
-						//borderBottom: "1px solid rgba(0, 0, 0, 0.3)",
-					},
 				}}
 			>
 				{columns.map((col, colIndex) => {
@@ -167,25 +163,11 @@ const GoodCalendar = ({ tasks }: Props) => {
 							.sort(
 								(a, b) =>
 									new Date(a.dateTime).getMinutes() -
-									new Date(b.dateTime).getMinutes()
+									new Date(b.dateTime).getMinutes(),
 							);
 
 						const taskExists = !!gridTasks.length;
 
-						// All Day row - row 2
-						// if (rowIndex === 1) {
-						// 	return (
-						// 		<Box
-						// 			key={`${colIndex}-${rowIndex}`}
-						// 			sx={{
-						// 				gridRow: "2",
-						// 				gridColumn: " 2 /-1",
-						// 				borderRadius: "8px",
-						// 				bgcolor: "primary.light",
-						// 			}}
-						// 		></Box>
-						// 	);
-						// }
 						return (
 							<Box
 								className={`flex-center col gap2 grid-item ${
@@ -201,8 +183,6 @@ const GoodCalendar = ({ tasks }: Props) => {
 									gridColumn: `${colIndex + 1}`,
 									gridRow: `${rowIndex + 1}`,
 									padding: "3px 2px",
-									//borderTop: taskExists ? "1px solid black" : "none",
-									//borderBottom: taskExists ? "1px solid black" : "none",
 								}}
 							>
 								<Box
@@ -218,8 +198,8 @@ const GoodCalendar = ({ tasks }: Props) => {
 												? theme.palette.background.paper
 												: theme.palette.grey[400]
 											: isLight
-											? theme.palette.grey[300]
-											: theme.palette.background.paper,
+												? theme.palette.grey[300]
+												: theme.palette.background.paper,
 
 										transition: "background 0.2s ease-in-out",
 										"&:hover": {
@@ -241,7 +221,7 @@ const GoodCalendar = ({ tasks }: Props) => {
 											>
 												{new Date(task.dateTime).getMinutes() !== 0 &&
 													new Date(
-														arr[Math.max(0, i - 1)].dateTime
+														arr[Math.max(0, i - 1)].dateTime,
 													).getMinutes() !==
 														new Date(task.dateTime).getMinutes() && (
 														<Typography

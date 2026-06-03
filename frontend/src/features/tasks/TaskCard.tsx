@@ -1,11 +1,4 @@
-import {
-	Box,
-	Button,
-	Card,
-	IconButton,
-	Paper,
-	Typography,
-} from "@mui/material";
+import { Box, Button, Card, IconButton, Typography } from "@mui/material";
 import {
 	isGoodTask,
 	isNoneTimer,
@@ -64,9 +57,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 					}}
 					onClick={() => navigate(`/${task.habitId}`)}
 				>
-					{/* <Typography variant="body1" sx={{ height: "100%" }}> */}
 					{task.title}
-					{/* </Typography> */}
 				</Typography>
 				{isGoodTask(task) && !isNoneTimer(task.timer) && (
 					<Box className="flex-center col">

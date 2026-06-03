@@ -3,7 +3,6 @@ import {
 	AccordionDetails,
 	AccordionSummary,
 	Box,
-	Card,
 	Chip,
 	Paper,
 	Typography,
@@ -135,7 +134,6 @@ const BasketItem = ({
 
 	return (
 		<Paper
-			//elevation={2}
 			variant="outlined"
 			className="flex col gap2"
 			sx={{ p: 1, backgroundColor: "primary.contrastText" }}
@@ -144,8 +142,8 @@ const BasketItem = ({
 				{foodCat === FOOD_CATEGORIES.MEALS
 					? mealChip
 					: foodCat === FOOD_CATEGORIES.INGREDIENTS
-					? ingChip
-					: customChip}
+						? ingChip
+						: customChip}
 				<Typography variant="subtitle2">{calories}Cal</Typography>
 			</Box>
 			<Box className="flex-between gap2 full-w">
@@ -175,7 +173,7 @@ const Basket = () => {
 	const [expanded, setExpanded] = useState<string>(currentBasketId);
 
 	const currBasket = useSelector((state) =>
-		selectCurrentBasket(state, currentBasketId)
+		selectCurrentBasket(state, currentBasketId),
 	);
 
 	const sortedBaskets = useMemo(() => {
@@ -201,25 +199,15 @@ const Basket = () => {
 				justifyContent: "flex-start",
 				overflow: "auto",
 				p: 1,
-				//backgroundColor: "#f7f7f7",
 			}}
 		>
 			{sortedBaskets &&
 				sortedBaskets.map((basket, i) => {
 					const basketTotal = basketsTotals.basketsTotals.find(
-						(el) => el.id === basket.id
+						(el) => el.id === basket.id,
 					);
 					const isCurrBasket = basket.id === currentBasketId;
 					return (
-						// <Box
-						// 	key={basket.id}
-						// 	className="full-w full-h"
-						// 	sx={{
-						// 		p: 1,
-						// 		backgroundColor: "primary.light",
-						// 		overflow: "hidden",
-						// 	}}
-						// >
 						<Accordion
 							key={basket.id}
 							expanded={expanded === basket.id}
@@ -227,8 +215,6 @@ const Basket = () => {
 							className="full-w"
 							sx={{
 								p: 0,
-								//backgroundColor: "primary.light",
-								//color: "primary.contrastText",
 							}}
 							elevation={2}
 						>

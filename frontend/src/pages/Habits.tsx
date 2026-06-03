@@ -53,27 +53,6 @@ const HabitBar = memo(({ search, setSearch }: BarProps) => (
 		}}
 	>
 		<SearchBar onChange={(value) => setSearch(value)} value={search} />
-		{/* <Box className="flex-center gap2">
-			<Search />
-			<TextField
-				type="text"
-				size="small"
-				label="search..."
-				onChange={(e) => setSearch(e.target.value)}
-				value={search}
-				sx={{
-					p: 0,
-					m: 0,
-					fontSize: "12px",
-					"& .MuiOutlinedInput-root": {
-						padding: 0,
-					},
-					"& .MuiInputBase-input": { fontSize: "12px", p: 1 },
-					"& label": { fontSize: "12px" },
-				}}
-			/>
-			{search && <Close fontSize="small" onClick={() => setSearch("")} />}
-		</Box> */}
 		<AddButton />
 	</Paper>
 ));

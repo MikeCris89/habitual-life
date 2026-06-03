@@ -1,10 +1,4 @@
-import {
-	BasketItems,
-	FoodCategory,
-	Baskets,
-	IngredientForm,
-	MealForm,
-} from "./../../../utils/types";
+import { Baskets, IngredientForm, MealForm } from "./../../../utils/types";
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../../utils/indexedDb";
 import dataList from "../../../data/curated_ingredients.json";
@@ -61,7 +55,7 @@ export const foodApi = createApi({
 						} else {
 							draft.ingredients.push({ ...ing });
 						}
-					})
+					}),
 				);
 			},
 		}),
@@ -85,7 +79,7 @@ export const foodApi = createApi({
 						} else {
 							draft.meals.push({ ...meal });
 						}
-					})
+					}),
 				);
 			},
 		}),
@@ -107,7 +101,7 @@ export const foodApi = createApi({
 						} else {
 							draft.push(basket);
 						}
-					})
+					}),
 				);
 			},
 		}),
@@ -125,7 +119,7 @@ export const foodApi = createApi({
 					foodApi.util.updateQueryData("getBaskets", undefined, (draft) => {
 						const index = draft.findIndex((basket) => basket.id === basketId);
 						if (index !== -1) draft.splice(index, 1);
-					})
+					}),
 				);
 			},
 		}),

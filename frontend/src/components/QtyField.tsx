@@ -29,7 +29,7 @@ const QtyField = ({
 	min = 0,
 }: Props) => {
 	const isCollapsed = collapse && value === 0;
-	const { isLight, theme } = useThemeMode();
+	const { theme } = useThemeMode();
 
 	const handleChange = (num: number) => {
 		if (num < min) num = min;

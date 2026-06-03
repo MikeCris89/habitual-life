@@ -2,32 +2,25 @@ import {
 	Box,
 	Button,
 	Checkbox,
-	FormControl,
-	IconButton,
-	MenuItem,
 	Paper,
-	Select,
 	Table,
 	TableBody,
 	TableCell,
 	TableContainer,
 	TableHead,
 	TableRow,
-	TextField,
 	Typography,
 } from "@mui/material";
 import PageNav from "../../components/PageNav";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	CounterTask,
 	CounterType,
 	HabitTypes,
 	isCounterHabit,
 	isCounterTask,
-	MacrosType,
 	PresetId,
 } from "../../utils/types";
-import { Add, CheckBox, Remove } from "@mui/icons-material";
 import {
 	useAddHabitMutation,
 	useEditHabitMutation,
@@ -44,8 +37,6 @@ import { setError, setLoading, setSuccess } from "../loading/loadingSlice";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import NumberInput from "../../components/NumberInput";
-import { getMaxNumFromObjArr } from "../../utils/helpers";
-import { nanoid } from "nanoid";
 import { NUTRIENTS } from "./NutritionConstants";
 import PageWrapper from "../../components/PageWrapper";
 import { useThemeMode } from "../../hooks/ThemeProvider";
@@ -74,14 +65,6 @@ const initForm: CounterType = {
 		active: macroDefaults.has(el.id),
 	})),
 };
-
-// const initMacros: MacrosType = {
-// 	label: "",
-// 	total: 0,
-// 	unit: "",
-// 	active: true,
-// 	id: "",
-// };
 
 const CalorieForm = () => {
 	const [addHabit] = useAddHabitMutation();
@@ -137,35 +120,15 @@ const CalorieForm = () => {
 	const handleChangeMacros = (
 		name: string,
 		value: number | string | boolean,
-		macroId: string
+		macroId: string,
 	) => {
 		setForm((prev) => ({
 			...prev,
 			macros: prev.macros?.map((m) =>
-				m.id === macroId ? { ...m, [name]: value } : m
+				m.id === macroId ? { ...m, [name]: value } : m,
 			),
 		}));
 	};
-
-	// const handleAddMacro = () => {
-	// 	const newId = nanoid();
-	// 	setForm((prev) => {
-	// 		if (prev.macros)
-	// 			return {
-	// 				...prev,
-	// 				macros: [...prev.macros, { ...initMacros, id: newId }],
-	// 			};
-	// 		return prev;
-	// 	});
-	// 	setTimeout(() => focusRef.current?.[newId]?.focus(), 0);
-	// };
-
-	// const handleRemoveMacro = (id: string) => {
-	// 	setForm((prev) => ({
-	// 		...prev,
-	// 		macros: prev.macros?.filter((m) => m.id !== id),
-	// 	}));
-	// };
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -182,11 +145,9 @@ const CalorieForm = () => {
 				macros: form.macros?.filter((el) => el.active),
 			};
 			if (!habit) {
-				console.log("adding new calorie habit");
 				await addHabit(newHabit).unwrap();
 				await createDailyTasks(newHabit).unwrap();
 			} else if (task) {
-				console.log("editing calorie task");
 				const newTask: CounterTask = {
 					...task,
 					total: newHabit.total,
@@ -211,14 +172,7 @@ const CalorieForm = () => {
 	if (isLoading) return <Loading />;
 
 	return (
-		<PageWrapper
-		// className="flex-between col"
-		// sx={{
-		// 	maxWidth: "600px",
-		// 	p: 1,
-		// 	"& >*": { width: "100%" },
-		// }}
-		>
+		<PageWrapper>
 			<PageNav back={true} title="Calorie Counter" />
 			<Box sx={{ overflowY: "auto", flex: 1, marginBottom: "5px" }}>
 				<Box
@@ -268,9 +222,6 @@ const CalorieForm = () => {
 										<TableRow
 											key={macro.id}
 											sx={{
-												// bgcolor: macro.active
-												// 	? ""
-												// 	: theme.palette.grey[isLight ? 200 : 800],
 												bgcolor: macro.active
 													? theme.palette.grey[isLight ? 100 : 900]
 													: theme.palette.grey[isLight ? 200 : 800],
@@ -284,39 +235,14 @@ const CalorieForm = () => {
 														handleChangeMacros(
 															"active",
 															e.target.checked,
-															macro.id
+															macro.id,
 														)
 													}
 												/>
 											</TableCell>
 											<TableCell>
 												<Typography>{`${macro.label} (${macro.unit})`}</Typography>
-												{/* <TextField
-													name="title"
-													variant="filled"
-													value={macro.label}
-													hiddenLabel
-													slotProps={{
-														input: { inputProps: { maxLength: 20 } },
-													}}
-													onChange={(e) =>
-														handleChangeMacros(
-															e.target.name,
-															e.target.value,
-															macro.id
-														)
-													}
-													size="small"
-													required
-													sx={{ minWidth: "100px" }}
-													inputRef={(el) => {
-														return i === arr.length - 1
-															? (focusRef.current[macro.id] = el)
-															: null;
-													}}
-												/> */}
 											</TableCell>
-											{/* TOTAL */}
 											<TableCell align="right">
 												<NumberInput
 													value={macro.total}
@@ -332,41 +258,11 @@ const CalorieForm = () => {
 													disabled={!macro.active}
 												/>
 											</TableCell>
-											{/* <TableCell align="right">
-												<FormControl fullWidth required>
-													<Select
-														id={`${macro.id}`}
-														value={macro.unit}
-														name="units"
-														onChange={(e) =>
-															handleChangeMacros(
-																e.target.name,
-																e.target.value,
-																macro.id
-															)
-														}
-														size="small"
-														variant="standard"
-													>
-														<MenuItem value={"g"}>g</MenuItem>
-														<MenuItem value={"mg"}>mg</MenuItem>
-													</Select>
-												</FormControl>
-											</TableCell> */}
-											{/* <TableCell>
-												<Remove
-													onClick={() => handleRemoveMacro(macro.id)}
-													fontSize="small"
-												/>
-											</TableCell> */}
 										</TableRow>
 									))}
 								</TableBody>
 							</Table>
 						</TableContainer>
-						{/* <IconButton onClick={handleAddMacro}>
-							<Add />
-						</IconButton> */}
 					</Paper>
 				</Box>
 			</Box>

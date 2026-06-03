@@ -8,9 +8,6 @@ const useVisibilityEffect = (onVisible: () => void) => {
 
 		document.addEventListener("visibilitychange", handleVisibilityChange);
 
-		//test to run function if also visible
-		//if (document.visibilityState === "visible") onVisible();
-
 		return () => {
 			document.removeEventListener("visibilitychange", handleVisibilityChange);
 		};

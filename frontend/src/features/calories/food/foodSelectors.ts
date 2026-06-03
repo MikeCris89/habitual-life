@@ -48,11 +48,9 @@ export const selectIngredients = createSelector(
 			EMPTY_ING,
 	],
 	(ingredients) => {
-		const data: FormattedIng = Object.fromEntries(
+		return Object.fromEntries(
 			ingredients.map((ing) => [ing.id, { ...ing }])
 		);
-		console.log("selectIngredients Calculating", data);
-		return data;
 	}
 );
 
@@ -80,7 +78,6 @@ export const selectMeals = createSelector(
 				id: meal.id,
 			};
 		}
-		console.log("selectMeals Calculating", formattedMeals);
 		return formattedMeals;
 	}
 );

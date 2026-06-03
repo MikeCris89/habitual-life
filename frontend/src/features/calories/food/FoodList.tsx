@@ -43,10 +43,11 @@ const FoodList = <T extends IngredientForm | MealForm>({
 	const sortedItems = useMemo(() => {
 		return items
 			.filter(
-				(item) => !searchValue || item.title.toLowerCase().includes(searchValue)
+				(item) =>
+					!searchValue || item.title.toLowerCase().includes(searchValue),
 			)
 			.sort((a, b) =>
-				a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+				a.title.toLowerCase().localeCompare(b.title.toLowerCase()),
 			);
 	}, [items, searchValue]);
 
@@ -95,11 +96,7 @@ const FoodList = <T extends IngredientForm | MealForm>({
 					{sortedItems &&
 						sortedItems.map((item) => {
 							return (
-								<Box
-									key={item.id}
-									className="flex-between gap1 full-w"
-									//sx={{ flex: 1 }}
-								>
+								<Box key={item.id} className="flex-between gap1 full-w">
 									<Box
 										className="flex gap2 full-w full-h"
 										sx={{

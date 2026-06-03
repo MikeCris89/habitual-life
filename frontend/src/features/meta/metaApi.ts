@@ -42,7 +42,6 @@ export const metaApi = createApi({
 							startOfDay(),
 						);
 						await dbActions.batchCreateDailyTasks(tasks);
-						console.log(habits);
 						return { data: metaInit };
 					}
 					if (data.length > 1) {

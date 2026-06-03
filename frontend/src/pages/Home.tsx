@@ -6,8 +6,6 @@ import PageNav from "../components/PageNav";
 import { TUTORIAL_SECTIONS } from "../features/tutorial/TutorialButton";
 
 const Home = () => {
-	console.log("Homepage render ");
-
 	return (
 		<PageWrapper>
 			<PageNav title="Home" tutorialSection={TUTORIAL_SECTIONS.overview} />

@@ -58,14 +58,6 @@ const Tutorial = ({ section }: TutorialProps) => {
 		return section ? false : true;
 	});
 
-	// useEffect(() => {
-	// 	setSelectedSection(initialSection);
-	// 	if (isMobile) setShowMenu(section ? false : true);
-	// }, [initialSection, isMobile, section]);
-
-	// const selectedLabel =
-	// 	SECTIONS.find((s) => s.id === selectedSection)?.label ?? "Overview";
-
 	const handleSelect = (id: TutorialSectionId) => {
 		setSelectedSection(id);
 		if (isMobile) setShowMenu(false);
@@ -133,7 +125,6 @@ const Tutorial = ({ section }: TutorialProps) => {
 				overflowY: "auto",
 				p: 1,
 				minHeight: 0,
-				// flex: "1 1 auto",
 			}}
 		>
 			<TutorialContent section={selectedSection} />

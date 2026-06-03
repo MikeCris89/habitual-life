@@ -2,12 +2,10 @@ import {
 	Box,
 	Button,
 	FormControl,
-	FormLabel,
 	InputLabel,
 	MenuItem,
 	Select,
 	TextField,
-	Typography,
 } from "@mui/material";
 import {
 	FOOD_CATEGORIES,
@@ -18,11 +16,10 @@ import {
 } from "../../utils/types";
 import { useEffect, useState } from "react";
 import LogForm from "./LogForm";
-import { useAddEditIngredientMutation, useGetFoodQuery } from "./food/foodApi";
+import { useAddEditIngredientMutation } from "./food/foodApi";
 import NumberField from "../../components/NumberField";
 import { nanoid } from "nanoid";
-import { formatLabel } from "../../utils/helpers";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectIngredients } from "./food/foodSelectors";
 import Loading from "../../components/Loading";
@@ -60,7 +57,6 @@ const IngredientLog = ({
 
 	useEffect(() => {
 		if (isEditing && ingredients[id]) {
-			console.log(ingredients[id]);
 			setForm({ ...ingredients[id] });
 		}
 	}, [id, isEditing, ingredients]);
@@ -94,10 +90,8 @@ const IngredientLog = ({
 			className="flex-between col gap3 full-w full-h"
 			sx={{
 				overflow: "hidden",
-				//justifyContent: "flex-start",
 			}}
 		>
-			{/* <Typography>New {formatLabel(source, true)}</Typography> */}
 			<PageWrapper>
 				<SectionContainer
 					title={isEditing ? "Edit Ingredient" : "New Ingredient"}
@@ -127,7 +121,6 @@ const IngredientLog = ({
 						/>
 					</form>
 				</SectionContainer>
-				{/* <FormLabel>Serving</FormLabel> */}
 				<SectionContainer title="Serving" fullWidth>
 					<Box className="flex-around" sx={{ width: "100%" }}>
 						<NumberField
@@ -174,7 +167,6 @@ const IngredientLog = ({
 					<LogForm
 						handleChangeCalories={handleChange}
 						handleChangeMacros={handleChangeMacros}
-						//handleSubmit={handleSubmit}
 						calories={form.calories}
 						macros={form.macros}
 					/>

@@ -221,7 +221,6 @@ export const dbActions = {
 		const oldMeta = res[0];
 		const newMeta = { ...oldMeta, lastCreatedDate: dayBefore() };
 		await this.put("meta", newMeta);
-		console.log(`All data cleared from store: ${storeName}`);
 	},
 	async logError(error: unknown) {
 		try {

@@ -17,7 +17,6 @@ const TutorialContent = ({ section }: { section: TutorialSection }) => {
 						sx={{
 							display: "flex",
 							gap: "10px",
-							// justifyContent: "center",
 							alignItems: "center",
 						}}
 					>

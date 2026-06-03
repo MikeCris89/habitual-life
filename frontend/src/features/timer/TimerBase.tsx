@@ -46,7 +46,6 @@ const TimerBase = () => {
 					onComplete={() => {
 						dispatch(onComplete());
 					}}
-					//initialRemainingTime={initRemainingTime}
 					colors={
 						isBreak ? ["#1E90FF", "#4CAF50"] : ["#4CAF50", "#FFC107", "#FF5733"]
 					}

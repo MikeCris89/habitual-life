@@ -1,4 +1,4 @@
-import { Badge, Box, Card, Paper, Tab, Tabs } from "@mui/material";
+import { Badge, Box, Tab, Tabs } from "@mui/material";
 import useDisplay from "../../hooks/useDisplay";
 import { SyntheticEvent, useMemo, useState } from "react";
 import { ShoppingBasket } from "@mui/icons-material";
@@ -70,7 +70,7 @@ const NutritionInput = () => {
 
 	const currentBasketId = useCurrBasketId();
 	const currBasket = useSelector((state) =>
-		selectCurrentBasket(state, currentBasketId)
+		selectCurrentBasket(state, currentBasketId),
 	);
 
 	const { handleEditBasketItem } = useBasketUpdater();
@@ -92,7 +92,7 @@ const NutritionInput = () => {
 
 	const ingQtyMap = useMemo(() => {
 		return Object.fromEntries(
-			currBasket.ingredients.map((el) => [el.id, el.qty])
+			currBasket.ingredients.map((el) => [el.id, el.qty]),
 		);
 	}, [currBasket.ingredients]);
 
@@ -102,10 +102,7 @@ const NutritionInput = () => {
 	};
 
 	if (loadingFood) return <Loading />;
-	if (errorFood) {
-		console.log(errorFood);
-		handleError(`Error loading food.`, errorFood);
-	}
+	if (errorFood) handleError(`Error loading food.`, errorFood);
 
 	const basketBadge =
 		currBasket.custom.length +
@@ -149,10 +146,8 @@ const NutritionInput = () => {
 					/>
 				</Tabs>
 			</Box>
-			{/* <Card sx={{ flex: 1, height: "100%", minHeight: 0, width: "100%" }}> */}
 			<SectionContainer fullWidth fullHeight>
 				<MotionTabPanel value={tabValue} index={0} direction={direction}>
-					{/* Meals */}
 					<FoodList
 						items={meals}
 						qtyMap={mealQtyMap}
@@ -161,7 +156,7 @@ const NutritionInput = () => {
 								currentBasketId,
 								FOOD_CATEGORIES.MEALS,
 								itemId,
-								qty
+								qty,
 							)
 						}
 						newButton={() => navigate("meals")}
@@ -169,7 +164,6 @@ const NutritionInput = () => {
 					/>
 				</MotionTabPanel>
 				<MotionTabPanel value={tabValue} index={1} direction={direction}>
-					{/* Ingredients */}
 					<FoodList
 						items={filteredIng}
 						qtyMap={ingQtyMap}
@@ -178,7 +172,7 @@ const NutritionInput = () => {
 								currentBasketId,
 								FOOD_CATEGORIES.INGREDIENTS,
 								itemId,
-								qty
+								qty,
 							)
 						}
 						newButton={() => navigate("ingredients")}
@@ -186,15 +180,12 @@ const NutritionInput = () => {
 					/>
 				</MotionTabPanel>
 				<MotionTabPanel value={tabValue} index={2} direction={direction}>
-					{/* Custom Logging */}
 					<CustomLog />
 				</MotionTabPanel>
 				<MotionTabPanel value={tabValue} index={3} direction={direction}>
-					{/* Basket */}
 					<Basket />
 				</MotionTabPanel>
 			</SectionContainer>
-			{/* </Card> */}
 		</Box>
 	);
 };

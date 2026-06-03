@@ -1,5 +1,5 @@
 import { HelpOutline } from "@mui/icons-material";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { openModal } from "../modal/modalSlice";
 

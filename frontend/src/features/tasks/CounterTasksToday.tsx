@@ -1,11 +1,4 @@
-import {
-	Box,
-	Button,
-	Card,
-	IconButton,
-	Paper,
-	Typography,
-} from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
 import { CounterTask, isCounterTask, PresetId, Task } from "../../utils/types";
 import {
 	useGetDailyTasksQuery,
@@ -83,7 +76,6 @@ const CounterTasksToday = () => {
 			: [];
 	}, [tasks, dataByHabitId]);
 
-	console.log("CounterTaskToday render ", tasks);
 	return (
 		<Box
 			sx={{
@@ -132,7 +124,6 @@ const CounterTasksToday = () => {
 								className="flex-center col"
 								key={task.id}
 								onClick={() => incrementTask({ task })}
-								//sx={{ minWidth: 0 }}
 							>
 								<>
 									<Box className="flex-center">

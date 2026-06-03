@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { useRef } from "react";
 
 interface Props {
@@ -52,7 +52,7 @@ const DurationPicker = ({ handleChange, value = 0 }: Props) => {
 
 	const handleDuration = (
 		e: React.ChangeEvent<HTMLInputElement>,
-		type: "hours" | "minutes" | "seconds"
+		type: "hours" | "minutes" | "seconds",
 	) => {
 		let value = e.target.value.replace(/\D/g, "");
 		if (value.length > 2) {

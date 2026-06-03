@@ -15,13 +15,8 @@ const GoodTasksToday = ({ selectedDate }: GoodTasksTodayProps) => {
 	const isToday = todayStart === selectedStart;
 	const selectedEnd = nextDay(selectedStart);
 
-	const {
-		tasksAllDay: todayTasksAllDay,
-		tasksByTime: todayTasksByTime,
-		allTasks: todayAllTasks,
-	} = useGetDailyTasksQuery(
-		undefined,
-		{
+	const { tasksAllDay: todayTasksAllDay, tasksByTime: todayTasksByTime } =
+		useGetDailyTasksQuery(undefined, {
 			selectFromResult: ({ data = [] }) => {
 				return data.filter(isGoodTask).reduce<Record<string, Task[]>>(
 					(acc, task) => {
@@ -34,8 +29,7 @@ const GoodTasksToday = ({ selectedDate }: GoodTasksTodayProps) => {
 					{ allTasks: [], tasksAllDay: [], tasksByTime: [] },
 				);
 			},
-		},
-	);
+		});
 
 	const { dataArray = [], dataByHabitId: pastTasks = {} } =
 		useGetTasksByRangeQuery()?.data ?? {};
@@ -43,12 +37,11 @@ const GoodTasksToday = ({ selectedDate }: GoodTasksTodayProps) => {
 	const startMs = new Date(selectedStart).getTime();
 	const endMs = new Date(selectedEnd).getTime();
 
-	const { tasksAllDay, tasksByTime, allTasks } = isToday
+	const { tasksAllDay, tasksByTime } = isToday
 		? {
 				tasksAllDay: todayTasksAllDay,
 				tasksByTime: todayTasksByTime,
-				allTasks: todayAllTasks,
-		  }
+			}
 		: dataArray
 				.filter(isGoodTask)
 				.filter((task) => {
@@ -73,12 +66,9 @@ const GoodTasksToday = ({ selectedDate }: GoodTasksTodayProps) => {
 		(a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
 	);
 
-	console.log("GoodTasksToday Rendering", { selectedDate, allTasks });
-
 	return (
 		<Box
 			className="flex-center col full-h"
-			//elevation={3}
 			sx={{
 				p: 1,
 				gap: "10px",
@@ -155,7 +145,6 @@ const GoodTasksToday = ({ selectedDate }: GoodTasksTodayProps) => {
 												width: "6px",
 												height: "6px",
 												borderRadius: "50%",
-												//bgcolor: "text.secondary",
 											}}
 										/>
 										<Typography

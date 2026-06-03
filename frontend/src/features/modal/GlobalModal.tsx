@@ -52,7 +52,6 @@ const GlobalModal = () => {
 				maxWidth: "800px",
 				height: "100dvh",
 				maxHeight: "1100px",
-				// my: 1,
 				py: 1,
 				bgcolor: "background.paper",
 				overflow: "hidden",
@@ -69,10 +68,6 @@ const GlobalModal = () => {
 				borderRadius: 2,
 				minHeight: "200px",
 				minWidth: "250px",
-				// height: "90%",
-				// width: "95%",
-				// maxWidth: "750px",
-				// maxHeight: "800px",
 			};
 
 	return (

@@ -99,10 +99,7 @@ const CalorieLog = ({ children }: CalorieProps) => {
 						flexDirection: isMobile ? "column" : "row",
 					}}
 				>
-					{/* Current Calorie/Macros Count - NutritionDisplay.tsx */}
 					{children}
-
-					{/* Calorie Input */}
 					<NutritionInput />
 				</Box>
 			</CurrBasketIdContext.Provider>

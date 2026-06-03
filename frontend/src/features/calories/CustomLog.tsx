@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { Baskets, CustomForm, FOOD_CATEGORIES } from "../../utils/types";
+import { Baskets, CustomForm } from "../../utils/types";
 import LogForm from "./LogForm";
 import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
@@ -19,7 +19,7 @@ const CustomLog = () => {
 	const [addBasket] = useAddBasketMutation();
 	const currentBasketId = useCurrBasketId();
 	const currBasket = useSelector((state) =>
-		selectCurrentBasket(state, currentBasketId)
+		selectCurrentBasket(state, currentBasketId),
 	);
 	const [form, setForm] = useState({ ...initCustom });
 
@@ -38,7 +38,6 @@ const CustomLog = () => {
 	};
 
 	const handleSubmit = () => {
-		console.log(currBasket);
 		if (currBasket) {
 			const newBasket: Baskets = {
 				...currBasket,

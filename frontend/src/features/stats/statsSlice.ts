@@ -25,7 +25,6 @@ const statsSlice = createSlice({
 	initialState,
 	reducers: {
 		setPastStats: (state, action: PayloadAction<Task[]>) => {
-			console.log("setPastStats - pastTasks:", action.payload);
 			action.payload.forEach((task) => {
 				const dateKey = startOfDay(task.dateTime);
 

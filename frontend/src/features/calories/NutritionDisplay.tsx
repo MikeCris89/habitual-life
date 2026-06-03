@@ -34,7 +34,6 @@ const NutritionDisplay = () => {
 			sx={{
 				p: 2,
 				minHeight: 0,
-				//flex: 1,
 				maxHeight: isMobile ? "40%" : "100%",
 				width: "100%",
 			}}
@@ -67,8 +66,8 @@ const NutritionDisplay = () => {
 							allBasketsTotal.calories > task.total
 								? "red"
 								: !currentTotals || currentTotals.calories === 0
-								? "text.primary"
-								: "green",
+									? "text.primary"
+									: "green",
 					}}
 				>
 					{allBasketsTotal.calories}

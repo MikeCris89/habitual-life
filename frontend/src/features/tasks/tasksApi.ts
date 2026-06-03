@@ -1,4 +1,3 @@
-// tasks/tasksApi.ts
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { dbActions } from "../../utils/indexedDb";
 import {
@@ -92,7 +91,6 @@ export const generateTestTasksData = (
 			.flatMap((habit) => {
 				if (habit.id === PresetId.weightTracker) {
 					const testCount = testWeightCounts(30, i);
-					console.log(testCount);
 					return {
 						...createTask(habit, date.toISOString(), testCount),
 						complete: Math.random() * 100 <= completionRate,
@@ -160,8 +158,6 @@ export const generateTasks = (
 	}
 	return tasks;
 };
-
-export const createTestData = () => {};
 
 export const tasksApi = createApi({
 	reducerPath: "tasksApi",
@@ -245,7 +241,6 @@ export const tasksApi = createApi({
 			queryFn: async (habits: Habit[] | Habit) => {
 				try {
 					if (!Array.isArray(habits)) habits = [habits];
-					console.log("createDailyTasks start", habits);
 					const tasksToday = generateTasks(habits);
 					const data = await dbActions.batchCreateDailyTasks(tasksToday);
 					return { data };
@@ -256,16 +251,6 @@ export const tasksApi = createApi({
 				}
 			},
 			invalidatesTags: ["Tasks"],
-			// async onQueryStarted(habits, { dispatch, queryFulfilled }) {
-			// 	const { data: tasks } = await queryFulfilled;
-			// 	dispatch(
-			// 		tasksApi.util.updateQueryData("getDailyTasks", undefined, (draft) => {
-			// 			tasks?.forEach((task) => {
-			// 				draft.push(task);
-			// 			});
-			// 		})
-			// 	);
-			// },
 		}),
 		editTask: builder.mutation<Task, Task>({
 			queryFn: async (task) => {
@@ -401,133 +386,3 @@ export const {
 	useDeleteTasksMutation,
 	useDeleteAllTasksMutation,
 } = tasksApi;
-
-// NOTES ON ADDING META DATA TO CACHES FOR FETCHED DATES
-/**
- * You’re exactly right about how RTK Query caches results based on parameters! Each different parameter set gets its own cached entry, meaning:
-	•	Calling getTasksByRange({ startDate: "2024-01-01", endDate: "2024-01-31" }) will cache that result separately.
-	•	If you later call getTasksByRange({ startDate: "2024-02-01", endDate: "2024-02-28" }), it won’t replace the previous result—both will be cached separately.
-
-🔥 The Problem: Keeping Meta Data Consistent
-
-Since each query has its own cache, the problem is:
-👉 How do we make sure that earliestFetched and latestFetched stay in sync across different queries?
-
-That’s where onCacheEntryAdded comes in.
-
-✅ How onCacheEntryAdded Keeps Meta Consistent
-
-When a new query finishes, onCacheEntryAdded lets us update all cached queries with the new metadata.
-
-Here’s how it works:
-
-1️⃣ A new query runs, returning tasks and their min/max dates.
-2️⃣ RTK Query caches that data for those parameters (start-end range).
-3️⃣ Inside onCacheEntryAdded, we:
-	•	Update that query’s cache with new metadata (earliest/latest dates).
-	•	Manually update all other cached queries so they also get the latest earliest/latest date values.
-
-🔥 How This Works in the Code
-
-// Query to fetch tasks within a given date range
-getTasksByRange: builder.query<
-  Task[],
-  { startDate: string; endDate: string }
->({
-  queryFn: async ({ startDate, endDate }, { getState }) => {
-    const db = await dbPromise;
-    const tx = db.transaction("tasks", "readonly");
-    const store = tx.objectStore("tasks");
-    const index = store.index("dateTime");
-    const tasks: Task[] = [];
-
-    let cursor = await index.openCursor(
-      IDBKeyRange.bound(startDate, endDate, false, true)
-    );
-
-    while (cursor) {
-      tasks.push(cursor.value);
-      cursor = await cursor.continue();
-    }
-    await tx.done;
-
-    // 🔥 Check current fetched range from existing cache
-    const state = getState() as RootState;
-    const cachedQuery = tasksApi.endpoints.getTasksByRange.select({ startDate, endDate })(state)?.data;
-
-    const newEarliest = tasks.length
-      ? Math.min(...tasks.map((t) => new Date(t.dateTime).getTime()))
-      : cachedQuery?.earliestFetched;
-
-    const newLatest = tasks.length
-      ? Math.max(...tasks.map((t) => new Date(t.dateTime).getTime()))
-      : cachedQuery?.latestFetched;
-
-    return { data: tasks, meta: { newEarliest, newLatest } };
-  },
-
-  // 🔥 Sync metadata across cached queries
-  async onCacheEntryAdded(
-    { startDate, endDate },
-    { cacheDataLoaded, dispatch, getState }
-  ) {
-    try {
-      const { data, meta } = await cacheDataLoaded;
-
-      dispatch(
-        tasksApi.util.updateQueryData(
-          "getTasksByRange",
-          { startDate, endDate }, // Update the specific query entry
-          (draft) => {
-            draft.earliestFetched = meta.newEarliest;
-            draft.latestFetched = meta.newLatest;
-            if (!data.length) {
-              draft.noMorePastTasks = true; // Stop further past fetching
-            }
-          }
-        )
-      );
-
-      // 🔥 Sync meta with ALL cached queries
-      const state = getState() as RootState;
-      const cachedQueries = tasksApi.util.selectInvalidatedBy(state, "getTasksByRange");
-
-      cachedQueries.forEach(({ queryCacheKey }) => {
-        dispatch(
-          tasksApi.util.updateQueryData(
-            "getTasksByRange",
-            queryCacheKey,
-            (draft) => {
-              draft.earliestFetched = meta.newEarliest;
-              draft.latestFetched = meta.newLatest;
-            }
-          )
-        );
-      });
-    } catch (error) {
-      console.error("Error updating cache range:", error);
-    }
-  },
-}),
-
-✅ What This Code Does
-
-1️⃣ A new query runs → RTK caches it.
-2️⃣ It extracts min/max task dates (earliestFetched, latestFetched).
-3️⃣ It updates that query’s cache entry inside onCacheEntryAdded.
-4️⃣ It finds all other cached queries using selectInvalidatedBy("getTasksByRange").
-5️⃣ It updates those queries so all of them share the same metadata.
-
-🚀 Why This Approach Works
-
-✅ All cached queries share the same earliest/latest date values.
-✅ If a new range is fetched, old queries update their metadata automatically.
-✅ Reduces unnecessary API calls—only fetches if needed.
-✅ No need for a separate Redux slice—keeps everything inside tasksApi.
-
-🌟 Final Takeaway
-
-This approach allows multiple components to query different date ranges without breaking cache consistency.
-
-Would this fully solve your issue? Or do you still need more control over when/how date ranges update?
- */

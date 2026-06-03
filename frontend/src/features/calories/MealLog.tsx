@@ -2,9 +2,6 @@ import {
 	Badge,
 	Box,
 	Button,
-	Card,
-	Divider,
-	Paper,
 	Tab,
 	Table,
 	TableBody,
@@ -14,10 +11,9 @@ import {
 	TableRow,
 	Tabs,
 	TextField,
-	Typography,
 } from "@mui/material";
 import { FOOD_CATEGORIES, MealForm } from "../../utils/types";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 import {
 	useAddEditIngredientMutation,
@@ -38,7 +34,6 @@ import { DinnerDiningOutlined } from "@mui/icons-material";
 import Loading from "../../components/Loading";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionContainer } from "../habits/HabitForm";
-import PageWrapper from "../../components/PageWrapper";
 
 const initMeal: MealForm = {
 	title: "",
@@ -63,15 +58,11 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 	const mealTotals = calcMealTotals(form, ingredients);
 
 	return (
-		// <Card elevation={2} sx={{ p: 1, width: "100%" }}>
 		<SectionContainer
 			title="Meal Nutrition Summary"
 			fullWidth
 			wrapperSx={{ minHeight: "200px" }}
 		>
-			{/* <Typography variant="subtitle2" sx={{ mb: 1 }}>
-					Meal Nutrition Summary
-				</Typography> */}
 			<TableContainer className="full-w" sx={{ maxHeight: "150px" }}>
 				<Table size="small" stickyHeader>
 					<TableHead>
@@ -108,7 +99,6 @@ const MealNutrition = ({ form, qtyMap }: MealNutritionProps) => {
 				</Table>
 			</TableContainer>
 		</SectionContainer>
-		// </Card>
 	);
 };
 
@@ -183,20 +173,20 @@ const MealLog = () => {
 
 	const ingQtyMap = useMemo(
 		() => Object.fromEntries(form.ingredients.map((el) => [el.id, el.qty])),
-		[form.ingredients]
+		[form.ingredients],
 	);
 
 	const ingList = useMemo(
 		() =>
 			foodData?.ingredients.filter(
-				(ing) => ing.source !== FOOD_CATEGORIES.MEALS
+				(ing) => ing.source !== FOOD_CATEGORIES.MEALS,
 			) ?? [],
-		[foodData]
+		[foodData],
 	);
 
 	const mealIngList = useMemo(
 		() => form.ingredients.map((ing) => formattedIng[ing.id]),
-		[form.ingredients, formattedIng]
+		[form.ingredients, formattedIng],
 	);
 
 	if (isEditing && foodData == null) return <Loading />;
@@ -219,7 +209,7 @@ const MealLog = () => {
 					return {
 						...prev,
 						ingredients: items.map((el) =>
-							el.id === ingId ? { ...el, qty } : el
+							el.id === ingId ? { ...el, qty } : el,
 						),
 					};
 				} else {
@@ -258,7 +248,6 @@ const MealLog = () => {
 		<Box
 			className="flex-center col full-w full-h"
 			sx={{
-				//overflow: "hidden",
 				alignItems: "flex-start",
 			}}
 		>
@@ -267,7 +256,6 @@ const MealLog = () => {
 					{newIng ? "cancel" : "close"}
 				</Button>
 			</Box>
-			{/* New Ingredient Form */}
 			{newIng && (
 				<IngredientLog
 					onSubmit={(ingId) => {
@@ -283,7 +271,6 @@ const MealLog = () => {
 					sx={{ overflow: "hidden", flex: 1 }}
 				>
 					<MealNutrition form={form} qtyMap={ingQtyMap} />
-					{/* Meal List */}
 					<Box
 						className="flex-center col gap3 full-w"
 						sx={{
@@ -373,7 +360,6 @@ const MealLog = () => {
 								}}
 							/>
 						</Tabs>
-						{/* <Box sx={{ position: "relative", height: "100%", width: "100%" }}> */}
 						<SectionContainer
 							className="flex-center"
 							fullWidth
@@ -381,10 +367,7 @@ const MealLog = () => {
 							wrapperSx={{ flex: 1 }}
 						>
 							<MotionTabPanel value={tab} index={0} direction={direction}>
-								<Box
-									className="flex-center col gap2 full-w full-h"
-									//sx={{ overflow: "hidden" }}
-								>
+								<Box className="flex-center col gap2 full-w full-h">
 									<FoodList
 										items={ingList}
 										qtyMap={ingQtyMap}
@@ -394,10 +377,7 @@ const MealLog = () => {
 								</Box>
 							</MotionTabPanel>
 							<MotionTabPanel value={tab} index={1} direction={direction}>
-								<Box
-									className="flex-between col gap2 full-w full-h"
-									//sx={{ overflow: "hidden" }}
-								>
+								<Box className="flex-between col gap2 full-w full-h">
 									<LogForm
 										calories={customForm.calories}
 										macros={customForm.macros}
@@ -424,10 +404,7 @@ const MealLog = () => {
 								</Box>
 							</MotionTabPanel>
 							<MotionTabPanel value={tab} index={2} direction={direction}>
-								<Box
-									className="flex-center col gap2 full-w full-h"
-									//sx={{ overflow: "hidden" }}
-								>
+								<Box className="flex-center col gap2 full-w full-h">
 									<FoodList
 										items={mealIngList}
 										qtyMap={ingQtyMap}
@@ -437,7 +414,6 @@ const MealLog = () => {
 								</Box>
 							</MotionTabPanel>
 						</SectionContainer>
-						{/* </Box> */}
 					</Box>
 
 					{tab !== 1 && (

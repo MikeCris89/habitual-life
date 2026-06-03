@@ -70,13 +70,11 @@ const timerSlice = createSlice({
 					state.isComplete = true;
 					return;
 				}
-				console.log("isBreak", state.isBreak, state.key);
 				// Break after rounds
 				if (timer.breakDuration !== 0 && !state.isBreak) {
 					state.duration = timer.breakDuration / 1000;
 					state.isBreak = true;
 				} else {
-					console.log("Not Break", state.isBreak, state.key);
 					// Set / Round transition
 					if (isLastRound) state.currSet++;
 					state.currRound = isLastRound ? 1 : state.currRound + 1;

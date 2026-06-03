@@ -39,14 +39,8 @@ const DataLoader = ({ children }: Props) => {
 		error: errorMeta,
 	} = useGetMetaQuery();
 
-	const {
-		data: _tasksToday,
-		isLoading: loadingTasks,
-		error: errorTasks,
-	} = useGetDailyTasksQuery();
-
-	// const [fetchHabits, { isFetching: loadingHabits, error: errorHabits }] =
-	// 	useLazyGetHabitsQuery();
+	const { isLoading: loadingTasks, error: errorTasks } =
+		useGetDailyTasksQuery();
 
 	const {
 		data: habits,
@@ -93,7 +87,6 @@ const DataLoader = ({ children }: Props) => {
 
 	useEffect(() => {
 		if (pastTasks) {
-			console.log("DataLoader - Dispatching setPastStats", pastTasks);
 			dispatch(setPastStats(pastTasks.dataArray));
 		}
 	}, [pastTasks, dispatch]);
@@ -170,17 +163,12 @@ const DataLoader = ({ children }: Props) => {
 		}
 	}, [error]);
 
-	console.log("DataLoader Rendering");
-
 	if (process.env.NODE_ENV === "development") {
 		//@ts-ignore
 		window.dbPromise = dbPromise;
 	}
 
 	if (isLoading) return <Loading />;
-	//console.log("habits", habits);
-	//console.log("Tasks Today", tasksToday);
-	//console.log("pastTasks ", pastTasks);
 
 	return <>{children}</>;
 };

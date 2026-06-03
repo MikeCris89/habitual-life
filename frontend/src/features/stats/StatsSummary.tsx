@@ -11,8 +11,6 @@ const StatsSummary = () => {
 
 	const { completionRate } = useSelector(selectCurrentStats);
 
-	console.log("StatsSummary Rendering ", pastStats);
-
 	return (
 		<Box
 			className="flex-center col"

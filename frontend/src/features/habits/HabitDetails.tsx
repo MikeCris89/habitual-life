@@ -1,15 +1,8 @@
-import {
-	Box,
-	Button,
-	Divider,
-	Paper,
-	Typography,
-	useTheme,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { Days, HabitChip } from "./HabitCard";
 import PageNav from "../../components/PageNav";
-import { isGoodHabit, Task } from "../../utils/types";
+import { isGoodHabit } from "../../utils/types";
 import { useDeleteHabitMutation, useGetHabitsQuery } from "./habitsApi";
 import {
 	useDeleteAllTasksMutation,
@@ -18,19 +11,9 @@ import {
 } from "../tasks/tasksApi";
 import dayjs from "dayjs";
 import Loading from "../../components/Loading";
-import {
-	LineChart,
-	Line,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	ResponsiveContainer,
-	Label,
-} from "recharts";
 import { useMemo } from "react";
 import { Delete, Edit } from "@mui/icons-material";
-import { useThemeMode } from "../../hooks/ThemeProvider";
-import { formatLabel, getGraphCompRate } from "../../utils/helpers";
+import { getGraphCompRate } from "../../utils/helpers";
 import { useDialogModal } from "../modal/DialogModal";
 import { SectionContainer } from "./HabitForm";
 import PageWrapper from "../../components/PageWrapper";
@@ -41,9 +24,6 @@ const HabitDetails: React.FC = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { openDialog } = useDialogModal();
-	//const theme = useTheme();
-	const { isLight, theme } = useThemeMode();
-
 	const { data: dailyTasks = [] } = useGetDailyTasksQuery(undefined, {
 		selectFromResult: ({ data = [] }) => {
 			const resp = data.filter((el) => el.habitId === id);
@@ -62,23 +42,9 @@ const HabitDetails: React.FC = () => {
 		isLoading: loadingHabits,
 		error: errorHabits,
 	} = useGetHabitsQuery();
-	const [
-		deleteHabit,
-		{
-			isLoading: delHabitLoading,
-			isSuccess: delHabitSuccess,
-			error: delHabitError,
-		},
-	] = useDeleteHabitMutation();
+	const [deleteHabit] = useDeleteHabitMutation();
 
-	const [
-		deleteTask,
-		{
-			isLoading: delTaskLoading,
-			isSuccess: delTaskSuccess,
-			error: delTaskError,
-		},
-	] = useDeleteAllTasksMutation();
+	const [deleteTask] = useDeleteAllTasksMutation();
 
 	const graphData = useMemo(
 		() => getGraphCompRate([...history, ...dailyTasks]),
@@ -104,11 +70,6 @@ const HabitDetails: React.FC = () => {
 		openDialog({
 			title: "Delete Habit",
 			onConfirm: handleDelete,
-			// content: (
-			// 	<>
-			// 		<Typography sx={{ textAlign: "center" }}></Typography>
-			// 	</>
-			// ),
 			message:
 				"Deleting this Habit is permanent and will also delete all history and tasks associated with it.",
 			confirmDef: true,
@@ -116,24 +77,13 @@ const HabitDetails: React.FC = () => {
 	};
 
 	return (
-		<PageWrapper
-		// className="flex-center col gap3 full-w full-h"
-		// sx={{ p: 1, justifyContent: "flex-start" }}
-		>
-			{/* top nav */}
+		<PageWrapper>
 			<PageNav
 				back={true}
 				title="Details"
 				tutorialSection={TUTORIAL_SECTIONS.habits}
 			/>
-			{/* <Box className="flex-around col gap4 full-w" sx={{ flex: 1, p: 1 }}> */}
-			<SectionContainer
-				fullWidth
-				wrapperSx={{ flex: 1 }}
-				//fullHeight
-				// className="full-w flex-center col gap3"
-				//sx={{ flex: 1, justifyContent: "flex-start" }}
-			>
+			<SectionContainer fullWidth wrapperSx={{ flex: 1 }}>
 				<Box className="flex-between full-w" sx={{ p: 1 }}>
 					<HabitChip type={habit.type} />
 					<Box className="flex-center gap3" sx={{ justifyContent: "flex-end" }}>
@@ -170,45 +120,7 @@ const HabitDetails: React.FC = () => {
 					labelY="Completion (%)"
 					domain={[0, 100]}
 				/>
-				{/* <ResponsiveContainer width="100%" height={200}>
-					<LineChart data={graphData}>
-						<CartesianGrid strokeDasharray="3 3" />
-						<XAxis
-							dataKey="date"
-							tickFormatter={(value) => dayjs(value).format("MM/DD")}
-							tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
-						/>
-						<YAxis
-							dataKey="compRate"
-							domain={[0, 100]}
-							tick={{ fill: theme.palette.primary.main, fontSize: 12 }}
-						>
-							<Label
-								value="Completion (%)"
-								angle={-90}
-								position="insideLeft"
-								offset={10}
-								style={{
-									textAnchor: "middle",
-									//fill: isLight ? "#555" : "#ccc", // change text color
-									fill: theme.palette.secondary.main,
-									fontSize: 12,
-									fontWeight: 500,
-								}}
-							/>
-						</YAxis>
-						<Line
-							type="monotone"
-							dataKey="compRate"
-							stroke={isLight ? "#8884d8" : theme.palette.secondary.main}
-							strokeWidth={3}
-							dot={false}
-							activeDot={false}
-						/>
-					</LineChart>
-				</ResponsiveContainer> */}
 			</SectionContainer>
-			{/* </Box> */}
 		</PageWrapper>
 	);
 };

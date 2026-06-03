@@ -3,18 +3,15 @@ import Graph from "../../components/Graph";
 import PageNav from "../../components/PageNav";
 import PageWrapper from "../../components/PageWrapper";
 import { SectionContainer } from "../habits/HabitForm";
-import {
-	useGetDailyTasksQuery,
-	useGetTasksByRangeQuery,
-} from "../tasks/tasksApi";
+
 import {
 	selectCurrentGoal,
 	selectCurrentStats,
 	selectStats,
 } from "./statsSelectors";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { startOfDay } from "../../utils/timeUtils";
-import { Box, FormControl, Slider, Typography } from "@mui/material";
+import { Box, Slider, Typography } from "@mui/material";
 import { useThemeMode } from "../../hooks/ThemeProvider";
 import { useGetMetaQuery, useSetGoalMutation } from "../meta/metaApi";
 import { TUTORIAL_SECTIONS } from "../tutorial/TutorialButton";
@@ -75,8 +72,6 @@ const Stats = () => {
 			sentReq.current = undefined;
 		}, 500);
 	};
-
-	//const dynamicMarks = [{ value: newGoal - 20, label: `${newGoal - 20}%` }];
 
 	return (
 		<PageWrapper sx={{ justifyContent: "space-between" }}>

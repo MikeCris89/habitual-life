@@ -86,12 +86,6 @@ export const selectBasketTotals = createSelector(
 					) ?? {},
 			}
 		);
-		console.log(
-			"selectBasketsTotal recalculating",
-			allBasketsTotal,
-			basketsTotals
-		);
-
 		return { basketsTotals, allBasketsTotal };
 	}
 );

@@ -10,8 +10,6 @@ const GoodBadSwitcher = () => {
 	const [tab, setTab] = useState(false);
 	const [selectedDate, setSelectedDate] = useState<string>(startOfDay());
 
-	console.log("GoodBadSwitcher Rendering ", { tab, selectedDate });
-
 	return (
 		<>
 			<DateNavigator
@@ -53,7 +51,6 @@ const GoodBadSwitcher = () => {
 					overflowY: "hidden",
 					height: "100%",
 					p: 1,
-					//bgcolor: "grey.200",
 					borderRadius: "12px",
 					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",
 				}}
