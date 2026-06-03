@@ -19,16 +19,21 @@ const StatsSummary = () => {
 		>
 			<SectionContainer fullWidth>
 				{pastStats && (
-					<Box className="flex-center col" sx={{ width: "100%" }}>
-						<Typography variant="subtitle2" color="primary.main">
+					<Box
+						className="flex-between gap2"
+						sx={{ width: "100%", alignItems: "center" }}
+					>
+						<Typography
+							variant="subtitle2"
+							color="primary.main"
+							sx={{ whiteSpace: "nowrap" }}
+						>
 							Completion Rate
 						</Typography>
-						<Box className="flex-between gap2" sx={{ width: "80%" }}>
-							<ProgressBar completionRate={completionRate} large={true} />
-							<Typography variant="body1" sx={{ fontWeight: "bold" }}>
-								{completionRate}%
-							</Typography>
-						</Box>
+						<ProgressBar completionRate={completionRate} large={true} />
+						<Typography variant="body1" sx={{ fontWeight: "bold" }}>
+							{completionRate}%
+						</Typography>
 					</Box>
 				)}
 			</SectionContainer>

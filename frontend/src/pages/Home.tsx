@@ -7,7 +7,7 @@ import { TUTORIAL_SECTIONS } from "../features/tutorial/TutorialButton";
 
 const Home = () => {
 	return (
-		<PageWrapper>
+		<PageWrapper sx={{ gap: 1.5 }}>
 			<PageNav title="Home" tutorialSection={TUTORIAL_SECTIONS.overview} />
 			<StatsSummary />
 

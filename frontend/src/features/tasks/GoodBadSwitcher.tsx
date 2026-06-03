@@ -18,10 +18,12 @@ const GoodBadSwitcher = () => {
 			/>
 			<Box
 				sx={{
-					p: 1,
+					px: 1,
+					py: 0.5,
 					display: "grid",
 					gridTemplateColumns: "1fr 4fr 1fr",
 					width: "100%",
+					alignItems: "center",
 				}}
 			>
 				<div></div>
@@ -30,6 +32,7 @@ const GoodBadSwitcher = () => {
 						size="small"
 						variant={tab ? "outlined" : "contained"}
 						onClick={() => setTab(false)}
+						sx={{ borderRadius: "8px 0 0 8px" }}
 					>
 						To-Do
 					</Button>
@@ -37,6 +40,7 @@ const GoodBadSwitcher = () => {
 						size="small"
 						variant={tab ? "contained" : "outlined"}
 						onClick={() => setTab(true)}
+						sx={{ borderRadius: "0 8px 8px 0" }}
 					>
 						Not To-Do
 					</Button>
@@ -48,8 +52,8 @@ const GoodBadSwitcher = () => {
 				sx={{
 					width: "100%",
 					minHeight: 0,
+					flex: 1,
 					overflowY: "hidden",
-					height: "100%",
 					p: 1,
 					borderRadius: "12px",
 					boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)",

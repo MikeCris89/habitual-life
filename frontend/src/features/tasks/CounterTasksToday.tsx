@@ -90,7 +90,8 @@ const CounterTasksToday = () => {
 					sx={{
 						height: "100%",
 						width: "100%",
-						p: 1,
+						px: 1,
+						py: 0.5,
 					}}
 				>
 					{sortedTasks.map((task) => {
