@@ -1,4 +1,4 @@
-import { Box, Button, Card, IconButton, Typography } from "@mui/material";
+import { Box, Button, Card, Chip, IconButton, Typography } from "@mui/material";
 import {
 	isGoodTask,
 	isNoneTimer,
@@ -10,6 +10,7 @@ import {
 	AvTimerTwoTone,
 	Check,
 	CheckCircleTwoTone,
+	LocalFireDepartmentTwoTone,
 	PinOutlined,
 	TimerOutlined,
 } from "@mui/icons-material";
@@ -20,7 +21,7 @@ import { formatMsTime } from "../../utils/timeUtils";
 import { setTimer } from "../timer/timerSlice";
 import { useNavigate } from "react-router-dom";
 import ProgressBar from "../../components/ProgressBar";
-import { getCompletionRate } from "../../utils/helpers";
+import { getCompletionRate, getStreaks } from "../../utils/helpers";
 
 interface CardProps {
 	task: Task;
@@ -34,6 +35,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 	const navigate = useNavigate();
 
 	const completionRate = getCompletionRate(pastTasks, task);
+	const { current: streak } = getStreaks([...pastTasks, task], task.dateTime);
 
 	return (
 		<Card
@@ -59,6 +61,16 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 				>
 					{task.title}
 				</Typography>
+				{streak > 0 && (
+					<Chip
+						size="small"
+						color="warning"
+						variant="outlined"
+						icon={<LocalFireDepartmentTwoTone fontSize="small" />}
+						label={streak}
+						sx={{ mx: 1, flexShrink: 0 }}
+					/>
+				)}
 				{isGoodTask(task) && !isNoneTimer(task.timer) && (
 					<Box className="flex-center col">
 						{isSingleTimer(task.timer) && (

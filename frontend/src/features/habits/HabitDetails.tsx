@@ -20,14 +20,19 @@ import dayjs from "dayjs";
 import Loading from "../../components/Loading";
 import { useMemo } from "react";
 import {
+	AccessTime,
 	AvTimerTwoTone,
+	Check,
 	CheckCircleTwoTone,
 	Delete,
 	Edit,
+	EmojiEventsTwoTone,
+	LocalFireDepartmentTwoTone,
+	PercentTwoTone,
 	PinOutlined,
 	TimerOutlined,
 } from "@mui/icons-material";
-import { getGraphCompRate } from "../../utils/helpers";
+import { getGraphCompRate, getStreaks } from "../../utils/helpers";
 import { useDialogModal } from "../modal/DialogModal";
 import { openModal } from "../modal/modalSlice";
 import { setTimer } from "../timer/timerSlice";
@@ -35,6 +40,28 @@ import { SectionContainer } from "./HabitForm";
 import PageWrapper from "../../components/PageWrapper";
 import Graph from "../../components/Graph";
 import { TUTORIAL_SECTIONS } from "../tutorial/TutorialButton";
+
+const StatItem = ({
+	icon,
+	value,
+	label,
+}: {
+	icon: React.ReactNode;
+	value: string | number;
+	label: string;
+}) => (
+	<Box className="flex-center col" sx={{ gap: "2px" }}>
+		<Box className="flex-center gap1" sx={{ color: "primary.main" }}>
+			{icon}
+			<Typography variant="h6" sx={{ fontWeight: "bold", lineHeight: 1 }}>
+				{value}
+			</Typography>
+		</Box>
+		<Typography variant="caption" color="text.secondary">
+			{label}
+		</Typography>
+	</Box>
+);
 
 const HabitDetails: React.FC = () => {
 	const { id } = useParams();
@@ -68,6 +95,17 @@ const HabitDetails: React.FC = () => {
 		() => getGraphCompRate([...history, ...dailyTasks]),
 		[history, dailyTasks],
 	);
+
+	const stats = useMemo(() => {
+		const all = [...history, ...dailyTasks];
+		if (!all.length) return null;
+
+		const { current, best } = getStreaks(all);
+		const totalDone = all.filter((task) => task.complete).length;
+		const completionRate = Math.round((totalDone / all.length) * 100);
+
+		return { current, best, totalDone, completionRate };
+	}, [history, dailyTasks]);
 
 	if (!id) return <div>No Habit Selected.</div>;
 	if (loadingHabits) return <Loading />;
@@ -147,15 +185,26 @@ const HabitDetails: React.FC = () => {
 					</Box>
 				</Box>
 				{/* body */}
-				<Typography variant="h5">{habit.title}</Typography>
-				<Typography variant="h6" className="flex gap3">
+				<Box className="flex-center col gap2 full-w">
+					<Typography variant="h5" sx={{ textAlign: "center" }}>
+						{habit.title}
+					</Typography>
 					<Days days={habit.daysOfWeek} />
-				</Typography>
 
-				{isGoodHabit(habit) &&
-					habit.timeOfDay.map((el, i) => (
-						<Box key={i}>{dayjs(el.time).format("h:mm A")}</Box>
-					))}
+					{isGoodHabit(habit) && habit.timeOfDay.length > 0 && (
+						<Box className="flex-center gap2" sx={{ flexWrap: "wrap" }}>
+							{habit.timeOfDay.map((el, i) => (
+								<Chip
+									key={i}
+									size="small"
+									variant="outlined"
+									icon={<AccessTime fontSize="small" />}
+									label={dayjs(el.time).format("h:mm A")}
+								/>
+							))}
+						</Box>
+					)}
+				</Box>
 
 				{dailyTasks.length > 0 && (
 					<Box className="flex-center col gap2" sx={{ mt: 1 }}>
@@ -196,6 +245,47 @@ const HabitDetails: React.FC = () => {
 					</Box>
 				)}
 			</SectionContainer>
+			{stats && (
+				<SectionContainer fullWidth title="Stats">
+					<Box
+						sx={{
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
+							gap: 2,
+							width: "100%",
+							py: 1,
+						}}
+					>
+						<StatItem
+							icon={<LocalFireDepartmentTwoTone fontSize="small" />}
+							value={stats.current}
+							label="Current streak"
+						/>
+						<StatItem
+							icon={<EmojiEventsTwoTone fontSize="small" />}
+							value={stats.best}
+							label="Best streak"
+						/>
+						<StatItem
+							icon={<CheckCircleTwoTone fontSize="small" />}
+							value={stats.totalDone}
+							label="Completed"
+						/>
+						<StatItem
+							icon={<Check fontSize="small" />}
+							value={`${stats.completionRate}%`}
+							label="Completion"
+						/>
+					</Box>
+					<Typography
+						variant="caption"
+						color="text.secondary"
+						sx={{ textAlign: "center" }}
+					>
+						Tracking since {dayjs(habit.createdAt).format("MMM D, YYYY")}
+					</Typography>
+				</SectionContainer>
+			)}
 			<SectionContainer fullWidth>
 				<Graph
 					graphData={graphData}
