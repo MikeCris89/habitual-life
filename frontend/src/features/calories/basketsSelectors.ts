@@ -74,7 +74,7 @@ export const selectBasketTotals = createSelector(
 				basketsTotals.push(basketTotals);
 				acc.calories += basketTotals.calories;
 				for (const [macId, macTotal] of Object.entries(basketTotals.macros)) {
-					acc.macros[macId] += macTotal;
+					if (macId in acc.macros) acc.macros[macId] += macTotal;
 				}
 				return acc;
 			},

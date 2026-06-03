@@ -105,7 +105,7 @@ export const getDefaultHabits = (): Habit[] => {
 			total: 2400,
 			macros: [
 				{
-					id: "macro-protein",
+					id: "protein",
 					label: "Protein",
 					total: 180,
 					unit: "g",
@@ -113,7 +113,7 @@ export const getDefaultHabits = (): Habit[] => {
 					active: true,
 				},
 				{
-					id: "macro-carbs",
+					id: "carbs",
 					label: "Carbs",
 					total: 240,
 					unit: "g",
@@ -121,7 +121,7 @@ export const getDefaultHabits = (): Habit[] => {
 					active: true,
 				},
 				{
-					id: "macro-fat",
+					id: "fat",
 					label: "Fat",
 					total: 70,
 					unit: "g",
