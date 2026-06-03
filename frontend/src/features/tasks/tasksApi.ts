@@ -161,6 +161,8 @@ export const generateTasks = (
 	return tasks;
 };
 
+export const createTestData = () => {};
+
 export const tasksApi = createApi({
 	reducerPath: "tasksApi",
 	baseQuery: fakeBaseQuery(),
@@ -209,7 +211,17 @@ export const tasksApi = createApi({
 			providesTags: ["Tasks", "DailyTasks"],
 		}),
 		createTestTaskData: builder.mutation({
-			queryFn: async ({ startDate, endDate, habits, completionRate }) => {
+			queryFn: async ({
+				startDate,
+				endDate,
+				habits,
+				completionRate,
+			}: {
+				startDate: string;
+				endDate: string;
+				habits: Habit[];
+				completionRate: number;
+			}) => {
 				try {
 					const data = generateTestTasksData(
 						habits,

@@ -44,7 +44,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import PageNav from "../../components/PageNav";
-import { Add, AddCircle, RemoveCircleOutline } from "@mui/icons-material";
+import { AddCircle, RemoveCircleOutline } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import {
 	useAddHabitMutation,
@@ -61,7 +61,6 @@ import {
 import { useDispatch } from "react-redux";
 import { setError, setLoading, setSuccess } from "../loading/loadingSlice";
 import DurationPicker from "../../components/DurationPicker";
-import NumberField from "../../components/NumberField";
 import PageWrapper from "../../components/PageWrapper";
 import QtyField from "../../components/QtyField";
 

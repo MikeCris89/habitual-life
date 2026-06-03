@@ -40,7 +40,7 @@ const DataLoader = ({ children }: Props) => {
 	} = useGetMetaQuery();
 
 	const {
-		data: tasksToday,
+		data: _tasksToday,
 		isLoading: loadingTasks,
 		error: errorTasks,
 	} = useGetDailyTasksQuery();
