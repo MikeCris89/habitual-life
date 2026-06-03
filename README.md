@@ -16,12 +16,13 @@ I built this because I wanted a single customizable app for all my habits, and i
 - Daily tasks generated programmatically from habit definitions on app load
 - Past day navigation with full edit support on historical tasks
 - Completion rate tracking over a rolling 30-day window with configurable goal
+- Per-habit stats: current/best streak, completion count, and completion-rate history
 - Single countdown timer and round-interval timer (work/rest cycles for workouts, breathing)
 - Stats page with completion rate charts (Recharts)
 - Weekly calendar overview
 - Preset habits for weight tracking and calorie/macro counting with saved ingredients
 - Tutorial system, auto-shown on first load and accessible throughout the app
-- Test data generator for populating realistic history
+- Demo data seeded on first launch — app opens populated, no empty-state setup
 - Account settings with full data reset
 - Installable PWA, works offline
 
@@ -135,7 +136,7 @@ Tests cover the core logic:
 - **`statsSlice`** (3 tests) — total/completed task counts, per-day completion rate calculation, day stats initialization
 - **`timerSlice`** (6 tests) — single timer completion, break phase after round, round advancement, full set/round cycle completion, play/pause toggle, restart behavior
 
-Tests use Jest (via Create React App). Mock data properties are referenced directly in assertions (`mockHabit.id`) instead of hardcoded strings, and `forEach` with individual `expect` calls is preferred over `.every()` for clearer failure messages.
+Tests are written with Jest and run on every push via GitHub Actions, covering the core logic: task generation, stats, and timer state.
 
 A `startOfDay()` utility handles date comparisons in tests to avoid timezone issues that come up with hardcoded UTC strings.
 
