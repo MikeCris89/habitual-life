@@ -68,6 +68,8 @@ const GlobalModal = () => {
 				borderRadius: 2,
 				minHeight: "200px",
 				minWidth: "250px",
+				maxHeight: "90dvh",
+				maxWidth: isDesktop ? "700px" : "90vw",
 			};
 
 	return (

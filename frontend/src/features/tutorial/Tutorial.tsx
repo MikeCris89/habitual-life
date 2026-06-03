@@ -80,7 +80,7 @@ const Tutorial = ({ section }: TutorialProps) => {
 	const Menu = (
 		<Box
 			sx={{
-				width: "100%",
+				// width: "1",
 				height: "100%",
 				overflow: "hidden",
 			}}
@@ -119,7 +119,7 @@ const Tutorial = ({ section }: TutorialProps) => {
 	const Content = (
 		<Box
 			sx={{
-				minWidth: "300px",
+				minWidth: isDesktop ? "400px" : "280px",
 				width: "100%",
 				height: "100%",
 				overflowY: "auto",
@@ -137,17 +137,19 @@ const Tutorial = ({ section }: TutorialProps) => {
 			<Box
 				sx={{
 					position: "relative",
-					height: "100%",
+					height: "90dvh",
 					width: "100%",
 					maxWidth: "700px",
-					maxHeight: "900px",
+					maxHeight: "90dvh",
+					minHeight: 0,
+					display: "flex",
 				}}
 			>
 				{HeaderRightClose}
 				<Box
 					sx={{
 						display: "grid",
-						gridTemplateColumns: "280px 1fr",
+						gridTemplateColumns: "200px 1fr",
 						height: "100%",
 						width: "100%",
 						minHeight: 0,

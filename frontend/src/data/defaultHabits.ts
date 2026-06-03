@@ -67,14 +67,14 @@ export const getDefaultHabits = (): Habit[] => {
 		},
 		{
 			type: "good",
-			title: "Brush teeth",
-			id: "habit-brush",
+			title: "Walk",
+			id: "habit-walk",
 			createdAt,
 			daysOfWeek: everyDay(),
 			allDay: false,
 			timeOfDay: [
 				{ id: 1, time: at(8, 0) },
-				{ id: 2, time: at(21, 30) },
+				{ id: 2, time: at(20, 0) },
 			],
 			timer: { type: "none" },
 		},
