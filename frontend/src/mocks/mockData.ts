@@ -1,4 +1,4 @@
-import { startOfDay } from "../../utils/timeUtils";
+import { startOfDay } from "../utils/timeUtils";
 import {
 	DaysOfWeek,
 	GoodType,
@@ -8,7 +8,7 @@ import {
 	GoodTask,
 	SingleTimer,
 	RoundTimer,
-} from "../../utils/types";
+} from "../utils/types";
 
 // HABITS
 

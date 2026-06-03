@@ -4,7 +4,7 @@ import timerReducer, {
 	startTimer,
 	restartTimer,
 } from "../features/timer/timerSlice";
-import { mockRoundTimer, mockSingleTimer } from "./mocks/mockData";
+import { mockRoundTimer, mockSingleTimer } from "../mocks/mockData";
 
 describe("timerSlice", () => {
 	it("should set isComplete to true when single timer completes", () => {

@@ -6,7 +6,7 @@ import {
 	startOfDay,
 	startOfWeek,
 } from "../utils/timeUtils";
-import { mockGoodHabitAllDay, mockGoodHabitWithTimes } from "./mocks/mockData";
+import { mockGoodHabitAllDay, mockGoodHabitWithTimes } from "../mocks/mockData";
 
 jest.mock("../utils/indexedDb", () => ({
 	dbActions: {},

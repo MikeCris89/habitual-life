@@ -1,6 +1,6 @@
 import statsReducer, { setPastStats } from "../features/stats/statsSlice";
 import { startOfDay } from "../utils/timeUtils";
-import { mockTasks } from "./mocks/mockData";
+import { mockTasks } from "../mocks/mockData";
 
 const today = startOfDay();
 
