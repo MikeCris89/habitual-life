@@ -32,7 +32,7 @@ import {
 	PinOutlined,
 	TimerOutlined,
 } from "@mui/icons-material";
-import { getGraphCompRate, getStreaks } from "../../utils/helpers";
+import { displayTitle, getGraphCompRate, getStreaks } from "../../utils/helpers";
 import { useDialogModal } from "../modal/DialogModal";
 import { openModal } from "../modal/modalSlice";
 import { setTimer } from "../timer/timerSlice";
@@ -191,7 +191,7 @@ const HabitDetails: React.FC = () => {
 					{/* body */}
 					<Box className="flex-center col gap2 full-w">
 						<Typography variant="h5" sx={{ textAlign: "center" }}>
-							{habit.title}
+							{displayTitle(habit)}
 						</Typography>
 						<Days days={habit.daysOfWeek} />
 

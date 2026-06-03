@@ -3,7 +3,7 @@ import { DaysOfWeek, Habit, HabitType, HabitTypes } from "../../utils/types";
 import { useNavigate } from "react-router-dom";
 import { dayStyle, dayActive } from "../../utils/styles";
 import { useThemeMode } from "../../hooks/ThemeProvider";
-import { formatLabel } from "../../utils/helpers";
+import { displayTitle, formatLabel } from "../../utils/helpers";
 
 interface CardProps {
 	habit: Habit;
@@ -79,7 +79,7 @@ const HabitCard = ({ habit }: CardProps) => {
 			}}
 			onClick={handleClick}
 		>
-			<Typography variant="h6">{habit.title}</Typography>
+			<Typography variant="h6">{displayTitle(habit)}</Typography>
 
 			<Box className="flex-between full-w">
 				<HabitChip type={habit.type} />

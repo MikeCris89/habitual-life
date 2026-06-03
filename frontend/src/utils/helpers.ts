@@ -1,5 +1,15 @@
-import { Task } from "./types";
+import { HabitType, Task } from "./types";
 import { startOfDay } from "./timeUtils";
+
+// Bad habits/tasks read as something to avoid — prefix their title with
+// "No - ", unless one is already present (the form prefills it).
+export const displayTitle = (item: {
+	type: HabitType;
+	title: string;
+}): string => {
+	if (item.type !== "bad") return item.title;
+	return /^no\s*-/i.test(item.title.trim()) ? item.title : `No - ${item.title}`;
+};
 
 // Current and best run of fully-completed days for a habit's tasks.
 // `asOf` anchors the "current" streak to a given day (e.g. the viewed date),

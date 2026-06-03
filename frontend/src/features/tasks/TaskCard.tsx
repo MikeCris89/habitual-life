@@ -21,7 +21,7 @@ import { formatMsTime } from "../../utils/timeUtils";
 import { setTimer } from "../timer/timerSlice";
 import { useNavigate } from "react-router-dom";
 import ProgressBar from "../../components/ProgressBar";
-import { getCompletionRate, getStreaks } from "../../utils/helpers";
+import { displayTitle, getCompletionRate, getStreaks } from "../../utils/helpers";
 
 interface CardProps {
 	task: Task;
@@ -58,7 +58,7 @@ const TaskCard = ({ task, pastTasks, circleIcon = false }: CardProps) => {
 					}}
 					onClick={() => navigate(`/${task.habitId}`)}
 				>
-					{task.title}
+					{displayTitle(task)}
 				</Typography>
 				{circleIcon ? (
 					<Button

@@ -6,6 +6,7 @@ import {
 	FormGroup,
 	FormLabel,
 	IconButton,
+	InputAdornment,
 	Paper,
 	Switch,
 	TextField,
@@ -111,7 +112,6 @@ export const initTypes: Record<HabitType, Habit> = {
 	},
 	bad: {
 		...initHabit,
-		title: "No - ",
 		type: HabitTypes.BAD,
 	},
 	counter: {
@@ -206,8 +206,13 @@ const HabitForm = () => {
 		);
 	}, [type, habitToEdit]);
 
-	const [habit, setHabit] = useState<Habit>({
-		...(habitToEdit ?? initTypes[habitType]),
+	const [habit, setHabit] = useState<Habit>(() => {
+		const base = habitToEdit ?? initTypes[habitType];
+		// Bad habits show "No - " as an input prefix, not part of the stored
+		// title — strip any legacy prefix from existing habits.
+		return base.type === "bad"
+			? { ...base, title: base.title.replace(/^no\s*-\s*/i, "") }
+			: { ...base };
 	});
 	const [selectingTime, setSelectingTime] = useState<boolean>(false);
 
@@ -409,7 +414,16 @@ const HabitForm = () => {
 						value={habit.title}
 						onChange={handleChange}
 						fullWidth
-						slotProps={{ input: { inputProps: { maxLength: 50 } } }}
+						placeholder={habit.type === "bad" ? "what to avoid" : undefined}
+						slotProps={{
+							input: {
+								inputProps: { maxLength: 50 },
+								startAdornment:
+									habit.type === "bad" ? (
+										<InputAdornment position="start">No -</InputAdornment>
+									) : undefined,
+							},
+						}}
 						required
 					/>
 
